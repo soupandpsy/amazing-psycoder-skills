@@ -1,6 +1,10 @@
+<div align="center">
+
 # Amazing PsyCoder
 
 > 心理学人的米奇妙妙屋：从实验设计到程序编写一步到位！🎉
+
+</div>
 
 ## 📖 为什么做这个项目
 
