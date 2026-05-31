@@ -1,31 +1,40 @@
 <div align="center">
 
-# Amazing PsyCoder
+# 🧠 Amazing PsyCoder 💻
 
-> 心理学人的米奇妙妙屋：从实验设计到程序编写一步到位！🎉
+> 心理学人的米奇妙妙屋：先把实验理清楚，再把代码写出来，最后少踩几个坑。🪄
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
 
 </div>
 
+**Design ⇒ Generate ⇒ Audit.** Three mandatory skills, one runnable experiment. No skipped steps, no guesswork, no code delivered without review.
+
+---
+
 ## 📖 为什么做这个项目
 
-心理学实验编程的痛点，做过的人都懂：
+心理学实验编程的痛点，做过的人都懂。程序能跑 🏃 只是第一步，真正的折磨是——它跑起来以后，到底是不是按你的实验逻辑在跑。😵‍💫
 
-- **学习成本高** — PsychoPy 的 Builder 和 Coder 该用哪个？Psychtoolbox 的 `Screen('Flip')` 为什么要在 `vbl + (waitframes - 0.5) * ifi` 时刻翻页？光是搞清楚 API 就要花几周。
-- **设计时漏细节** — 试次窗口长什么样？反应时从哪个窗口开始算？按键映射是什么？漏一个细节，实验逻辑就崩。
-- **切换平台困难** — 实验室的 PsychoPy 代码想在 Pavlovia 上线跑？从 Python 翻译成 JavaScript，所有 API 都要重写。
-- **写代码时踩坑** — `time.sleep()` 阻塞了 Escape 键，被试按啥都没反应。中文刺激没配字体，屏幕上一堆 □□□。这些坑每个初学者都必踩一次。
-- **代码报错不知道怎么改** — 报了一屏红字，不知道该看哪一行。搜了半天 StackOverflow，发现别人的问题跟自己的完全不一样。
-- **改参数要找半天** — 想把注视点从 500ms 改成 800ms，翻了 300 行代码才找到那个藏在循环里的魔数。
-- **代码过了自己这关仍不安心** — 跑起来了，但 RT 到底测得准不准？数据保存方式对不对？万一被试做一半崩了，之前的数据还在不在？
-- **别人看不懂你的代码** — 接手师兄的代码，变量名叫 `x1`、`x2`、`tmp`，没有注释，不知道从哪开始改。
+- ⏱️ **RT 到底从哪一屏开始算** —— 计时起点标错，整批反应时数据白收
+- ⌨️ **按键映射有没有写反** —— f=红还是f=绿？被试按对了代码判错了
+- 🚦 **No-go 不按键怎么算正确** —— 该按不按、不该按按了，规则不清
+- 🧩 **设计时漏细节** —— 试次窗口长什么样？按键映射是什么？漏一个细节，实验逻辑就崩
+- 📊 **条件表和刺激文件对不上** —— 列名拼错、文件路径写错，试次直接跳过
+- 🔀 **随机化连续出现同类试次** —— 被试按了一排同一个键，数据废了
+- 💾 **程序崩了数据还在不在** —— 跑完才保存，崩了全丢
+- 🔤 **中文指导语变成 □□□** —— 没配中文字体，被试看着一堆豆腐块
+- 😇 **代码能跑，但真的能正式采集吗** —— 跑起来了，RT 准不准？逻辑对不对？没底
 
 每个实验室都有踩过这些坑的师兄师姐，但他们的经验很少被系统化地沉淀下来。Amazing PsyCoder 把这些经验编码进了 Claude Code 的三个强制技能里——不是给你一份代码模板自己改，而是像一位坐在你旁边的实验编程老手，一步步确认设计、生成代码、审计质量。
 
 ## 🎯 我们做了什么
 
-- **🔴 设计编排层**（psych-experiment-programming）—— 5 阶段渐进式确认，试次窗口时间线画清楚才放行，不猜任何实验细节
-- **🟡 代码生成层**（psych-experiment-coder）—— 4 层优先级架构生成代码，9 项质量门自动检查，`time.sleep()` 和 `KbCheck` 测 RT 直接拒绝
-- **🟢 审计层**（psych-experiment-code-reviewer）—— 烟雾测试、数据完整性验证、范式特定失败模式检查，输出 `ready_for_collection` 才准收数据
+- 1️⃣ **设计编排层**（psych-experiment-programming）—— 先帮你理清实验设计：试次时间线怎么走？block 怎么分？条件表怎么设计？按键规则是什么？正确性怎么算？5 阶段渐进式确认，试次窗口时间线画清楚才放行，不猜任何实验细节
+- 2️⃣ **代码生成层**（psych-experiment-coder）—— 再帮你生成实验代码：4 层优先级架构，9 项质量门自动检查，`time.sleep()` 和 `KbCheck` 测 RT 直接拒绝。重点处理 RT 计时、反应收集、刺激呈现、条件文件读取、增量保存、Escape 退出、中文字体
+- 3️⃣ **审计层**（psych-experiment-code-reviewer）—— 最后帮你做采集前审查：RT 起点有没有问题？按键映射有没有反？数据保存安不安全？随机化是否合理？烟雾测试 + 数据完整性验证 + 范式特定失败模式检查，输出 `ready_for_collection` 才准收数据
 
 三步全部强制，不可跳过。**未经审计的代码不交付。**
 
@@ -37,7 +46,7 @@
 - 🧪 **崩溃不丢数据**：每个试次结束立刻存盘。就算实验崩了，已经收完的试次数据都还在
 - 🎛️ **一个系统，三个平台**：不管你们实验室用 PsychoPy、jsPsych 还是 MATLAB 的 Psychtoolbox，都能生成对应的代码
 
-**不要在实验代码调试上浪费时间，把精力留给真正的科研。**
+**少一点玄学调试，少一点凌晨崩溃，多一点正式采集前的安全感。🧪✨**
 
 ---
 
@@ -47,6 +56,7 @@
 - [快速开始](#快速开始)
 - [三个技能](#三个技能)
 - [平台支持](#平台支持)
+- [适合这些人](#-适合这些人)
 - [范式覆盖](#范式覆盖)
 - [文件结构](#文件结构)
 
@@ -57,7 +67,7 @@
 在 Claude Code 中输入：
 
 ```
-Install Amazing PsyCoder for me: https://github.com/<your-username>/AmazingPsyCoderSkills
+Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
 ```
 
 Claude Code 会自动 clone 仓库、把 4 个技能注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
@@ -66,7 +76,7 @@ Claude Code 会自动 clone 仓库、把 4 个技能注册到 `~/.claude/skills/
 <summary>手动安装</summary>
 
 ```bash
-git clone https://github.com/<your-username>/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
+git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
 cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
 cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-programming ~/.claude/skills/
 cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-coder ~/.claude/skills/
@@ -117,11 +127,21 @@ cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills
 
 ## 平台支持
 
-- **[PsychoPy](https://psychopy.org/)** — 本地实验，精确 RT 计时（USB HID 硬件时间戳）
-- **[jsPsych](https://www.jspsych.org/v7/)** — 在线实验，浏览器端部署
-- **[Psychtoolbox](http://psychtoolbox.org/)** — MATLAB 实验室，GPU 级帧精确控制
+- 🐍 **[PsychoPy](https://psychopy.org/)** — 本地实验，精确 RT 计时（USB HID 硬件时间戳）
+- 🌐 **[jsPsych](https://www.jspsych.org/v7/)** — 在线实验，浏览器端部署
+- 🧮 **[Psychtoolbox](http://psychtoolbox.org/)** — MATLAB 实验室，GPU 级帧精确控制
 
 每个平台均配备完整的代码生成体系。
+
+---
+
+## 👥 适合这些人
+
+- 👶 不太会写代码，但必须搞定实验程序
+- 🎓 正在写或将要写实验代码的本科生、研究生
+- 🧠 做认知、行为、社会心理实验的研究者
+- 🐍 PsychoPy 本地实验 · 🌐 jsPsych 在线实验 · 🧮 Psychtoolbox / MATLAB
+- 😵‍💫 被 RT、随机化、条件表反复背刺过，只想安心收数据
 
 ---
 
