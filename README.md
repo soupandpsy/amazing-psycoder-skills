@@ -39,11 +39,37 @@
 
 ## 📑 目录
 
+- [安装](#安装)
 - [快速开始](#快速开始)
 - [三个技能](#三个技能)
 - [平台支持](#平台支持)
 - [范式覆盖](#范式覆盖)
 - [文件结构](#文件结构)
+
+---
+
+## 安装
+
+在 Claude Code 中输入：
+
+```
+Install Amazing PsyCoder for me: https://github.com/<your-username>/AmazingPsyCoderSkills
+```
+
+Claude Code 会自动 clone 仓库、把 4 个技能注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
+
+<details>
+<summary>手动安装</summary>
+
+```bash
+git clone https://github.com/<your-username>/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills/
+```
+
+</details>
 
 ---
 
