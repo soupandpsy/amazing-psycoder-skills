@@ -95,13 +95,24 @@ Dans Claude Code, tapez `/amazing-psycoder` et décrivez votre expérience :
 Le système vous dirige vers l'orchestrateur qui vous guide à travers le processus de design en 5 phases. Une timeline d'essai est générée :
 
 ```
-┌───────────────┐    ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
-│ Fixation      │ →  │ Stimulus      │ →  │ Pause         │ →  │ Feedback      │
-│ +             │    │ Rouge (vert)  │    │               │    │ Correct !     │
-│ 500ms         │    │ 2000ms        │    │ 500ms         │    │ 1000ms        │
-│               │    │ ← touche      │    │               │    │               │
-└───────────────┘    └───────────────┘    └───────────────┘    └───────────────┘
-                  Début du TR
+Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
+┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+│                      │    │                      │    │                      │
+│          +           │ →  │    Rouge (vert)      │ →  │                      │
+│                      │    │                      │    │                      │
+└──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+500ms                       2000ms                      500ms
+pas de rép.                 ← touche                    pas de rép.
+                            Début du TR                 
+
+Window 4: Feedback
+┌──────────────────────┐
+│                      │
+│      Correct !       │
+│                      │
+└──────────────────────┘
+1000ms
+pas de rép.
 ```
 
 Après avoir confirmé la timeline, choisissez votre plateforme. Un fichier exécutable (`.py` / `.js` / `.m`) et un README d'expérience sont générés.
@@ -124,13 +135,24 @@ Utilisateur      ❯ Oui, PsychoPy.
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · Fenêtres d'essai + Règles de réponse (critique)
                    Couleurs d'encre → f=rouge j=vert k=bleu. Timeline :
-                   ┌───────────────┐    ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
-                   │ Fixation      │ →  │ Stimulus      │ →  │ Pause         │ →  │ Feedback      │
-                   │ +             │    │ Rouge (vert)  │    │               │    │ Correct !     │
-                   │ 500ms         │    │ 2000ms        │    │ 500ms         │    │ 1000ms        │
-                   │ pas de rép.   │    │ ← déb. TR     │    │ pas de rép.   │    │ pas de rép.   │
-                   └───────────────┘    └───────────────┘    └───────────────┘    └───────────────┘
-                                     Début du TR
+                   Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
+                   ┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+                   │                      │    │                      │    │                      │
+                   │          +           │ →  │    Rouge (vert)      │ →  │                      │
+                   │                      │    │                      │    │                      │
+                   └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+                   500ms                       2000ms                      500ms
+                   pas de rép.                 f / j / k                   pas de rép.
+                                               ← Début du TR               
+
+                   Window 4: Feedback
+                   ┌──────────────────────┐
+                   │                      │
+                   │      Correct !       │
+                   │                      │
+                   └──────────────────────┘
+                   1000ms
+                   pas de rép.
                    Gate 1 ✅ Fenêtres complètes, mapping de réponse confirmé
 
 Utilisateur      ❯ Timeline et touches OK. ITI 400-800ms aléatoire.

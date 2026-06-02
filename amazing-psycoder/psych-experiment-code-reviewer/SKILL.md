@@ -124,7 +124,7 @@ Run the 9-item Quality Gate from the coder SKILL.md first. Any failure = automat
 
 When auditing code, scan for these exact patterns per platform:
 
-**PsychoPy (19 patterns to scan):**
+**PsychoPy (14 patterns to scan):**
 ```
 event.getKeys(           ← blocks event loop
 event.waitKeys(          ← blocks event loop
@@ -142,7 +142,7 @@ preBuffer=-1             ← missing on Sound()
 addLoop(                 ← called before loop runs (not right before)
 ```
 
-**Psychtoolbox (18 patterns to scan):**
+**Psychtoolbox (15 patterns to scan):**
 ```
 WaitSecs(                ← blocks execution (except for ITI pre-trial)
 KbWait                   ← blocking, no RT timestamp
@@ -161,7 +161,7 @@ Screen('Flip', w)        ← missing 'when' parameter
 Screen('Flip', w, 0)     ← zero when parameter
 ```
 
-**jsPsych (13 patterns to scan):**
+**jsPsych (12 patterns to scan):**
 ```
 jsPsych.init(            ← v7 removed
 'html-keyboard-response' ← string plugin type (should be class)
@@ -591,9 +591,9 @@ The reviewer should output this checklist with every `ready_for_collection` verd
 
 | File | When to load |
 |------|-------------|
-| [../psych-experiment-coder/psychopy/spec/README.md](../psych-experiment-coder/psychopy/spec/README.md) | PsychoPy code audit — canonical skeleton + 19 anti-patterns |
-| [../psych-experiment-coder/jspsych/spec/README.md](../psych-experiment-coder/jspsych/spec/README.md) | jsPsych code audit — canonical skeleton + 13 anti-patterns |
-| [../psych-experiment-coder/psychtoolbox/spec/README.md](../psych-experiment-coder/psychtoolbox/spec/README.md) | PTB code audit — canonical skeleton + 18 anti-patterns |
+| [../psych-experiment-coder/psychopy/spec/README.md](../psych-experiment-coder/psychopy/spec/README.md) | PsychoPy code audit — canonical skeleton + 14 anti-patterns |
+| [../psych-experiment-coder/jspsych/spec/README.md](../psych-experiment-coder/jspsych/spec/README.md) | jsPsych code audit — canonical skeleton + 12 anti-patterns |
+| [../psych-experiment-coder/psychtoolbox/spec/README.md](../psych-experiment-coder/psychtoolbox/spec/README.md) | PTB code audit — canonical skeleton + 15 anti-patterns |
 | [../psych-experiment-programming/paradigms/](../psych-experiment-programming/paradigms/) | Paradigm failure mode cross-reference |
 | [../psych-experiment-programming/references/data-recording.md](../psych-experiment-programming/references/data-recording.md) | Data output column validation |
 | [../psych-experiment-programming/references/config-schema.md](../psych-experiment-programming/references/config-schema.md) | Config validation rules |

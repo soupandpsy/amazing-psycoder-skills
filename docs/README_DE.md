@@ -95,13 +95,24 @@ Geben Sie in Claude Code `/amazing-psycoder` ein und beschreiben Sie Ihr Experim
 Das System leitet Sie zum Orchestrator weiter, der Sie durch den 5-Phasen-Designprozess führt. Dabei wird eine Trial-Zeitlinie generiert:
 
 ```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│ Fixation    │ →  │ Stimulus    │ →  │ Pause       │ →  │ Feedback    │
-│ +           │    │ Rot (grün)  │    │             │    │ Richtig!    │
-│ 500ms       │    │ 2000ms      │    │ 500ms       │    │ 1000ms      │
-│             │    │ ← Taste     │    │             │    │             │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-                   RT-Start
+Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
+┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+│                      │    │                      │    │                      │
+│          +           │ →  │     Rot (grün)       │ →  │                      │
+│                      │    │                      │    │                      │
+└──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+500ms                       2000ms                      500ms
+keine Reak.                 ← Taste                     keine Reak.
+                            RT-Start                    
+
+Window 4: Feedback
+┌──────────────────────┐
+│                      │
+│       Richtig!       │
+│                      │
+└──────────────────────┘
+1000ms
+keine Reak.
 ```
 
 Nach Bestätigung der Zeitlinie wählen Sie Ihre Plattform. Ausgabe ist eine ausführbare Datei (`.py` / `.js` / `.m`) und eine Experiment-README.
@@ -124,13 +135,24 @@ Nutzer           ❯ Ja, PsychoPy.
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · Trial-Fenster + Antwortregeln (kritisch)
                    Tintenfarben → f=Rot j=Grün k=Blau. Trial-Zeitlinie:
-                   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-                   │ Fixation     │ →  │ Stimulus     │ →  │ Pause        │ →  │ Feedback     │
-                   │ +            │    │ Rot (grün)   │    │              │    │ Richtig!     │
-                   │ 500ms        │    │ 2000ms       │    │ 500ms        │    │ 1000ms       │
-                   │ keine Reak.  │    │ ← RT-Start   │    │ keine Reak.  │    │ keine Reak.  │
-                   └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-                                     RT-Start
+                   Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
+                   ┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+                   │                      │    │                      │    │                      │
+                   │          +           │ →  │     Rot (grün)       │ →  │                      │
+                   │                      │    │                      │    │                      │
+                   └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+                   500ms                       2000ms                      500ms
+                   keine Reak.                 f / j / k                   keine Reak.
+                                               ← RT-Start                  
+
+                   Window 4: Feedback
+                   ┌──────────────────────┐
+                   │                      │
+                   │       Richtig!       │
+                   │                      │
+                   └──────────────────────┘
+                   1000ms
+                   keine Reak.
                    Gate 1 ✅ Fenster vollständig, Antwort-Mapping bestätigt
 
 Nutzer           ❯ Zeitlinie und Tasten passen. ITI 400-800ms zufällig.

@@ -72,11 +72,11 @@ User request
   ├─ "I got an error" / "代码报错"
   │    → Check the error type:
   │       Design error → psych-experiment-programming
-  │       Code error   → psych-experiment-coder (debug mode)
+  │       Code error   → psych-experiment-coder (see Debugging & Iteration Loop)
   │
   ├─ "Review found issues" / "审计不通过" / "代码有问题需要修"
   │    → Check the severity:
-  │       Critical/Major issues → Fix in psych-experiment-coder (debug mode), re-audit after
+  │       Critical/Major issues → Fix in psych-experiment-coder, re-audit after
   │       Minor only → User can collect data; fix when convenient
   │
   ├─ "What paradigms are available?" / "有哪些范式"

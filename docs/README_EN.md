@@ -95,13 +95,24 @@ In Claude Code, type `/amazing-psycoder` and describe your experiment:
 The system routes you to the orchestrator for the 5-phase design. During the process, it generates a trial window timeline:
 
 ```
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│ Fixation     │ →  │ Stimulus     │ →  │ Blank        │ →  │ Feedback     │
-│ +            │    │ Red (green)  │    │              │    │ Correct!     │
-│ 500ms        │    │ 2000ms       │    │ 500ms        │    │ 1000ms       │
-│              │    │ ← press      │    │              │    │              │
-└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-                    RT onset
+Window 1: Fixation          Window 2: Stimulus          Window 3: Blank
+┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+│                      │    │                      │    │                      │
+│          +           │ →  │     Red (green)      │ →  │                      │
+│                      │    │                      │    │                      │
+└──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+500ms                       2000ms                      500ms
+no resp                     ← press                     no resp
+                            RT onset                    
+
+Window 4: Feedback
+┌──────────────────────┐
+│                      │
+│       Correct!       │
+│                      │
+└──────────────────────┘
+1000ms
+no resp
 ```
 
 After confirming the timeline, choose your platform. Outputs a runnable file (`.py` / `.js` / `.m`) and an experiment README.
@@ -124,13 +135,24 @@ User             ❯ Yes, PsychoPy.
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · Trial Windows + Response Rules (most critical)
                    Ink colors → f=red j=green k=blue. Trial timeline:
-                   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-                   │ Fixation     │ →  │ Stimulus     │ →  │ Blank        │ →  │ Feedback     │
-                   │ +            │    │ Red (green)  │    │              │    │ Correct!     │
-                   │ 500ms        │    │ 2000ms       │    │ 500ms        │    │ 1000ms       │
-                   │ no resp      │    │ ← RT onset   │    │ no resp      │    │ no resp      │
-                   └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-                                     RT onset
+                   Window 1: Fixation          Window 2: Stimulus          Window 3: Blank
+                   ┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
+                   │                      │    │                      │    │                      │
+                   │          +           │ →  │     Red (green)      │ →  │                      │
+                   │                      │    │                      │    │                      │
+                   └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
+                   500ms                       2000ms                      500ms
+                   no resp                     f / j / k                   no resp
+                                               ← RT onset                  
+
+                   Window 4: Feedback
+                   ┌──────────────────────┐
+                   │                      │
+                   │       Correct!       │
+                   │                      │
+                   └──────────────────────┘
+                   1000ms
+                   no resp
                    Gate 1 ✅ Windows complete, response mapping confirmed
 
 User             ❯ Timeline and keys look good. ITI 400-800ms random.

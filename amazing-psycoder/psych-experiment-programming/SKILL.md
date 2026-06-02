@@ -98,16 +98,19 @@ Each trial window box must include:
 Use this format:
 
 ```text
-┌──────────────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────────┐
-│ Window 1                     │ →  │ Window 2                     │ →  │ Window 3                     │
-│ Fixation                     │    │ Stimulus                     │    │ Response                     │
-│ Content: +                   │    │ Content: {stimulus}          │    │ Content: {stimulus}          │
-│ Duration: 500 ms             │    │ Duration: 500 ms             │    │ Duration: until key          │
-│ Response: none               │    │ Response: none               │    │ Response: f/j                │
-│ File: none                   │    │ File: stimuli/images/*.png   │    │ Condition: conditions.xlsx   │
-│ Data: none                   │    │ Data: none                   │    │ Data: rt, key, acc           │
-└──────────────────────────────┘    └──────────────────────────────┘    └──────────────────────────────┘
-```
+Window 1: Fixation               Window 2: Stimulus               Window 3: Response
+┌──────────────────────┐         ┌──────────────────────┐         ┌──────────────────────┐
+│                      │         │                      │         │                      │
+│          +           │    →    │     {stimulus}       │    →    │     {stimulus}       │
+│                      │         │                      │         │                      │
+└──────────────────────┘         └──────────────────────┘         └──────────────────────┘
+Duration: 500 ms                 Duration: 500 ms                 Duration: until key
+Response: none                   Response: none                   Response: f / j
+File: none                       File: stimuli/images/*.png       Condition: conditions.xlsx
+                                 Data: rt, key, acc               
+```                                                               
+
+**Max 3 windows per row** — if the trial has more than 3 windows, wrap to the next row.
 
 After the box timeline, also provide a structured table:
 
@@ -192,18 +195,27 @@ Build the trial window timeline — the most critical phase. Every screen event 
 - File/folder reference (which stimulus files?)
 - Condition source (which xlsx column drives this window?)
 
-**How to present**: Box timeline with filled and `[MISSING]` values side by side.
+**How to present**: Window name above the box, content centered inside, other fields below. All left-aligned with the box.
 
 ```text
-┌──────────────────────────┐    ┌──────────────────────────┐    ┌──────────────────────────┐
-│ Window 1                 │ →  │ Window 2                 │ →  │ Window 3                 │
-│ Fixation                 │    │ Stimulus                 │    │ Response                 │
-│ Content: +               │    │ Content: [MISSING]       │    │ Content: [MISSING]       │
-│ Duration: [MISSING]      │    │ Duration: [MISSING]      │    │ Duration: until key      │
-│ Response: none           │    │ Response: none           │    │ Response: [MISSING]      │
-│ File: none               │    │ File: [MISSING]          │    │ Condition: [MISSING]     │
-│ Data: none               │    │ Data: none               │    │ Data: rt, key, acc       │
-└──────────────────────────┘    └──────────────────────────┘    └──────────────────────────┘
+Window 1: Fixation              Window 2: Stimulus              Window 3: Response
+┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
+│                      │        │                      │        │                      │
+│          +           │   →    │      [MISSING]       │   →    │      [MISSING]       │
+│                      │        │                      │        │                      │
+└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
+Duration: [MISSING]             Duration: [MISSING]             Duration: until key
+Response: none                  Response: none                  Response: [MISSING]
+File: none                      File: [MISSING]                 Condition: [MISSING]
+                                Data: rt, key, acc              
+
+Format rules:                                                   
+- Window name/sequence number above the box, left-aligned with the box
+- Content centered inside the box (box width = 22 characters)
+- Duration, Response, File, Condition, Data below the box, left-aligned
+- Arrow (→) between windows in the same row
+- **Max 3 windows per row** — windows 4+ wrap to the next row automatically
+- [MISSING] marks unresolved items that must be confirmed before Gate 1
 ```
 
 **Questions (max 3)**:
@@ -328,13 +340,24 @@ Format:
 
 ### Trial 窗口与反应规则
 
-┌──────────────────────────┐    ┌──────────────────────────┐    ┌──────────────────────────┐    ┌──────────────────────────┐
-│ Window 1                 │ →  │ Window 2                 │ →  │ Window 3                 │ →  │ Window 4                 │
-│ Fixation                 │    │ Stroop Stimulus          │    │ Feedback                 │    │ ITI                      │
-│ Content: +               │    │ Content: 色词文字         │    │ Content: 正确/错误        │    │ Content: (blank)         │
-│ Duration: 500 ms         │    │ Duration: until key      │    │ Duration: 500 ms         │    │ Duration: 600-900 ms     │
-│ Response: none           │    │ Response: f/j/k          │    │ Response: none           │    │ Response: none           │
-└──────────────────────────┘    └──────────────────────────┘    └──────────────────────────┘    └──────────────────────────┘
+Window 1: Fixation              Window 2: Stroop                Window 3: Feedback
+┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
+│                      │        │                      │        │                      │
+│          +           │   →    │       色词文字       │   →    │       正确/错误      │
+│                      │        │                      │        │                      │
+└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
+500ms                           until key                       500ms
+none                            f / j / k                       none
+                                ← RT onset                      
+
+Window 4: ITI
+┌──────────────────────┐
+│                      │
+│                      │
+│                      │
+└──────────────────────┘
+600-900ms
+none
 
 | Window | Content | Duration | Response | Condition | Data |
 |--------|---------|----------|----------|-----------|------|
@@ -475,13 +498,13 @@ These patterns extend the core 5-phase workflow. They are optional but recommend
 
 When the experiment includes surveys, scales, or demographic collection, insert a **Questionnaire Phase** between Phase 4 (Blocks) and Phase 5 (Validate). This phase follows the same window-condition-block pattern but with survey-specific concerns:
 
-**Demographics** — Single-item windows using `html-button-response` or `survey-html-form`:
+**Demographics** — Single-item windows with button response or form input:
 - Sex (buttons), Age (number input with range validation), Education (dropdown)
 - Each item = one window block with `response: [keys]` or `response: [mouse]`
-- Validation: age range, required fields, Chinese ID number format
+- Validation: age range, required fields
 
-**Likert Scales** — Multi-item scales using `timeline_variables`:
-- Each item = one trial with `stimulus: jsPsych.timelineVariable('s')`
+**Likert Scales** — Multi-item scales with stimulus content from condition variables:
+- Each item = one trial, stimulus text from a condition column
 - Response: numbered buttons (1-4, 1-7, etc.)
 - Data: tag each item with scale name + item index for later scoring
 - **Reverse scoring**: Mark reverse-coded items. Score computation happens in debrief.
@@ -500,7 +523,7 @@ After the main experiment and before the final "thank you" screen, insert a **De
 3. **Paradigm-specific scores**: IAT D-score, EAST effect, Stroop interference, n-back d'
 4. **Validity checks**: Too-fast rate (>10% RT < 300ms = invalid), accuracy floor
 
-This phase is a `Block` type `debrief` — it reads from `jsPsych.data.get()` (or PsychoPy saved data), computes scores, and displays them. No new data is collected.
+This phase is a `Block` type `debrief` — it reads saved experiment data, computes scores, and displays them. No new data is collected.
 
 ## Routing
 
@@ -601,16 +624,26 @@ Detected from input: 3 words (红/绿/蓝), 3 ink colors, f/j keys (only 2 keys 
 Build the trial window timeline, then immediately finalize key mapping and accuracy rules:
 
 ```text
-┌──────────────────────────┐    ┌──────────────────────────┐    ┌──────────────────────────┐    ┌──────────────────────────┐
-│ Window 1                 │ →  │ Window 2                 │ →  │ Window 3                 │ →  │ Window 4                 │
-│ Fixation                 │    │ Stroop Stimulus          │    │ Feedback                 │    │ ITI                      │
-│ Content: +               │    │ Content: 色词文字         │    │ Content: 正确/错误        │    │ Content: (blank)         │
-│ Duration: [MISSING]      │    │ Duration: until key      │    │ Duration: 500 ms         │    │ Duration: [MISSING]      │
-│ Response: none           │    │ Response: f/j/k          │    │ Response: none           │    │ Response: none           │
-│ File: none               │    │ File: none (text)        │    │ File: none               │    │ File: none               │
-│ Condition: none          │    │ Condition: {word}/{ink}  │    │ Condition: {correct_resp}│    │ Condition: none          │
-│ Data: none               │    │ Data: rt, key, acc       │    │ Data: none               │    │ Data: none               │
-└──────────────────────────┘    └──────────────────────────┘    └──────────────────────────┘    └──────────────────────────┘
+Window 1: Fixation              Window 2: Stroop                Window 3: Feedback
+┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
+│                      │        │                      │        │                      │
+│          +           │   →    │       色词文字       │   →    │       正确/错误      │
+│                      │        │                      │        │                      │
+└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
+Duration: [MISSING]             Duration: until key             Duration: 500 ms
+Response: none                  Response: f / j / k             Response: none
+File: none                      Condition: {word}, {ink}        Condition: {correct_resp}
+                                Data: rt, key, acc              
+
+Window 4: ITI
+┌──────────────────────┐
+│                      │
+│                      │
+│                      │
+└──────────────────────┘
+Duration: [MISSING]
+Response: none
+Condition: none
 ```
 
 | Window | Content | Duration | Response | File | Condition | Data |
