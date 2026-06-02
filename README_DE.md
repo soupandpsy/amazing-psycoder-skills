@@ -126,10 +126,10 @@ Amazing PsyCoder ❯ Lassen Sie mich zuerst einige Punkte bestätigen:
 Nutzer           ❯ Die ersten beiden sind okay. ITI auf 400-800ms ändern.
 
 Amazing PsyCoder ❯ Aktualisiert. Trial-Zeitlinie:
-                   ┌───────────────────────────────────────────────┐
-                   │ Fixation(500ms) → Stimulus(2000ms/Taste)      │
-                   │ → Feedback(500ms) → ITI(400-800ms)            │
-                   └───────────────────────────────────────────────┘
+                   ┌──────────────────────────────────────────────┐
+                   │  Fixation(500ms) → Stimulus(2000ms/Taste)    │
+                   │  → Feedback(500ms) → ITI(400-800ms)          │
+                   └──────────────────────────────────────────────┘
                    Alles bestätigt? Code generieren?
 
 Nutzer           ❯ Generieren.

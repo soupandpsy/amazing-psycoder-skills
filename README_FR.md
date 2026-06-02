@@ -126,10 +126,10 @@ Amazing PsyCoder ❯ Laissez-moi confirmer quelques points d'abord :
 Utilisateur      ❯ Les deux premiers sont bons. ITI à 400-800ms.
 
 Amazing PsyCoder ❯ Mis à jour. Timeline d'essai :
-                   ┌───────────────────────────────────────────────┐
-                   │ Fixation(500ms) → Stimulus(2000ms/touche)     │
-                   │ → Feedback(500ms) → ITI(400-800ms)            │
-                   └───────────────────────────────────────────────┘
+                   ┌──────────────────────────────────────────────┐
+                   │  Fixation(500ms) → Stimulus(2000ms/touche)   │
+                   │  → Feedback(500ms) → ITI(400-800ms)          │
+                   └──────────────────────────────────────────────┘
                    Tout confirmé ? Générer le code ?
 
 Utilisateur      ❯ Générer.
