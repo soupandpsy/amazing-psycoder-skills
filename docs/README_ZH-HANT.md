@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
-[![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
+[![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
 
@@ -64,7 +64,7 @@ Amazing PsyCoder 把這些經驗編碼進了 Claude Code 的三個強制技能�
 在 Claude Code 中輸入以下指令，系統會自動完成安裝：
 
 ```
-Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
+Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
 Claude Code 會自動 clone 倉庫，把技能文件註冊到 `~/.claude/skills/`。完成後輸入 `/amazing-psycoder` 即可啟動。
@@ -75,11 +75,11 @@ Claude Code 會自動 clone 倉庫，把技能文件註冊到 `~/.claude/skills/
 <br>
 
 ```bash
-git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -234,7 +234,7 @@ Amazing PsyCoder ❯ 🔍 審計通過 · 就緒標籤：ready_for_collection
 ## 📂 檔案結構
 
 ```
-AmazingPsyCoderSkills/
+amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← 編排器（系統入口）
 │   ├── SKILL.md
 │   ├── psych-experiment-programming/  ← ① 設計層（5 階段工作流 + 38 範式）

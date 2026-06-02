@@ -80,7 +80,7 @@ User request
   │       Minor only → User can collect data; fix when convenient
   │
   ├─ "What paradigms are available?" / "有哪些范式"
-  │    → Show paradigm coverage matrix (§10)
+  │    → Show [Paradigm Coverage Matrix](#paradigm-coverage-matrix)
   │
   └─ "How does this system work?" / "这个系统怎么用"
        → Show system overview + three-step chain
@@ -289,7 +289,7 @@ Code comments and README language MUST match the user's language:
 ## File Structure
 
 ```
-AmazingPsyCoderSkills/
+amazing-psycoder-skills/
 ├── amazing-psycoder/                       ← Entry orchestrator (this skill)
 │   ├── SKILL.md
 │   ├── psych-experiment-programming/        ← ① Orchestration layer

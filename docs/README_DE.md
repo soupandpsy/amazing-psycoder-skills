@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
-[![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
+[![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
 
@@ -64,7 +64,7 @@ Amazing PsyCoder kodiert diese Lektionen in drei zwingende Claude Code Skills �
 Geben Sie in Claude Code folgende Anweisung ein, und das System installiert sich automatisch:
 
 ```
-Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
+Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
 Claude Code klont das Repository und registriert die Skill-Dateien in `~/.claude/skills/`. Starten Sie danach mit `/amazing-psycoder`.
@@ -75,11 +75,11 @@ Claude Code klont das Repository und registriert die Skill-Dateien in `~/.claude
 <br>
 
 ```bash
-git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -234,7 +234,7 @@ Amazing PsyCoder ❯ 🔍 Audit bestanden · Bereitschaft: ready_for_collection
 ## 📂 Dateistruktur
 
 ```
-AmazingPsyCoderSkills/
+amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← Orchestrator (Einstiegspunkt)
 │   ├── SKILL.md
 │   ├── psych-experiment-programming/  ← ① Design-Schicht (5-Phasen-Workflow + 38 Paradigmen)

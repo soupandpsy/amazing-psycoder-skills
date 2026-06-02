@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
-[![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
+[![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](README.md) · [**繁體中文**](docs/README_ZH-HANT.md) · [**English**](docs/README_EN.md) · [**日本語**](docs/README_JA.md) · [**Deutsch**](docs/README_DE.md) · [**Français**](docs/README_FR.md)
 
@@ -64,7 +64,7 @@ Amazing PsyCoder 把这些经验编码进了 Claude Code 的三个强制技能�
 在 Claude Code 中输入以下指令，系统会自动完成安装：
 
 ```
-Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
+Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
 Claude Code 会自动 clone 仓库，把技能文件注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
@@ -75,11 +75,11 @@ Claude Code 会自动 clone 仓库，把技能文件注册到 `~/.claude/skills/
 <br>
 
 ```bash
-git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -234,7 +234,7 @@ Amazing PsyCoder ❯ 🔍 审计通过 · 就绪标签：ready_for_collection
 ## 📂 文件结构
 
 ```
-AmazingPsyCoderSkills/
+amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← 编排器（系统入口）
 │   ├── SKILL.md
 │   ├── psych-experiment-programming/  ← ① 设计层（5 阶段工作流 + 38 范式）
