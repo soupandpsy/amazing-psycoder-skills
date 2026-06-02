@@ -8,7 +8,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
 
-[**简体中文**](README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
+[**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
 
 <br>
 
@@ -77,9 +77,9 @@ Claude Codeがリポジトリをクローンし、スキルファイルを `~/.c
 ```bash
 git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
 cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -213,13 +213,16 @@ Amazing PsyCoder ❯ 🔍 監査合格 · 準備状態：ready_for_collection
 
 ```
 AmazingPsyCoderSkills/
-├── amazing-psycoder/                  ← オーケストレーター（エントリーポイント）
-├── psych-experiment-programming/      ← ① 設計層（5段階ワークフロー + 38パラダイム）
-├── psych-experiment-coder/            ← ② コード生成層
-│   ├── psychopy/
-│   ├── jspsych/
-│   └── psychtoolbox/
-└── psych-experiment-code-reviewer/    ← ③ 監査層（5モード + スモークテスト）
+├── amazing-psycoder/                  ← オーケストレーター（エントリポイント）
+│   ├── SKILL.md
+│   ├── psych-experiment-programming/  ← ① 設計層（5段階ワークフロー + 38パラダイム）
+│   ├── psych-experiment-coder/        ← ② コード生成層
+│   │   ├── psychopy/
+│   │   ├── jspsych/
+│   │   └── psychtoolbox/
+│   └── psych-experiment-code-reviewer/ ← ③ 監査層（5モード + スモークテスト）
+├── docs/                              ← 多言語README
+└── README.md
 ```
 
 ---

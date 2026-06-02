@@ -155,12 +155,12 @@ Determine what the user already has, what paradigm, and what platform.
 | Partial config YAML | Load it; identify which sections are filled vs missing |
 | config.yaml + conditions/*.xlsx | Load everything; validate; skip to Phase 5 if complete |
 | Existing experiment code to modify | Identify the platform; read the code; apply changes; skip to Phase 5 |
-| "帮我检查这段代码" | Route to [code reviewer](#code-review) directly |
+| "帮我检查这段代码" | Route to `psych-experiment-code-reviewer` directly |
 
 Also resolve in Phase 1 if the user hasn't stated it:
 - Paradigm (match to [paradigm file](paradigms/); ask if unclear)
 - Platform (PsychoPy / Psychtoolbox / jsPsych)
-- **Operating system + font (blocking)**: Every experiment using text stimuli must confirm the target OS and font before advancing past Phase 1. Ask: "实验在什么操作系统上运行？（macOS / Windows / Linux）" — this determines font paths in the generated code. If the user doesn't know, generate auto-detection code with a manual override switch. This is not optional — CJK text without proper font = □□□ tofu. The generated code will include a `FONT_CONFIG` toggle block at the top of the parameters section so users can switch between auto-detect and manual path without modifying logic code.
+- **Operating system + font (blocking)**: Every experiment using text stimuli must confirm the target OS and font before advancing past Phase 1. Ask: "实验在什么操作系统上运行？（macOS / Windows / Linux）" — this determines font paths. If the user doesn't know, the coder will generate auto-detection with a manual override switch. This is not optional — CJK text without proper font = □□□ tofu.
 
 **After loading the paradigm file**: Cross-reference its `## Must Confirm` list against what the user already stated. For each unconfirmed item, assign it to the phase where it will be asked:
 
@@ -502,22 +502,6 @@ After the main experiment and before the final "thank you" screen, insert a **De
 
 This phase is a `Block` type `debrief` — it reads from `jsPsych.data.get()` (or PsychoPy saved data), computes scores, and displays them. No new data is collected.
 
-### Environment Safety
-
-For web-based experiments (jsPsych/PsychoJS), always include:
-
-```javascript
-// Disable text selection across browsers
-body { user-select: none; -ms-user-select: none; -moz-user-select: none; -webkit-user-select: none; }
-// Block dangerous keys
-document.onkeydown = function() {
-    if (event.keyCode in {27:'Esc', 116:'F5', 123:'F12'} ||
-        (event.ctrlKey && event.keyCode in {85:'U'})) return false
-}
-```
-
-For PsychoPy, use fullscreen mode; for windowed mode, consider key blocking in the event loop.
-
 ## Routing
 
 | User request | Action |
@@ -739,9 +723,9 @@ blocks:
 
 ---
 
-### Phase 5: Validate & Generate
+### Phase 5: Validate & Route
 
-All `[MISSING]` resolved. 9 validation checks pass. Route to psych-experiment-coder → generate full code.
+All `[MISSING]` resolved. 9 validation checks pass. Route to psych-experiment-coder for code generation.
 
 ---
 
@@ -754,13 +738,11 @@ All `[MISSING]` resolved. 9 validation checks pass. Route to psych-experiment-co
 
 ## Output Format
 
-For every new experiment, the final output is:
+For every new experiment, the programming skill produces:
 
 1. **Trial Window Timeline** — box diagram of the trial sequence with response rules (user-facing)
 2. **Complete Design Decision Registry** — all decisions from all phases with sources (user-facing, presented at Gate 5)
 3. **Completed config YAML** — the single source of truth (internal artifact, passed to coder; NOT displayed to user)
 4. **Condition tables** — generated xlsx files (if not provided by user)
-5. **Full experiment code** — runnable, all parameters at the top (produced by coder)
-6. **README file** — experiment logic description in user's language (produced by coder)
-7. **Data output columns** — column names and descriptions
-8. **Pre-collection checklist** — things to verify before running subjects
+
+The coder produces the runnable code, README, and pre-collection checklist. The reviewer produces the audit report and readiness label.

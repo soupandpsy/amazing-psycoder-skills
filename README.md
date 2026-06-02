@@ -8,7 +8,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
 
-[**简体中文**](README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
+[**简体中文**](README.md) · [**繁體中文**](docs/README_ZH-HANT.md) · [**English**](docs/README_EN.md) · [**日本語**](docs/README_JA.md) · [**Deutsch**](docs/README_DE.md) · [**Français**](docs/README_FR.md)
 
 <br>
 
@@ -77,9 +77,9 @@ Claude Code 会自动 clone 仓库，把技能文件注册到 `~/.claude/skills/
 ```bash
 git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
 cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -214,12 +214,15 @@ Amazing PsyCoder ❯ 🔍 审计通过 · 就绪标签：ready_for_collection
 ```
 AmazingPsyCoderSkills/
 ├── amazing-psycoder/                  ← 编排器（系统入口）
-├── psych-experiment-programming/      ← ① 设计层（5 阶段工作流 + 38 范式）
-├── psych-experiment-coder/            ← ② 代码生成层
-│   ├── psychopy/
-│   ├── jspsych/
-│   └── psychtoolbox/
-└── psych-experiment-code-reviewer/    ← ③ 审计层（5 模式 + 烟雾测试）
+│   ├── SKILL.md
+│   ├── psych-experiment-programming/  ← ① 设计层（5 阶段工作流 + 38 范式）
+│   ├── psych-experiment-coder/        ← ② 代码生成层
+│   │   ├── psychopy/
+│   │   ├── jspsych/
+│   │   └── psychtoolbox/
+│   └── psych-experiment-code-reviewer/ ← ③ 审计层（5 模式 + 烟雾测试）
+├── docs/                              ← 多语言 README
+└── README.md
 ```
 
 ---

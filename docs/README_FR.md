@@ -8,7 +8,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/AmazingPsyCoderSkills?style=social)](https://github.com/soupandpsy/AmazingPsyCoderSkills)
 
-[**简体中文**](README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
+[**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
 
 <br>
 
@@ -77,9 +77,9 @@ Claude Code clonera le dépôt et enregistrera les fichiers de skill dans `~/.cl
 ```bash
 git clone https://github.com/soupandpsy/AmazingPsyCoderSkills /tmp/AmazingPsyCoderSkills
 cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
+cp -r /tmp/AmazingPsyCoderSkills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
 ```
 
 </details>
@@ -214,12 +214,15 @@ Amazing PsyCoder ❯ 🔍 Audit réussi · État : ready_for_collection
 ```
 AmazingPsyCoderSkills/
 ├── amazing-psycoder/                  ← Orchestrateur (point d'entrée)
-├── psych-experiment-programming/      ← ① Couche design (workflow 5 phases + 38 paradigmes)
-├── psych-experiment-coder/            ← ② Couche génération de code
-│   ├── psychopy/
-│   ├── jspsych/
-│   └── psychtoolbox/
-└── psych-experiment-code-reviewer/    ← ③ Couche audit (5 modes + tests de fumée)
+│   ├── SKILL.md
+│   ├── psych-experiment-programming/  ← ① Couche conception (workflow 5 phases + 38 paradigmes)
+│   ├── psych-experiment-coder/        ← ② Couche génération de code
+│   │   ├── psychopy/
+│   │   ├── jspsych/
+│   │   └── psychtoolbox/
+│   └── psych-experiment-code-reviewer/ ← ③ Couche audit (5 modes + smoke tests)
+├── docs/                              ← READMEs multilingues
+└── README.md
 ```
 
 ---

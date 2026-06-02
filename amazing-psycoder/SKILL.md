@@ -74,6 +74,11 @@ User request
   │       Design error → psych-experiment-programming
   │       Code error   → psych-experiment-coder (debug mode)
   │
+  ├─ "Review found issues" / "审计不通过" / "代码有问题需要修"
+  │    → Check the severity:
+  │       Critical/Major issues → Fix in psych-experiment-coder (debug mode), re-audit after
+  │       Minor only → User can collect data; fix when convenient
+  │
   ├─ "What paradigms are available?" / "有哪些范式"
   │    → Show paradigm coverage matrix (§10)
   │
@@ -151,47 +156,15 @@ Layer 4: demo/          ← Lowest: raw demo code, logic reference only, never A
 
 ---
 
-## Code Template (12 Steps, Platform-Independent)
+## Code Template (Overview)
 
-Every generated experiment script follows this structure:
-
-```
-1.  Imports / dependencies
-2.  Experiment parameters (all editable at top)
-    - Include OS detection + font path setup if CJK text used
-3.  Display setup (window / canvas / screen)
-4.  Stimulus preloading (outside trial loop)
-5.  Condition file loading / generation
-6.  Helper functions
-7.  Instruction routine
-8.  Practice routine (with feedback)
-9.  Main experimental loop
-    a. Block-level setup
-    b. Trial randomization
-    c. Per-trial: fixation → stimulus → response → feedback → ITI
-    d. Block-level feedback (if applicable)
-10. Data saving (incremental, try/finally)
-11. Cleanup / quit (always with escape / abort handler)
-12. Package as platform file + generate README
-```
+All generated code follows a 12-step structure: imports → parameters → display setup → stimulus preloading → condition loading → helpers → instructions → practice → main loop (blocks → randomization → per-trial windows) → incremental data save → cleanup → package with README. The full template with detailed per-step requirements is in the [coder SKILL.md](psych-experiment-coder/SKILL.md#code-template).
 
 ---
 
-## Post-Generation Quality Gate (9 Items, Mandatory)
+## Post-Generation Quality Gate (Overview)
 
-After code generation, all 9 checks must pass. **Any failure = fix before delivery**:
-
-| # | Check | How to verify |
-|---|-------|---------------|
-| 1 | **Spec skeleton used** | Code structure matches platform spec Canonical Code Skeleton |
-| 2 | **No spec anti-patterns** | Scan for `time.sleep`, `KbCheck` for RT, `event.getKeys(maxWait=)`, `jsPsych.init()`, `WaitSecs` |
-| 3 | **Spec API patterns used** | API patterns come from spec skeleton, not paradigms/demo files |
-| 4 | **All parameters at top** | Every editable value in parameters block; no magic numbers |
-| 5 | **Escape in every loop** | Every `while` loop with `Flip`/frame-draw includes escape check |
-| 6 | **RT source verified** | PsychoPy = `key.rt`, PTB = `firstPress - VBLTimestamp`, jsPsych = `data.rt` |
-| 7 | **Incremental save** | Per-trial data flush; crash after N trials → N rows survive |
-| 8 | **Preload outside loop** | No `imread`/`MakeTexture`/`ImageStim()` inside trial loop |
-| 9 | **FONT_CONFIG toggle** | If CJK text used, `FONT_AUTO_DETECT`/`MANUAL_FONT_PATH` block present |
+Before delivery, all generated code must pass the 9-item Quality Gate defined in the [coder SKILL.md](psych-experiment-coder/SKILL.md#post-generation-quality-gate-mandatory). Covers: spec skeleton compliance, anti-pattern scan, API patterns, parameter placement, escape handling, RT source, incremental save, preloading, and CJK font config. **Any failure = fix before delivery.**
 
 ---
 
@@ -318,32 +291,40 @@ Code comments and README language MUST match the user's language:
 ```
 AmazingPsyCoderSkills/
 ├── amazing-psycoder/                       ← Entry orchestrator (this skill)
-│   └── SKILL.md
-├── psych-experiment-programming/            ← ① Orchestration layer
-│   ├── SKILL.md                             ← 5-phase workflow + 10 red lines
-│   ├── README.md
-│   ├── paradigms/                           ← 38 paradigm reference files
-│   └── references/                          ← Design references (config-schema, timing, etc.)
-├── psych-experiment-coder/                  ← ② Code generation layer
-│   ├── SKILL.md                             ← Generation flow + 4-layer arch + 9-item gate
-│   ├── psychopy/                            ← PsychoPy (full auto)
-│   │   ├── spec/README.md                   ← Canonical Skeleton + anti-patterns
-│   │   ├── mapping/README.md                ← Config→code mapping
-│   │   ├── paradigms/                        ← 27 paradigm references
-│   │   └── demo/_raw/                       ← 45 demo .py files
-│   ├── jspsych/                             ← jsPsych (reference)
-│   │   ├── spec/README.md                   ← Canonical Skeleton + anti-patterns
-│   │   ├── mapping/README.md                ← Config→timeline + migration table
-│   │   ├── paradigms/                        ← 25 paradigm references
-│   │   └── demo/_raw/                       ← 23 demo .js files
-│   └── psychtoolbox/                        ← PTB (reference)
-│       ├── spec/README.md                   ← Canonical Skeleton + anti-patterns
-│       ├── mapping/README.md                ← Config→MATLAB + frame loops
-│       ├── paradigms/                        ← 5 paradigm references
-│       └── demo/_raw/                         ← 100 API demos by category
-└── psych-experiment-code-reviewer/          ← ③ Audit layer
-    ├── SKILL.md                             ← 5 review modes + platform-aware audit
-    └── README.md
+│   ├── SKILL.md
+│   ├── psych-experiment-programming/        ← ① Orchestration layer
+│   │   ├── SKILL.md                         ← 5-phase workflow + 10 red lines
+│   │   ├── README.md
+│   │   ├── paradigms/                       ← 38 paradigm reference files
+│   │   └── references/                      ← Design references (config-schema, timing, etc.)
+│   ├── psych-experiment-coder/              ← ② Code generation layer
+│   │   ├── SKILL.md                         ← Generation flow + 4-layer arch + 9-item gate
+│   │   ├── README.md
+│   │   ├── psychopy/                        ← PsychoPy (full auto)
+│   │   │   ├── spec/README.md               ← Canonical Skeleton + anti-patterns
+│   │   │   ├── mapping/README.md            ← Config→code mapping
+│   │   │   ├── paradigms/                    ← 27 paradigm references
+│   │   │   └── demo/_raw/                   ← 45 demo .py files
+│   │   ├── jspsych/                         ← jsPsych
+│   │   │   ├── spec/README.md               ← Canonical Skeleton + anti-patterns
+│   │   │   ├── mapping/README.md            ← Config→timeline + migration table
+│   │   │   ├── paradigms/                    ← 25 paradigm references
+│   │   │   └── demo/_raw/                   ← 23 demo .js files
+│   │   └── psychtoolbox/                    ← PTB
+│   │       ├── spec/README.md               ← Canonical Skeleton + anti-patterns
+│   │       ├── mapping/README.md            ← Config→MATLAB + frame loops
+│   │       ├── paradigms/                    ← 5 paradigm references
+│   │       └── demo/_raw/                     ← 100 API demos by category
+│   └── psych-experiment-code-reviewer/      ← ③ Audit layer
+│       ├── SKILL.md                         ← 5 review modes + platform-aware audit
+│       └── README.md
+├── docs/                                    ← Multi-language READMEs
+│   ├── README_EN.md
+│   ├── README_ZH-HANT.md
+│   ├── README_JA.md
+│   ├── README_DE.md
+│   └── README_FR.md
+└── README.md                                ← Main README (简体中文)
 ```
 
 ---
