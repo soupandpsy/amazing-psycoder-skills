@@ -4,6 +4,8 @@ Declarative YAML format for defining an experiment. When all config fields are f
 
 > **Related**: [condition-file.md](condition-file.md) · [spec-template.md](spec-template.md)
 
+> ⚠️ **LANGUAGE NOTE**: Example values in this schema (e.g., `"休息一下"`, `"正确"`, `"错误"`, `"非常正性"`, `玫瑰`, `牡丹`) are Chinese-language placeholders showing the CONCEPT. When generating code, use the equivalent text in the user's language as determined by the design workflow. See [Language Consistency (Red Line)](../../psych-experiment-coder/SKILL.md#language-consistency-red-line).
+
 ## Schema
 
 ```yaml

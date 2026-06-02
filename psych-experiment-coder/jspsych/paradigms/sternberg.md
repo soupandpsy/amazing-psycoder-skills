@@ -1,7 +1,7 @@
 # Sternberg Working Memory Task — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [sternberg](../../psych-experiment-programming/paradigms/sternberg.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [sternberg](../../../psych-experiment-programming/paradigms/sternberg.md)
 > **Source**: [Pavlovia demos/sternberg](https://gitlab.pavlovia.org/demos/sternberg) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

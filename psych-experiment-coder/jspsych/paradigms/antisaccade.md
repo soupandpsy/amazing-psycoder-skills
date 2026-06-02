@@ -1,7 +1,7 @@
 # Antisaccade — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [antisaccade](../../psych-experiment-programming/paradigms/antisaccade.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [antisaccade](../../../psych-experiment-programming/paradigms/antisaccade.md)
 > **Source**: [Pavlovia demos/antisaccade](https://gitlab.pavlovia.org/demos/antisaccade) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

@@ -1,7 +1,7 @@
 # Stop-Signal — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [stop-signal](../../psych-experiment-programming/paradigms/stop-signal.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [stop-signal](../../../psych-experiment-programming/paradigms/stop-signal.md)
 > **Status**: **CONFIG-DRIVEN** — no Pavlovia demo code found. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

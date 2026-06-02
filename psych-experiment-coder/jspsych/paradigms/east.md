@@ -1,8 +1,10 @@
 # EAST (Extrinsic Affective Simon Task) — jsPsych
 
-> **Parent**: [psych-experiment-coder](../SKILL.md)
-> **Config reference**: [east](../../psych-experiment-programming/paradigms/east.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md)
+> **Config reference**: [east](../../../psych-experiment-programming/paradigms/east.md)
 > **Source**: [psychbruce/jspsych](https://github.com/psychbruce/jspsych) (Bao, 2020) · jsPsych 6.1.0
+
+> ⚠️ **LANGUAGE WARNING**: The code example below is a Chinese-language reference implementation. When generating code for non-Chinese users, ALL participant-facing text (instructions, stimuli, feedback, button labels, debrief text) MUST be translated to the user's language. See [Language Consistency (Red Line)](../../SKILL.md#language-consistency-red-line). The stimulus words (`健康, 快乐...`), instruction paragraphs, category labels, and debrief messages in this example are Chinese-specific — replace them entirely for other languages.
 
 ## Experiment Logic
 

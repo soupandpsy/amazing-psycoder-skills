@@ -1,7 +1,7 @@
 # Dot-Probe — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [dot-probe](../../psych-experiment-programming/paradigms/dot-probe.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [dot-probe](../../../psych-experiment-programming/paradigms/dot-probe.md)
 > **Source**: [Pavlovia demos/dot_probe](https://gitlab.pavlovia.org/demos/dot_probe) · PsychoPy 2024.2.4
 
 ## Experiment Logic

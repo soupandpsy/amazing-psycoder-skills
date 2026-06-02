@@ -1,7 +1,7 @@
 # Balloon Analogue Risk Task (BART) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [bart](../../psych-experiment-programming/paradigms/bart.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [bart](../../../psych-experiment-programming/paradigms/bart.md)
 > **Source**: [Pavlovia demos/bart](https://gitlab.pavlovia.org/demos/bart) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

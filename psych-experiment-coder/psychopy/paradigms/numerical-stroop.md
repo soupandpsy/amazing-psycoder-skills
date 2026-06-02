@@ -1,7 +1,7 @@
 # Numerical Stroop — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [numerical-stroop](../../psych-experiment-programming/paradigms/numerical-stroop.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [numerical-stroop](../../../psych-experiment-programming/paradigms/numerical-stroop.md)
 > **Source**: [Pavlovia demos/numerical_stroop](https://gitlab.pavlovia.org/demos/numerical_stroop) · PsychoPy 2023.1.3
 
 ## Experiment Logic

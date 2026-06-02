@@ -1,7 +1,7 @@
 # Antisaccade — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [antisaccade](../../psych-experiment-programming/paradigms/antisaccade.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [antisaccade](../../../psych-experiment-programming/paradigms/antisaccade.md)
 > **Source**: [Pavlovia demos/antisaccade](https://gitlab.pavlovia.org/demos/antisaccade) · PsychoPy 2025.1.0
 
 ## Experiment Logic

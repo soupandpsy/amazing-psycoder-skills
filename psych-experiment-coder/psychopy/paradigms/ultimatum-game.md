@@ -1,7 +1,7 @@
 # Ultimatum Game — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [ultimatum-game](../../psych-experiment-programming/paradigms/ultimatum-game.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [ultimatum-game](../../../psych-experiment-programming/paradigms/ultimatum-game.md)
 > **Source**: [Pavlovia demos/ultimatum_game](https://gitlab.pavlovia.org/demos/ultimatum_game) · PsychoPy 2024.2.4
 
 ## Experiment Logic

@@ -1,7 +1,7 @@
 # Corsi Blocks — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [corsi-blocks](../../psych-experiment-programming/paradigms/corsi-blocks.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [corsi-blocks](../../../psych-experiment-programming/paradigms/corsi-blocks.md)
 > **Source**: [Pavlovia demos/corsi_blocks](https://gitlab.pavlovia.org/demos/corsi_blocks) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

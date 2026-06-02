@@ -127,10 +127,10 @@ Every new experiment follows the same 5 phases. The order reflects how experimen
 
 ```
 Phase 1: Assess    → 收集已有信息
-Phase 2: Windows   → 定义 Trial + 反应规则（最关键，合并原 Phase 5）
+Phase 2: Windows   → 定义 Trial + 反应规则（最关键）
 Phase 3: Conditions→ 定义 trial 序列（xlsx + 刺激文件）
 Phase 4: Blocks    → 定义 block 结构和循环
-Phase 5: Validate  → 验证并生成代码
+Phase 5: Validate  → 验证并移交代码生成
 ```
 
 ### Blocking Gates
@@ -302,9 +302,9 @@ Also ask any paradigm Must-Confirm items assigned to Phase 4 (block order, count
 
 **Output**: Config `blocks[]` section complete. Each block has `name`, `condition_file`, `type`, `feedback`, `trials`. Phase 4 Decision Checklist presented for user confirmation.
 
-### Phase 5: Validate & Generate
+### Phase 5: Validate & Route
 
-Cross-check everything, **present the final design to the user for confirmation**, then generate code.
+Cross-check everything, **present the final design to the user for confirmation**, then route to the coder for code generation.
 
 **Step 1: Technical validation** — Run all 9 rules from [config-schema.md § Validation Rules](references/config-schema.md). These are the authoritative checks.
 

@@ -70,9 +70,9 @@ SKILL.md           ← 代码生成流程 + 质量门（跨平台）
 
 | 平台 | 状态 | 何时使用 |
 |------|------|---------|
-| **PsychoPy** (2024.x+, Python 3.10+) | 全支持 — config→代码自动生成 | 本地实验，需要精确 RT 计时 |
-| **jsPsych** (7.x, JavaScript) | 参考代码完整 — 配置可准备，手动代码生成 | 在线实验，Pavlovia 部署 |
-| **Psychtoolbox** (3.0.21+, MATLAB) | 参考代码完整 — 配置可准备，手动代码生成 | MATLAB 实验室，需要 GPU 级控制 |
+| **PsychoPy** (2024.x+, Python 3.10+) | 4层完整 — config→代码自动生成 | 本地实验，需要精确 RT 计时 |
+| **jsPsych** (7.x, JavaScript) | 4层完整 — config→代码自动生成 | 在线实验，Pavlovia 部署 |
+| **Psychtoolbox** (3.0.21+, MATLAB) | 4层完整 — config→代码自动生成 | MATLAB 实验室，需要 GPU 级控制 |
 
 ## Quality Gate（生成后强制检查）
 

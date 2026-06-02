@@ -1,7 +1,7 @@
 # Multisensory Nature (Climate Variant) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [multisensory-nature](../../psych-experiment-programming/paradigms/multisensory-nature.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [multisensory-nature](../../../psych-experiment-programming/paradigms/multisensory-nature.md)
 > **Source**: [Pavlovia demos/multisensory_nature](https://gitlab.pavlovia.org/demos/multisensory_nature) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

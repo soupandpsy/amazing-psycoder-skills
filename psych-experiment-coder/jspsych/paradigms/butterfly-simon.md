@@ -1,7 +1,7 @@
 # Butterfly Simon Task — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [simon](../../psych-experiment-programming/paradigms/simon.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [simon](../../../psych-experiment-programming/paradigms/simon.md)
 > **Source**: [Pavlovia demos/butterfly_simon](https://gitlab.pavlovia.org/demos/butterfly_simon) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

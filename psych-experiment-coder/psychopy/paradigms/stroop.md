@@ -1,7 +1,7 @@
 # Stroop — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [stroop](../../psych-experiment-programming/paradigms/stroop.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [stroop](../../../psych-experiment-programming/paradigms/stroop.md)
 > **Source**: [Pavlovia demos/Stroop](https://gitlab.pavlovia.org/demos/Stroop) · PsychoPy 3.1.3
 
 ## Experiment Logic

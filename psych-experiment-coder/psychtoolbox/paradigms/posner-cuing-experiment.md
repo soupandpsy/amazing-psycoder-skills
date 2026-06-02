@@ -317,7 +317,7 @@ for trial = 1:numTrials
     % Work out if the location of the gabpr target was identified corrcetly
     if targetPos == response
         correctness = 1;
-    elseif targetPos ~= repsonse
+    elseif targetPos ~= response
         correctness = 0;
     end
 

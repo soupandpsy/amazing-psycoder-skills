@@ -1,7 +1,7 @@
 # Climate Reflection Task — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [climate-reflection-task](../../psych-experiment-programming/paradigms/climate-reflection-task.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [climate-reflection-task](../../../psych-experiment-programming/paradigms/climate-reflection-task.md)
 > **Source**: [Pavlovia demos/climate_reflection_task](https://gitlab.pavlovia.org/demos/climate_reflection_task) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -1990,7 +1990,7 @@ function show_responsesRoutineBegin(snapshot) {
     show_textbox_text.setText(responses[response_loop.thisN]["answer"]);
     slider.reset()
     // Run 'Begin Routine' code from code
-    psychoJS.experiment.addData("previous_answer", responses[response_loop.thisN]["question"]);
+    psychoJS.experiment.addData("previous_answer", responses[response_loop.thisN]["answer"]);
     
     psychoJS.experiment.addData('show_responses.started', globalClock.getTime());
     show_responsesMaxDuration = null

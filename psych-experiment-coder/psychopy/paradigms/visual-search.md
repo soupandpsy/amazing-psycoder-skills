@@ -1,7 +1,7 @@
 # Visual Search — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [visual-search](../../psych-experiment-programming/paradigms/visual-search.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [visual-search](../../../psych-experiment-programming/paradigms/visual-search.md)
 > **Status**: **CONFIG-DRIVEN** — no Pavlovia demo code found. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

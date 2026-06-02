@@ -1,7 +1,7 @@
 # Stroop Task (lab.js) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [stroop](../../psych-experiment-programming/paradigms/stroop.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [stroop](../../../psych-experiment-programming/paradigms/stroop.md)
 > **Source**: [Pavlovia demos/labjs_stroop](https://gitlab.pavlovia.org/demos/labjs_stroop) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

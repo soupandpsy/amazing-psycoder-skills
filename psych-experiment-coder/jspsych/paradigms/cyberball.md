@@ -1,7 +1,7 @@
 # Cyberball — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [cyberball](../../psych-experiment-programming/paradigms/cyberball.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [cyberball](../../../psych-experiment-programming/paradigms/cyberball.md)
 > **Source**: [Pavlovia demos/cyberball](https://gitlab.pavlovia.org/demos/cyberball) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -1252,28 +1252,14 @@ function trialRoutineEachFrame() {
     }
     
     // if mouse is active this frame...
-    if (mouse.status == STARTED) {
+    if (mouse.status == PsychoJS.Status.STARTED) {
       _mouseButtons = mouse.getPressed();
       if (!_mouseButtons.every( (e,i,) => (e == prevButtonState[i]) )) { // button state changed?
         prevButtonState = _mouseButtons;
         if (_mouseButtons.reduce( (e, acc) => (e+acc) ) > 0) { // state changed to a new click
           // check if the mouse was inside our 'clickable' objects
           gotValidClick = false;
-          mouse.clickableObjects = eval([player1image, player2image])
-          ;// make sure the mouse's clickable objects are an array
-          if (!Array.isArray(mouse.clickableObjects)) {
-              mouse.clickableObjects = [mouse.clickableObjects];
-          }
-          // iterate through clickable objects and check each
-          for (const obj of mouse.clickableObjects) {
-              if (obj.contains(mouse)) {
-                  gotValidClick = true;
-                  mouse.clicked_name.push(obj.name);
-              }
-          }
-          // check if the mouse was inside our 'clickable' objects
-          gotValidClick = false;
-          mouse.clickableObjects = eval([player1image, player2image])
+          mouse.clickableObjects = [player1image, player2image]
           ;// make sure the mouse's clickable objects are an array
           if (!Array.isArray(mouse.clickableObjects)) {
               mouse.clickableObjects = [mouse.clickableObjects];

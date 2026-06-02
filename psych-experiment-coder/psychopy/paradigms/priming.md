@@ -1,7 +1,7 @@
 # Priming — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [priming](../../psych-experiment-programming/paradigms/priming.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [priming](../../../psych-experiment-programming/paradigms/priming.md)
 > **Source**: [Pavlovia demos/semantic_priming](https://gitlab.pavlovia.org/demos/semantic_priming) · PsychoPy 2025.1.0dev
 
 ## Experiment Logic

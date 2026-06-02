@@ -1,7 +1,7 @@
 # Wisconsin Card Sorting Task (WCST) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [wisconsin-card-sorting](../../psych-experiment-programming/paradigms/wisconsin-card-sorting.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [wisconsin-card-sorting](../../../psych-experiment-programming/paradigms/wisconsin-card-sorting.md)
 > **Source**: [Pavlovia demos/wisconsin_card_sorting](https://gitlab.pavlovia.org/demos/wisconsin_card_sorting) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -911,7 +911,7 @@ function TrialsRoutineEnd() {
         thisComponent.setAutoDraw(false);
       }
     }
-    if ((response.clicked_name === corrAns)) {
+    if ((response.clicked_name[0] === corrAns)) {
         corr = 1;
     } else {
         if ((one_red_dot.contains(response) && (corrAns === "one_red_dot"))) {

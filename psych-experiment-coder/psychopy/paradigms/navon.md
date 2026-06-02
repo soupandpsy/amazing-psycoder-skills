@@ -1,7 +1,7 @@
 # Navon — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [navon](../../psych-experiment-programming/paradigms/navon.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [navon](../../../psych-experiment-programming/paradigms/navon.md)
 > **Status**: **CONFIG-DRIVEN** — no Pavlovia demo code found. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

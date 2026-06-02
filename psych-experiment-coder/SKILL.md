@@ -26,6 +26,30 @@ Core principles:
 - **反模式零容忍** — `time.sleep()`, `event.getKeys(maxWait=)`, `KbCheck` for RT, in-loop disk I/O are blocked. The Post-Generation Quality Gate catches violations before delivery.
 - **代码生成优先级** — spec canonical skeleton > spec anti-patterns > config→code mapping > paradigm logic > Pavlovia demos (highest to lowest authority)
 - **生成后必经审计** — code generation is not the final step. After delivery, the user MUST run the code through `psych-experiment-code-reviewer` before collecting data. The reviewer is the mandatory quality gate between code generation and data collection.
+- **语言一致性（最高优先级）** — ALL text in generated code (instructions, stimuli, feedback, UI labels, comments, README) MUST match the user's language from the design workflow. Never copy Chinese/English example text from paradigm references or config schemas into generated output for users of a different language. This rule overrides all paradigm reference examples.
+
+## Language Consistency (Red Line)
+
+**This is the highest-priority output rule.** Every string in generated experiment code must use the language the user communicated in during the design workflow (orchestrator Phase 1-5). Paradigm reference files and config schemas may contain example text in a specific language — these are placeholders showing the CONCEPT, not the literal text to generate.
+
+| Content type | Language rule |
+|---|---|
+| Instruction text, rest prompts, debrief screens | **User's language** |
+| Stimulus words, feedback text ("Correct!", "Too slow!") | **User's language** |
+| Button labels, category tags, UI elements | **User's language** |
+| Code comments, README | **User's language** |
+| Variable names, function names | English (universal) |
+| Data column names | English (recommended) |
+
+Language determination is automatic from the design workflow conversation:
+
+- **中文用户** → 所有文本用中文（指导语、刺激、反馈、注释、README）
+- **English user** → all text in English
+- **日本語ユーザー** → all text in Japanese
+- **Deutscher Benutzer** → all text in German
+- **Utilisateur français** → all text in French
+
+**Critical:** NEVER copy stimulus text, instruction text, or feedback text from paradigm reference files into generated code without translating to the user's language. The paradigm reference's language is accidental — the user's language from the design workflow is authoritative.
 
 ## Platform Support Status
 
@@ -35,7 +59,7 @@ All three platforms share the same Generation Pipeline (Config→Code). The flow
 |----------|--------|------------|
 | **PsychoPy** (2024.x+, Python 3.10+) | 4 layers complete | Generate production-ready code from config YAML. See [psychopy/](psychopy/) |
 | **jsPsych** (JavaScript, 7.x) | 4 layers complete | Generate code from config YAML. 25 paradigm files. See [jspsych/](jspsych/) |
-| **Psychtoolbox** (MATLAB) | 4 layers complete | Generate code from config YAML. 5 paradigm files + 82 demos. See [psychtoolbox/](psychtoolbox/) |
+| **Psychtoolbox** (MATLAB) | 4 layers complete | Generate code from config YAML. 5 paradigm files + 100 demos. See [psychtoolbox/](psychtoolbox/) |
 
 All three platforms use the unified generation flow documented in their respective README files. Do not treat any platform as "unsupported" — if a platform is requested, apply the same Generation Pipeline using that platform's L1 skeleton and L2 mapping.
 
@@ -142,10 +166,7 @@ The README describes the experiment logic and how to run it. It must include:
 - Parameter locations (line numbers of editable parameters)
 - Known limitations or assumptions
 
-**Language consistency rule**: The language of the README and code comments MUST match the language the user used during the design workflow (orchestrator Phase 1-5). If the user communicated in Chinese, generate Chinese comments and a Chinese README. If the user communicated in English, generate English. Do not mix languages.
-
-- 中文用户 → 中文 README + 中文代码注释
-- English user → English README + English code comments
+**Language consistency**: See [Language Consistency (Red Line)](#language-consistency-red-line) above. All text — README, comments, instructions, stimuli, feedback, UI labels — must match the user's language. Do not mix languages.
 
 ## Config-Driven Code Generation
 
@@ -204,7 +225,7 @@ After generating code, run this checklist against the output file before present
 
 ## Output Format
 
-Before generating code, confirm the orchestrator's **Gate 5 (Final Design Review)** has passed — the Trial Window Timeline and full Design Decision Registry have been presented to and confirmed by the user. The config YAML is an internal artifact — do NOT display it to the user.
+Before generating code, confirm the programming skill's **Gate 5 (Final Design Review)** has passed — the Trial Window Timeline and full Design Decision Registry have been presented to and confirmed by the user. The config YAML is an internal artifact — do NOT display it to the user.
 
 When generating code, output:
 

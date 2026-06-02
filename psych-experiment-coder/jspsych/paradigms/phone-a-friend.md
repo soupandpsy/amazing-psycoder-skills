@@ -1,7 +1,7 @@
 # Phone a Friend — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [phone-a-friend](../../psych-experiment-programming/paradigms/phone-a-friend.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [phone-a-friend](../../../psych-experiment-programming/paradigms/phone-a-friend.md)
 > **Source**: [Pavlovia demos/phone_a_friend](https://gitlab.pavlovia.org/demos/phone_a_friend) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -1032,7 +1032,7 @@ function trialRoutineEachFrame() {
         if (_mouseButtons.reduce( (e, acc) => (e+acc) ) > 0) { // state changed to a new click
           // check if the mouse was inside our 'clickable' objects
           gotValidClick = false;
-          mouse.clickableObjects = eval(hint_button)
+          mouse.clickableObjects = [hint_button]
           ;// make sure the mouse's clickable objects are an array
           if (!Array.isArray(mouse.clickableObjects)) {
               mouse.clickableObjects = [mouse.clickableObjects];

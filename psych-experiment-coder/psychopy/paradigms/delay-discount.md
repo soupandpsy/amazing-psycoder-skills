@@ -1,7 +1,7 @@
 # Delay Discount — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [delay-discounting](../../psych-experiment-programming/paradigms/delay-discounting.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [delay-discounting](../../../psych-experiment-programming/paradigms/delay-discounting.md)
 > **Source**: [Pavlovia demos/delay_discount](https://gitlab.pavlovia.org/demos/delay_discount) · PsychoPy 2024.2.4
 
 ## Experiment Logic

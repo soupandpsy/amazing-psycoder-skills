@@ -1,7 +1,7 @@
 # Drag and Drop Puzzle — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [drag-and-drop](../../psych-experiment-programming/paradigms/drag-and-drop.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [drag-and-drop](../../../psych-experiment-programming/paradigms/drag-and-drop.md)
 > **Source**: [Pavlovia demos/drag_and_drop](https://gitlab.pavlovia.org/demos/drag_and_drop) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

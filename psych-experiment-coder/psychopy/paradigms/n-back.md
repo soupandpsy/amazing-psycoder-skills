@@ -1,7 +1,7 @@
 # N-back — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [n-back](../../psych-experiment-programming/paradigms/n-back.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [n-back](../../../psych-experiment-programming/paradigms/n-back.md)
 > **Status**: **CONFIG-DRIVEN** — no Pavlovia demo code found. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

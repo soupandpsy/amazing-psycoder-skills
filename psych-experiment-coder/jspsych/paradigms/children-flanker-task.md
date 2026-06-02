@@ -1,7 +1,7 @@
 # Children Flanker Task — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [children-flanker-task](../../psych-experiment-programming/paradigms/children-flanker-task.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [children-flanker-task](../../../psych-experiment-programming/paradigms/children-flanker-task.md)
 > **Source**: [Pavlovia demos/children_flanker_task](https://gitlab.pavlovia.org/demos/children_flanker_task) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

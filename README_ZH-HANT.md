@@ -67,7 +67,7 @@ Amazing PsyCoder 把這些經驗編碼進了 Claude Code 的三個強制技能�
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
 ```
 
-Claude Code 會自動 clone 倉庫，把 4 個技能註冊到 `~/.claude/skills/`。完成後輸入 `/amazing-psycoder` 即可啟動。
+Claude Code 會自動 clone 倉庫，把技能文件註冊到 `~/.claude/skills/`。完成後輸入 `/amazing-psycoder` 即可啟動。
 
 <details>
 <summary><b>🛠️ 手動安裝</b></summary>
@@ -95,12 +95,12 @@ cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills
 系統自動路由到編排器，引導完成 5 階段設計。設計過程中，系統會生成試次視窗時間線圖：
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐
 │ 注視點    │ →  │ 刺激呈現  │ →  │ 空屏等待  │ →  │ 回饋      │
-│ +        │    │ 紅色"綠"  │    │          │    │ 正確!     │
-│ 500ms    │    │ 2000ms   │    │ 500ms    │    │ 1000ms   │
-│          │    │ ← 按鍵   │    │          │    │          │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
+│ +         │    │ 紅色"綠"  │    │           │    │ 正確!     │
+│ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
+│           │    │ ← 按鍵    │    │           │    │           │
+└───────────┘    └───────────┘    └───────────┘    └───────────┘
                   RT 計時起點
 ```
 
@@ -112,38 +112,56 @@ cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills
 
 ### 🐍 PsychoPy — Stroop 任務
 
-> "我要做一個 Stroop，紅綠藍三色文字，按鍵判斷墨色，50:50 一致不一致，2 個 block 各 60 試次"
+> "我要做一個 Stroop，紅綠藍三色文字，按鍵判斷墨色，50:50 一致不一致，2 block 各 60 試次"
 
 ```
 使用者           ❯ 我要做一個 Stroop 任務
 
-Amazing PsyCoder ❯ 好的，先確認幾件事：
-                   1. 三個墨色對應三個按鍵，f=紅，j=綠，k=藍，可以嗎？
-                   2. 一致試次和不一致試次各佔 50%，可以嗎？
-                   3. 注視點 500ms，刺激最長 2000ms，回饋 500ms，ITI 600-900ms 隨機，
-                      這些時間參數按預設設定？
+Amazing PsyCoder ❯ 🟢 Phase 1/5 · 診斷
+                   範式 Stroop · 確認使用 PsychoPy？
 
-使用者           ❯ 前兩個沒問題。ITI 改成 400-800ms。
+使用者           ❯ 對，PsychoPy。
 
-Amazing PsyCoder ❯ 已更新。試次時間線如下：
+Amazing PsyCoder ❯ 🟢 Phase 2/5 · 試次視窗 + 反應規則（最關鍵）
+                   墨色紅綠藍 → f=紅 j=綠 k=藍。試次時間線：
+                   ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐
+                   │ 注視點    │ →  │ 刺激呈現  │ →  │ 空屏等待  │ →  │ 回饋      │
+                   │ +         │    │ 紅色"綠"  │    │           │    │ 正確!     │
+                   │ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
+                   │ 無反應    │    │ ← RT起點  │    │ 無反應    │    │ 無反應    │
+                   └───────────┘    └───────────┘    └───────────┘    └───────────┘
+                   RT 計時起點
+                   Gate 1 ✅ 視窗完整、反應映射已確認
+
+使用者           ❯ 時間線和按鍵沒問題。ITI 400-800ms 隨機。
+
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · 條件表
+                   一致:不一致 = 60:60 → 120 試次條件表已生成
+                   Gate 2 ✅ 條件列已填入
+
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Block 結構
+                   2 blocks × 60 trials · 回饋僅練習 block
+                   Gate 3 ✅ Config 零 [MISSING]
+
+Amazing PsyCoder ❯ 🟢 Phase 5/5 · 最終審查
                    ┌──────────────────────────────────────────────┐
-                   │  Fixation(500ms) → Stimulus(2000ms/按鍵)     │
-                   │  → Feedback(500ms) → ITI(400-800ms)          │
+                   │ 設計決策註冊表                               │
+                   │ 範式 Stroop · 平台 PsychoPy    ← 用戶確認    │
+                   │ 按鍵 f/j/k · 一致:不一致 50:50 ← 用戶確認    │
+                   │ ITI 400-800ms 隨機             ← 用戶確認    │
+                   │ 試次時間線 4 視窗              ← 範式慣例    │
                    └──────────────────────────────────────────────┘
-                   以上確認無誤，開始生成程式碼？
+                   Gate 5 ✅ 全部確認 → 路由至程式碼生成
 
 使用者           ❯ 生成。
 
-Amazing PsyCoder ❯ ✅ 程式碼已生成：stroop_task.py + README.md
-                   參數已置頂，FONT_CONFIG 已配置，增量儲存已開啟。
-                   是否需要審計？
+Amazing PsyCoder ❯ ✅ stroop_task.py + README.md 已生成
+                   參數置頂 · CJK 字體已配置 · 增量儲存
+                   → 自動路由至程式碼審計
 
-使用者           ❯ 審計。
-
-Amazing PsyCoder ❯ 🔍 審計通過，就緒標籤：ready_for_collection
-                   可以開始採集資料了。
+Amazing PsyCoder ❯ 🔍 審計通過 · 就緒標籤：ready_for_collection
+                   可開始採集資料。
 ```
-
 ---
 
 ## ✨ 特點

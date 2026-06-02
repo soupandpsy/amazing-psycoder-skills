@@ -1,7 +1,7 @@
 # Rating — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [rating](../../psych-experiment-programming/paradigms/rating.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [rating](../../../psych-experiment-programming/paradigms/rating.md)
 > **Source**: [Pavlovia demos/emotion_rating](https://gitlab.pavlovia.org/demos/emotion_rating) · PsychoPy 2024.1.5
 
 ## Experiment Logic

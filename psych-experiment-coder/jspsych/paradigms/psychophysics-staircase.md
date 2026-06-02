@@ -1,7 +1,7 @@
 # Psychophysics Staircase (Orientation Discrimination) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [psychophysics-staircase](../../psych-experiment-programming/paradigms/psychophysics-staircase.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [psychophysics-staircase](../../../psych-experiment-programming/paradigms/psychophysics-staircase.md)
 > **Source**: [Pavlovia demos/staircase_demo](https://gitlab.pavlovia.org/demos/staircase_demo) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -174,7 +174,6 @@ function experimentInit() {
   
   start_resp = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
   
-  Array.prototype.append = [].push;
   shuffle = util.shuffle;
   average = (arr) => (arr.reduce((a, b) => (a + b), 0)) / arr.length
   // Initialize components for Routine "trial"
@@ -300,6 +299,7 @@ function instructionsRoutineBegin(snapshot) {
     for (const thisComponent of instructionsComponents)
       if ('status' in thisComponent)
         thisComponent.status = PsychoJS.Status.NOT_STARTED;
+    continueRoutine = true;
     // check if the Routine should terminate
     if (!continueRoutine) {  // a component has requested a forced-end of Routine
       return Scheduler.Event.NEXT;
@@ -488,6 +488,7 @@ function trialRoutineBegin(snapshot) {
     for (const thisComponent of trialComponents)
       if ('status' in thisComponent)
         thisComponent.status = PsychoJS.Status.NOT_STARTED;
+    continueRoutine = true;
     // check if the Routine should terminate
     if (!continueRoutine) {  // a component has requested a forced-end of Routine
       return Scheduler.Event.NEXT;
@@ -553,7 +554,7 @@ function trialRoutineEachFrame(snapshot) {
         key_resp.keys = _key_resp_allKeys[_key_resp_allKeys.length - 1].name;  // just the last key pressed
         key_resp.rt = _key_resp_allKeys[_key_resp_allKeys.length - 1].rt;
         // was this correct?
-        if (key_resp.keys == 'corrAns') {
+        if (key_resp.keys == corrAns) {
             key_resp.corr = 1;
         } else {
             key_resp.corr = 0;
@@ -644,7 +645,7 @@ function trialRoutineEnd(snapshot) {
             }
         } else {
             currentDirection = "down";
-            reversalVals.append(this_ori);
+            reversalVals.push(this_ori);
             if ((stepSize !== stepSizes.slice((- 1))[0])) {
                 thisStep += 1;
             }
@@ -653,7 +654,7 @@ function trialRoutineEnd(snapshot) {
         trials.addData("corr", 0);
         if ((currentDirection === "down")) {
             currentDirection = "up";
-            reversalVals.append(this_ori);
+            reversalVals.push(this_ori);
             if ((stepSize !== stepSizes.slice((- 1))[0])) {
                 thisStep += 1;
             }
@@ -729,6 +730,7 @@ function endRoutineBegin(snapshot) {
     for (const thisComponent of endComponents)
       if ('status' in thisComponent)
         thisComponent.status = PsychoJS.Status.NOT_STARTED;
+    continueRoutine = true;
     // check if the Routine should terminate
     if (!continueRoutine) {  // a component has requested a forced-end of Routine
       return Scheduler.Event.NEXT;

@@ -1,7 +1,7 @@
 # Task Switching — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [task-switching](../../psych-experiment-programming/paradigms/task-switching.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [task-switching](../../../psych-experiment-programming/paradigms/task-switching.md)
 > **Status**: **CONFIG-DRIVEN** — no Pavlovia demo code found. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

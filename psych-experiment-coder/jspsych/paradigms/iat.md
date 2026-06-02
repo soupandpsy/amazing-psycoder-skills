@@ -1,7 +1,7 @@
 # IAT (Implicit Association Test) — jsPsych
 
-> **Parent**: [psych-experiment-coder](../SKILL.md)
-> **Config reference**: [iat](../../psych-experiment-programming/paradigms/iat.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md)
+> **Config reference**: [iat](../../../psych-experiment-programming/paradigms/iat.md)
 > **Source**: [psychbruce/jspsych](https://github.com/psychbruce/jspsych) (Bao, 2020) · jsPsych 6.1.0
 
 ## Experiment Logic

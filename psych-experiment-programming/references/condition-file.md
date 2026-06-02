@@ -4,6 +4,8 @@
 
 > **Related**: [config-schema.md](config-schema.md) · [data-recording.md](data-recording.md)
 
+> ⚠️ **LANGUAGE NOTE**: Example values in this document (e.g., `"正确"`, `"错误"`, `"太慢"` for feedback text) are Chinese-language placeholders. When generating condition files, use the equivalent text in the user's language. See [Language Consistency (Red Line)](../../psych-experiment-coder/SKILL.md#language-consistency-red-line).
+
 ## File Format
 
 - **Primary**: `.xlsx` (user-facing)
@@ -40,6 +42,7 @@ Each paradigm defines its own condition file columns in its paradigm file. See t
 - [Dot-probe](../paradigms/dot-probe.md#condition-file-columns)
 - [Visual Search](../paradigms/visual-search.md#condition-file-columns)
 - [Task Switching](../paradigms/task-switching.md#condition-file-columns)
+- [EAST](../paradigms/east.md#condition-file-columns)
 
 ## Variable Substitution
 

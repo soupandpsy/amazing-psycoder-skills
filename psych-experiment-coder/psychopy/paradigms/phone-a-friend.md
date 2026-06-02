@@ -1,7 +1,7 @@
 # Phone-a-Friend — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [phone-a-friend](../../psych-experiment-programming/paradigms/phone-a-friend.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [phone-a-friend](../../../psych-experiment-programming/paradigms/phone-a-friend.md)
 > **Source**: [Pavlovia demos/phone_a_friend](https://gitlab.pavlovia.org/demos/phone_a_friend) · PsychoPy 2025.2.0
 
 ## Experiment Logic

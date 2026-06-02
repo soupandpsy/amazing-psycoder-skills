@@ -67,7 +67,7 @@ In Claude Code, enter the following instruction and the system will install auto
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
 ```
 
-Claude Code will clone the repo and register all 4 skills into `~/.claude/skills/`. Once done, type `/amazing-psycoder` to launch.
+Claude Code will clone the repo and register the skill files into `~/.claude/skills/`. Once done, type `/amazing-psycoder` to launch.
 
 <details>
 <summary><b>🛠️ Manual install</b></summary>
@@ -95,12 +95,12 @@ In Claude Code, type `/amazing-psycoder` and describe your experiment:
 The system routes you to the orchestrator for the 5-phase design. During the process, it generates a trial window timeline:
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ Fixation  │ →  │ Stimulus  │ →  │ Blank     │ →  │ Feedback  │
-│ +         │    │ Red "绿"  │    │           │    │ Correct!  │
-│ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
-│           │    │ ← press   │    │           │    │           │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Fixation     │ →  │ Stimulus     │ →  │ Blank        │ →  │ Feedback     │
+│ +            │    │ Red (green)  │    │              │    │ Correct!     │
+│ 500ms        │    │ 2000ms       │    │ 500ms        │    │ 1000ms       │
+│              │    │ ← press      │    │              │    │              │
+└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
                     RT onset
 ```
 
@@ -117,33 +117,51 @@ After confirming the timeline, choose your platform. Outputs a runnable file (`.
 ```
 User             ❯ I want a Stroop task
 
-Amazing PsyCoder ❯ Let me confirm a few things first:
-                   1. Three ink colors → three keys: f=red, j=green, k=blue. OK?
-                   2. 50:50 congruent:incongruent. OK?
-                   3. Fixation 500ms, stimulus max 2000ms, feedback 500ms,
-                      ITI 600-900ms random. Use these defaults?
+Amazing PsyCoder ❯ 🟢 Phase 1/5 · Assess
+                   Paradigm Stroop · Confirm platform: PsychoPy?
 
-User             ❯ First two are fine. ITI should be 400-800ms.
+User             ❯ Yes, PsychoPy.
 
-Amazing PsyCoder ❯ Updated. Trial timeline:
-                   ┌──────────────────────────────────────────────┐
-                   │  Fixation(500ms) → Stimulus(2000ms/keypress) │
-                   │  → Feedback(500ms) → ITI(400-800ms)          │
-                   └──────────────────────────────────────────────┘
-                   All confirmed? Generate code?
+Amazing PsyCoder ❯ 🟢 Phase 2/5 · Trial Windows + Response Rules (most critical)
+                   Ink colors → f=red j=green k=blue. Trial timeline:
+                   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+                   │ Fixation     │ →  │ Stimulus     │ →  │ Blank        │ →  │ Feedback     │
+                   │ +            │    │ Red (green)  │    │              │    │ Correct!     │
+                   │ 500ms        │    │ 2000ms       │    │ 500ms        │    │ 1000ms       │
+                   │ no resp      │    │ ← RT onset   │    │ no resp      │    │ no resp      │
+                   └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
+                                     RT onset
+                   Gate 1 ✅ Windows complete, response mapping confirmed
+
+User             ❯ Timeline and keys look good. ITI 400-800ms random.
+
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · Conditions
+                   Congruent:incongruent = 60:60 → 120-trial condition table generated
+                   Gate 2 ✅ All columns filled
+
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Blocks
+                   2 blocks × 60 trials · Feedback in practice only
+                   Gate 3 ✅ Config has zero [MISSING]
+
+Amazing PsyCoder ❯ 🟢 Phase 5/5 · Final Review
+                   ┌───────────────────────────────────────────────────────┐
+                   │ Design Decision Registry                              │
+                   │ Paradigm Stroop · Platform PsychoPy   ← user          │
+                   │ Keys f/j/k · 50:50 congruent          ← user          │
+                   │ ITI 400-800ms random                  ← user          │
+                   │ Trial timeline 4 windows              ← convention    │
+                   └───────────────────────────────────────────────────────┘
+                   Gate 5 ✅ All confirmed → Route to code generation
 
 User             ❯ Generate.
 
-Amazing PsyCoder ❯ ✅ Code generated: stroop_task.py + README.md
-                   Parameters at top, FONT_CONFIG set, incremental save on.
-                   Run audit?
+Amazing PsyCoder ❯ ✅ stroop_task.py + README.md generated
+                   Params at top · CJK font configured · Incremental save
+                   → Auto-routing to code audit
 
-User             ❯ Audit.
-
-Amazing PsyCoder ❯ 🔍 Audit passed. Readiness: ready_for_collection
+Amazing PsyCoder ❯ 🔍 Audit passed · Readiness: ready_for_collection
                    Safe to start data collection.
 ```
-
 ---
 
 ## ✨ Features

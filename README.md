@@ -67,7 +67,7 @@ Amazing PsyCoder 把这些经验编码进了 Claude Code 的三个强制技能�
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
 ```
 
-Claude Code 会自动 clone 仓库，把 4 个技能注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
+Claude Code 会自动 clone 仓库，把技能文件注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
 
 <details>
 <summary><b>🛠️ 手动安装</b></summary>
@@ -95,12 +95,12 @@ cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills
 系统自动路由到编排器，引导完成 5 阶段设计。设计过程中，系统会生成试次窗口时间线图：
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐
 │ 注视点    │ →  │ 刺激呈现  │ →  │ 空屏等待  │ →  │ 反馈      │
-│ +        │    │ 红色"绿"  │    │          │    │ 正确!     │
-│ 500ms    │    │ 2000ms   │    │ 500ms    │    │ 1000ms   │
-│          │    │ ← 按键   │    │          │    │          │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
+│ +         │    │ 红色"绿"  │    │           │    │ 正确!     │
+│ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
+│           │    │ ← 按键    │    │           │    │           │
+└───────────┘    └───────────┘    └───────────┘    └───────────┘
                   RT 计时起点
 ```
 
@@ -112,38 +112,56 @@ cp -r /tmp/AmazingPsyCoderSkills/psych-experiment-code-reviewer ~/.claude/skills
 
 ### 🐍 PsychoPy — Stroop 任务
 
-> "我要做一个 Stroop，红绿蓝三色文字，按键判断墨色，50:50 一致不一致，2 个 block 各 60 试次"
+> "我要做一个 Stroop，红绿蓝三色文字，按键判断墨色，50:50 一致不一致，2 block 各 60 试次"
 
 ```
 用户             ❯ 我要做一个 Stroop 任务
 
-Amazing PsyCoder ❯ 好的，先确认几件事：
-                   1. 三个墨色对应三个按键，f=红，j=绿，k=蓝，可以吗？
-                   2. 一致试次和不一致试次各占 50%，可以吗？
-                   3. 注视点 500ms，刺激最长 2000ms，反馈 500ms，ITI 600-900ms 随机，
-                      这些时间参数按默认设置？
+Amazing PsyCoder ❯ 🟢 Phase 1/5 · 诊断
+                   范式 Stroop · 确认使用 PsychoPy？
 
-用户             ❯ 前两个没问题。ITI 改成 400-800ms。
+用户             ❯ 对，PsychoPy。
 
-Amazing PsyCoder ❯ 已更新。试次时间线如下：
+Amazing PsyCoder ❯ 🟢 Phase 2/5 · 试次窗口 + 反应规则（最关键）
+                   墨色红绿蓝 → f=红 j=绿 k=蓝。试次时间线：
+                   ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐
+                   │ 注视点    │ →  │ 刺激呈现  │ →  │ 空屏等待  │ →  │ 反馈      │
+                   │ +         │    │ 红色"绿"  │    │           │    │ 正确!     │
+                   │ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
+                   │ 无反应    │    │ ← RT起点  │    │ 无反应    │    │ 无反应    │
+                   └───────────┘    └───────────┘    └───────────┘    └───────────┘
+                                       RT 计时起点
+                   Gate 1 ✅ 窗口完整、反应映射已确认
+
+用户             ❯ 时间线和按键没问题。ITI 400-800ms 随机。
+
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · 条件表
+                   一致:不一致 = 60:60 → 120 试次条件表已生成
+                   Gate 2 ✅ 条件列已填入
+
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Block 结构
+                   2 blocks × 60 trials · 反馈仅练习 block
+                   Gate 3 ✅ Config 零 [MISSING]
+
+Amazing PsyCoder ❯ 🟢 Phase 5/5 · 最终审查
                    ┌──────────────────────────────────────────────┐
-                   │  Fixation(500ms) → Stimulus(2000ms/按键)     │
-                   │  → Feedback(500ms) → ITI(400-800ms)          │
+                   │ 设计决策注册表                               │
+                   │ 范式 Stroop · 平台 PsychoPy    ← 用户确认    │
+                   │ 按键 f/j/k · 一致:不一致 50:50 ← 用户确认    │
+                   │ ITI 400-800ms 随机             ← 用户确认    │
+                   │ 试次时间线 4 窗口              ← 范式惯例    │
                    └──────────────────────────────────────────────┘
-                   以上确认无误，开始生成代码？
+                   Gate 5 ✅ 全部确认 → 路由至代码生成
 
 用户             ❯ 生成。
 
-Amazing PsyCoder ❯ ✅ 代码已生成：stroop_task.py + README.md
-                   参数已置顶，FONT_CONFIG 已配置，增量保存已开启。
-                   是否需要审计？
+Amazing PsyCoder ❯ ✅ stroop_task.py + README.md 已生成
+                   参数置顶 · CJK 字体已配置 · 增量保存
+                   → 自动路由至代码审计
 
-用户             ❯ 审计。
-
-Amazing PsyCoder ❯ 🔍 审计通过，就绪标签：ready_for_collection
-                   可以开始采集数据了。
+Amazing PsyCoder ❯ 🔍 审计通过 · 就绪标签：ready_for_collection
+                   可开始数据采集。
 ```
-
 ---
 
 ## ✨ 特点

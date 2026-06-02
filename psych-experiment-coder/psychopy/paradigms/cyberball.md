@@ -1,6 +1,6 @@
 # Cyberball
 
-**Config reference**: [cyberball](../../psych-experiment-programming/paradigms/cyberball.md)
+**Config reference**: [cyberball](../../../psych-experiment-programming/paradigms/cyberball.md)
 **Source:** [Pavlovia cyberball demo](https://gitlab.pavlovia.org/demos/cyberball) (PsychoPy 2025.1.0dev167)
 
 ## Experiment Logic

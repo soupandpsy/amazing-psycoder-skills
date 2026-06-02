@@ -1,7 +1,7 @@
 # Sternberg Memory Scanning -- PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [sternberg](../../psych-experiment-programming/paradigms/sternberg.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [sternberg](../../../psych-experiment-programming/paradigms/sternberg.md)
 > **Source**: [Pavlovia demos/sternberg](https://gitlab.pavlovia.org/demos/sternberg) · PsychoPy 2023.2.3
 
 ## Experiment Logic

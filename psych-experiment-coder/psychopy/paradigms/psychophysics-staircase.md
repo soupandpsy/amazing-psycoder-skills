@@ -1,7 +1,7 @@
 # Staircase Demo — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [psychophysics-staircase](../../psych-experiment-programming/paradigms/psychophysics-staircase.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [psychophysics-staircase](../../../psych-experiment-programming/paradigms/psychophysics-staircase.md)
 > **Source**: [Pavlovia demos/staircase_demo](https://gitlab.pavlovia.org/demos/staircase_demo) · PsychoPy 2020.2.8
 
 ## Experiment Logic

@@ -1,7 +1,7 @@
 # Attention Network Task (ANT) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [attention-network-task](../../psych-experiment-programming/paradigms/attention-network-task.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [attention-network-task](../../../psych-experiment-programming/paradigms/attention-network-task.md)
 > **Source**: [Pavlovia demos/attention_network_task](https://gitlab.pavlovia.org/demos/attention_network_task) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

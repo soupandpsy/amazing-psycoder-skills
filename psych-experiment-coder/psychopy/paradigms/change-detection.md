@@ -1,7 +1,7 @@
 # Change Detection — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [change-detection](../../psych-experiment-programming/paradigms/change-detection.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [change-detection](../../../psych-experiment-programming/paradigms/change-detection.md)
 > **Source**: [Pavlovia demos/change_detection](https://gitlab.pavlovia.org/demos/change_detection) · PsychoPy 2024.1.5
 
 ## Experiment Logic

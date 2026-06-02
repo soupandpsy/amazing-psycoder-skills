@@ -1,7 +1,7 @@
 # Rating to Choice Task — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [rating-to-choice](../../psych-experiment-programming/paradigms/rating-to-choice.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [rating-to-choice](../../../psych-experiment-programming/paradigms/rating-to-choice.md)
 > **Source**: [Pavlovia demos/rating_to_choice_task](https://gitlab.pavlovia.org/demos/rating_to_choice_task) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -119,15 +119,9 @@ psychoJS.start({
     {'name': 'images/usgs-Yi06GUt3rA4-unsplash.jpg', 'path': 'images/usgs-Yi06GUt3rA4-unsplash.jpg'},
     {'name': 'conditions_choice_phase.xlsx', 'path': 'conditions_choice_phase.xlsx'},
     {'name': 'default.png', 'path': 'https://pavlovia.org/assets/default/default.png'},
-    {'name': 'images/catherine-kay-greenup-k_gmZfU9bTg-unsplash.jpg', 'path': 'images/catherine-kay-greenup-k_gmZfU9bTg-unsplash.jpg'},
-    {'name': 'images/europeana-oFh0eTEupTE-unsplash.jpg', 'path': 'images/europeana-oFh0eTEupTE-unsplash.jpg'},
     {'name': 'images/europeana-ORNK84pznIs-unsplash.jpg', 'path': 'images/europeana-ORNK84pznIs-unsplash.jpg'},
-    {'name': 'images/henrik-donnestad-t2Sai-AqIpI-unsplash.jpg', 'path': 'images/henrik-donnestad-t2Sai-AqIpI-unsplash.jpg'},
-    {'name': 'images/laya-clode-hnDQb0pPt9o-unsplash.jpg', 'path': 'images/laya-clode-hnDQb0pPt9o-unsplash.jpg'},
     {'name': 'images/museum-of-new-zealand-te-papa-tongarewa-SJfPfXCIHx0-unsplash.jpg', 'path': 'images/museum-of-new-zealand-te-papa-tongarewa-SJfPfXCIHx0-unsplash.jpg'},
     {'name': 'images/museum-of-new-zealand-te-papa-tongarewa-W_inwSSIqp8-unsplash.jpg', 'path': 'images/museum-of-new-zealand-te-papa-tongarewa-W_inwSSIqp8-unsplash.jpg'},
-    {'name': 'images/usgs-3F2YdXjJMCI-unsplash.jpg', 'path': 'images/usgs-3F2YdXjJMCI-unsplash.jpg'},
-    {'name': 'images/usgs-Yi06GUt3rA4-unsplash.jpg', 'path': 'images/usgs-Yi06GUt3rA4-unsplash.jpg'},
   ]
 });
 
@@ -998,7 +992,7 @@ function chooseRoutineBegin(snapshot) {
             if ((rated_2.length > 0)) {
                 im1 = rated_2.slice((- 1))[0];
             } else {
-                im2 = "images/museum-of-new-zealand-te-papa-tongarewa-W_inwSSIqp8-unsplash.jpg";
+                im1 = "images/museum-of-new-zealand-te-papa-tongarewa-W_inwSSIqp8-unsplash.jpg";
             }
             if ((rated_3.length > 0)) {
                 im2 = rated_3.slice((- 1))[0];
@@ -1010,7 +1004,7 @@ function chooseRoutineBegin(snapshot) {
                 if ((rated_1.length > 0)) {
                     im1 = rated_1.slice((- 1))[0];
                 } else {
-                    im2 = "images/museum-of-new-zealand-te-papa-tongarewa-SJfPfXCIHx0-unsplash.jpg";
+                    im1 = "images/museum-of-new-zealand-te-papa-tongarewa-SJfPfXCIHx0-unsplash.jpg";
                 }
                 if ((rated_3.length > 0)) {
                     im2 = rated_3.slice((- 1))[0];

@@ -67,7 +67,7 @@ Dans Claude Code, entrez l'instruction suivante et le système s'installera auto
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/AmazingPsyCoderSkills
 ```
 
-Claude Code clonera le dépôt et enregistrera les 4 skills dans `~/.claude/skills/`. Une fois terminé, tapez `/amazing-psycoder` pour lancer.
+Claude Code clonera le dépôt et enregistrera les fichiers de skill dans `~/.claude/skills/`. Une fois terminé, tapez `/amazing-psycoder` pour lancer.
 
 <details>
 <summary><b>🛠️ Installation manuelle</b></summary>
@@ -95,12 +95,12 @@ Dans Claude Code, tapez `/amazing-psycoder` et décrivez votre expérience :
 Le système vous dirige vers l'orchestrateur qui vous guide à travers le processus de design en 5 phases. Une timeline d'essai est générée :
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ Fixation  │ →  │ Stimulus  │ →  │ Pause     │ →  │ Feedback  │
-│ +         │    │ Rouge "绿"│    │           │    │ Correct ! │
-│ 500ms     │    │ 2000ms    │    │ 500ms     │    │ 1000ms    │
-│           │    │ ← touche  │    │           │    │           │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│ Fixation      │ →  │ Stimulus      │ →  │ Pause         │ →  │ Feedback      │
+│ +             │    │ Rouge (vert)  │    │               │    │ Correct !     │
+│ 500ms         │    │ 2000ms        │    │ 500ms         │    │ 1000ms        │
+│               │    │ ← touche      │    │               │    │               │
+└───────────────┘    └───────────────┘    └───────────────┘    └───────────────┘
                   Début du TR
 ```
 
@@ -117,33 +117,51 @@ Après avoir confirmé la timeline, choisissez votre plateforme. Un fichier exé
 ```
 Utilisateur      ❯ I want a Stroop task
 
-Amazing PsyCoder ❯ Laissez-moi confirmer quelques points d'abord :
-                   1. Trois couleurs d'encre → trois touches : f=rouge, j=vert, k=bleu. OK ?
-                   2. 50:50 congruent:incongruent. OK ?
-                   3. Fixation 500ms, stimulus max 2000ms, feedback 500ms,
-                      ITI 600-900ms aléatoire. Utiliser ces valeurs par défaut ?
+Amazing PsyCoder ❯ 🟢 Phase 1/5 · Diagnostic
+                   Paradigme Stroop · Confirmer PsychoPy ?
 
-Utilisateur      ❯ Les deux premiers sont bons. ITI à 400-800ms.
+Utilisateur      ❯ Oui, PsychoPy.
 
-Amazing PsyCoder ❯ Mis à jour. Timeline d'essai :
-                   ┌──────────────────────────────────────────────┐
-                   │  Fixation(500ms) → Stimulus(2000ms/touche)   │
-                   │  → Feedback(500ms) → ITI(400-800ms)          │
-                   └──────────────────────────────────────────────┘
-                   Tout confirmé ? Générer le code ?
+Amazing PsyCoder ❯ 🟢 Phase 2/5 · Fenêtres d'essai + Règles de réponse (critique)
+                   Couleurs d'encre → f=rouge j=vert k=bleu. Timeline :
+                   ┌───────────────┐    ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+                   │ Fixation      │ →  │ Stimulus      │ →  │ Pause         │ →  │ Feedback      │
+                   │ +             │    │ Rouge (vert)  │    │               │    │ Correct !     │
+                   │ 500ms         │    │ 2000ms        │    │ 500ms         │    │ 1000ms        │
+                   │ pas de rép.   │    │ ← déb. TR     │    │ pas de rép.   │    │ pas de rép.   │
+                   └───────────────┘    └───────────────┘    └───────────────┘    └───────────────┘
+                                     Début du TR
+                   Gate 1 ✅ Fenêtres complètes, mapping de réponse confirmé
+
+Utilisateur      ❯ Timeline et touches OK. ITI 400-800ms aléatoire.
+
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · Conditions
+                   Congruent:incongruent = 60:60 → Table de 120 essais générée
+                   Gate 2 ✅ Colonnes de condition remplies
+
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Blocs
+                   2 blocs × 60 essais · Feedback en pratique seulement
+                   Gate 3 ✅ Config zéro [MISSING]
+
+Amazing PsyCoder ❯ 🟢 Phase 5/5 · Revue finale
+                   ┌──────────────────────────────────────────────────────────┐
+                   │ Registre des Décisions de Conception                     │
+                   │ Paradigme Stroop · Plateforme PsychoPy  ← utilisateur    │
+                   │ Touches f/j/k · 50:50 congruent         ← utilisateur    │
+                   │ ITI 400-800ms aléatoire                 ← utilisateur    │
+                   │ Timeline essai 4 fenêtres               ← convention     │
+                   └──────────────────────────────────────────────────────────┘
+                   Gate 5 ✅ Tout confirmé → Routage vers la génération
 
 Utilisateur      ❯ Générer.
 
-Amazing PsyCoder ❯ ✅ Code généré : stroop_task.py + README.md
-                   Paramètres en haut, FONT_CONFIG activé, sauvegarde incrémentielle.
-                   Lancer l'audit ?
+Amazing PsyCoder ❯ ✅ stroop_task.py + README.md généré
+                   Params en haut · Police CJK configurée · Sauvegarde incrémentielle
+                   → Routage automatique vers l'audit
 
-Utilisateur      ❯ Audit.
-
-Amazing PsyCoder ❯ 🔍 Audit réussi. État : ready_for_collection
+Amazing PsyCoder ❯ 🔍 Audit réussi · État : ready_for_collection
                    Prêt pour la collecte de données.
 ```
-
 ---
 
 ## ✨ Fonctionnalités

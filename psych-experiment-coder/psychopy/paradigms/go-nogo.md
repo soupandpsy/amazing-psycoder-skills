@@ -1,7 +1,7 @@
 # Go/No-go — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [go-nogo](../../psych-experiment-programming/paradigms/go-nogo.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [go-nogo](../../../psych-experiment-programming/paradigms/go-nogo.md)
 > **Source**: [Pavlovia demos/go_nogo](https://gitlab.pavlovia.org/demos/go_nogo) · PsychoPy 2023.2.3
 
 ## Experiment Logic

@@ -1,7 +1,7 @@
 # Choice Reaction Time — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [choice-reaction-time](../../psych-experiment-programming/paradigms/choice-reaction-time.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [choice-reaction-time](../../../psych-experiment-programming/paradigms/choice-reaction-time.md)
 > **Source**: [Pavlovia demos/choice_reaction_time](https://gitlab.pavlovia.org/demos/choice_reaction_time) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

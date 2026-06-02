@@ -1,6 +1,6 @@
 # Wisconsin Card Sorting Task
 
-**Config reference**: [wisconsin-card-sorting](../../psych-experiment-programming/paradigms/wisconsin-card-sorting.md)
+**Config reference**: [wisconsin-card-sorting](../../../psych-experiment-programming/paradigms/wisconsin-card-sorting.md)
 **Source:** [Pavlovia wisconsin_card_sorting demo](https://gitlab.pavlovia.org/demos/wisconsin_card_sorting) (PsychoPy 2022.1.2)
 
 ## Experiment Logic

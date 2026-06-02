@@ -1,7 +1,7 @@
 # Choice Reaction Time — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [choice-reaction-time](../../psych-experiment-programming/paradigms/choice-reaction-time.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [choice-reaction-time](../../../psych-experiment-programming/paradigms/choice-reaction-time.md)
 > **Source**: [Pavlovia demos/choice_reaction_time](https://gitlab.pavlovia.org/demos/choice_reaction_time) · PsychoPy 2021.2.3
 
 ## Experiment Logic

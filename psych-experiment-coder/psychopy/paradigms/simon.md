@@ -1,7 +1,7 @@
 # Simon — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [simon](../../psych-experiment-programming/paradigms/simon.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [simon](../../../psych-experiment-programming/paradigms/simon.md)
 > **Source**: [Pavlovia demos/butterfly_simon](https://gitlab.pavlovia.org/demos/butterfly_simon) · PsychoPy 2025.1.0dev137
 
 ## Experiment Logic

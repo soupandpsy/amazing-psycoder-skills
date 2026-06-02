@@ -1,7 +1,7 @@
 # Mental Rotation -- PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [mental-rotation](../../psych-experiment-programming/paradigms/mental-rotation.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [mental-rotation](../../../psych-experiment-programming/paradigms/mental-rotation.md)
 > **Source**: [Pavlovia demos/mental_rotation](https://gitlab.pavlovia.org/demos/mental_rotation) · PsychoPy 2023.2.3
 
 ## Experiment Logic

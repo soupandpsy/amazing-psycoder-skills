@@ -1,7 +1,7 @@
 # Mental Rotation — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [mental-rotation](../../psych-experiment-programming/paradigms/mental-rotation.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [mental-rotation](../../../psych-experiment-programming/paradigms/mental-rotation.md)
 > **Source**: [Pavlovia demos/mental_rotation](https://gitlab.pavlovia.org/demos/mental_rotation) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
@@ -107,9 +107,7 @@ psychoJS.start({
     {'name': 'MentalRot.csv', 'path': 'MentalRot.csv'},
     {'name': 'F.png', 'path': 'F.png'},
     {'name': 'FR.png', 'path': 'FR.png'},
-    {'name': 'FR.png', 'path': 'FR.png'},
     {'name': 'default.png', 'path': 'https://pavlovia.org/assets/default/default.png'},
-    {'name': 'F.png', 'path': 'F.png'},
   ]
 });
 

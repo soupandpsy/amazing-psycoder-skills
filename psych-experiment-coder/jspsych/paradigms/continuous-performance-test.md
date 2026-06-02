@@ -1,7 +1,7 @@
 # Continuous Performance Test (CPT) — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [continuous-performance-test](../../psych-experiment-programming/paradigms/continuous-performance-test.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [continuous-performance-test](../../../psych-experiment-programming/paradigms/continuous-performance-test.md)
 > **Source**: [Pavlovia demos/continuous_performance_test](https://gitlab.pavlovia.org/demos/continuous_performance_test) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

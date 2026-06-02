@@ -1,7 +1,7 @@
 # Eriksen Flanker — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [eriksen-flanker](../../psych-experiment-programming/paradigms/eriksen-flanker.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [eriksen-flanker](../../../psych-experiment-programming/paradigms/eriksen-flanker.md)
 > **Status**: **CONFIG-DRIVEN** — no dedicated Pavlovia demo code found. See [Stroop](stroop.md) for a child-friendly fish variant. Code generated from config YAML using the patterns below.
 
 ## Experiment Logic

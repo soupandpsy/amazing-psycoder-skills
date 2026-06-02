@@ -1,7 +1,7 @@
 # Multisensory Nature — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [multisensory-nature](../../psych-experiment-programming/paradigms/multisensory-nature.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [multisensory-nature](../../../psych-experiment-programming/paradigms/multisensory-nature.md)
 > **Source**: [Pavlovia demos/multisensory_nature](https://gitlab.pavlovia.org/demos/multisensory_nature) · PsychoPy 2024.1.5
 
 ## Experiment Logic

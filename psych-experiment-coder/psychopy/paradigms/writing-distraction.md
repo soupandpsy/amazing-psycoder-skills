@@ -1,7 +1,7 @@
 # Writing Distraction — PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [writing-distraction](../../psych-experiment-programming/paradigms/writing-distraction.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [writing-distraction](../../../psych-experiment-programming/paradigms/writing-distraction.md)
 > **Source**: [Pavlovia demos/writing_distraction](https://gitlab.pavlovia.org/demos/writing_distraction) · PsychoPy 2025.1.1
 
 ## Experiment Logic

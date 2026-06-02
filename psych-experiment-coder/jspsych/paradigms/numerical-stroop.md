@@ -1,7 +1,7 @@
 # Numerical Stroop — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [numerical-stroop](../../psych-experiment-programming/paradigms/numerical-stroop.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [numerical-stroop](../../../psych-experiment-programming/paradigms/numerical-stroop.md)
 > **Source**: [Pavlovia demos/numerical_stroop](https://gitlab.pavlovia.org/demos/numerical_stroop) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 

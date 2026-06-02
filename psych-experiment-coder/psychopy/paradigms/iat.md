@@ -1,7 +1,7 @@
 # IAT -- PsychoPy
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [Implementation Guide](../spec/README.md)
-> **Config reference**: [iat](../../psych-experiment-programming/paradigms/iat.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [Implementation Guide](../spec/README.md)
+> **Config reference**: [iat](../../../psych-experiment-programming/paradigms/iat.md)
 > **Source**: [Pavlovia demos/OpenIAT](https://gitlab.pavlovia.org/demos/OpenIAT) · PsychoPy 2020.1.0
 
 ## Experiment Logic

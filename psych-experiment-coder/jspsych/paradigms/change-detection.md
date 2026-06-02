@@ -1,7 +1,7 @@
 # Change Detection — PsychoJS (Online)
 
-> **Parent**: [psych-experiment-coder](../SKILL.md) · [jsPsych/JavaScript Index](index.md)
-> **Config reference**: [change-detection](../../psych-experiment-programming/paradigms/change-detection.md)
+> **Parent**: [psych-experiment-coder](../../SKILL.md) · [jsPsych/JavaScript Index](index.md)
+> **Config reference**: [change-detection](../../../psych-experiment-programming/paradigms/change-detection.md)
 > **Source**: [Pavlovia demos/change_detection](https://gitlab.pavlovia.org/demos/change_detection) · PsychoJS (PsychoPy online export)
 > **Platform note**: This is PsychoJS code (PsychoPy's JavaScript runtime for online experiments), NOT jsPsych library code.
 
