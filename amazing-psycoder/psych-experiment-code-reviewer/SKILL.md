@@ -1,7 +1,7 @@
 ---
 name: psych-experiment-code-reviewer
 description: Use for reviewing psychological experiment code quality at any stage — from early design idea through completed code. Supports five modes: code-audit (full platform-aware code review with smoke test protocol), config-audit (pre-code design review), implementation-plan-review (architecture review), triage-only (missing-information checklist from natural-language idea), and blocked (insufficient input). Does NOT generate or fix code. Trigger for 检查实验代码、code review、实验程序审查、能不能正式采集、代码有没有问题、check experiment code、实验设计有没有问题、帮我看看这个实验方案.
-version: 1.0
+version: 1.2
 status: stable
 ---
 
@@ -9,7 +9,7 @@ status: stable
 
 ## Version
 
-v1.0 — smoke test protocol, data integrity verification, paradigm-specific checks, 2026-05-30.
+v1.2 — smoke test protocol, data integrity verification, paradigm-specific checks, 2026-06-06.
 
 ## Purpose
 

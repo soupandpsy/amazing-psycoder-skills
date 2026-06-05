@@ -6,6 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
+[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-red)](https://github.com/openclaw/openclaw)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-standard-333)](https://agentskills.io)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
@@ -45,7 +49,7 @@ Chaque laboratoire a des anciens qui ont fait toutes ces erreurs, mais ce savoir
 
 Rien que comprendre les API prend des semaines.
 
-Amazing PsyCoder encode ces leçons dans trois skills Claude Code obligatoires — orchestration du design (confirmation en 5 phases), génération de code (pipeline unifié + 9 points de contrôle qualité) et audit de code (protocole de test de fumée). Que votre laboratoire utilise PsychoPy, jsPsych ou Psychtoolbox, le même pipeline génère du code adapté à la plateforme.
+Amazing PsyCoder encode ces leçons dans trois skills obligatoires — orchestration du design (confirmation en 5 phases), génération de code (pipeline unifié + 9 points de contrôle qualité) et audit de code (protocole de test de fumée). Que votre laboratoire utilise PsychoPy, jsPsych ou Psychtoolbox, le même pipeline génère du code adapté à la plateforme.
 
 ---
 
@@ -61,25 +65,46 @@ Amazing PsyCoder encode ces leçons dans trois skills Claude Code obligatoires �
 
 ## ⚡ Installation
 
-Dans Claude Code, entrez l'instruction suivante et le système s'installera automatiquement :
+Tapez la commande de votre plateforme directement dans le chat IA :
 
+**Claude Code**
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
-Claude Code clonera le dépôt et enregistrera les fichiers de skill dans `~/.claude/skills/`. Une fois terminé, tapez `/amazing-psycoder` pour lancer.
+**Codex**
+```
+$skill-installer
+```
+Entrez l'URL du repo : `https://github.com/soupandpsy/amazing-psycoder-skills`
+
+**Hermes**
+```
+hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
+```
+
+**OpenClaw**
+```
+npm i -g clawhub && clawhub install amazing-psycoder
+```
+
+Ensuite tapez `/amazing-psycoder` pour lancer.
 
 <details>
-<summary><b>🛠️ Installation manuelle</b></summary>
+<summary><b>Autres méthodes d'installation</b></summary>
 
 <br>
 
 ```bash
+git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
+```
+
+**Manual copy**:
+
+```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills-dir>/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills-dir>/
 ```
 
 </details>
@@ -88,31 +113,31 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-review
 
 ## 🚀 Démarrage rapide
 
-Dans Claude Code, tapez `/amazing-psycoder` et décrivez votre expérience :
+Tapez `/amazing-psycoder` (ou laissez l'agent détecter automatiquement la compétence) et décrivez votre expérience :
 
 > "I want a Stroop task, red/green/blue text, key-press response, 2 blocks of 60 trials each"
 
 Le système vous dirige vers l'orchestrateur qui vous guide à travers le processus de design en 5 phases. Une timeline d'essai est générée :
 
 ```
-Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
-┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-│                      │    │                      │    │                      │
-│          +           │ →  │    Rouge (vert)      │ →  │                      │
-│                      │    │                      │    │                      │
-└──────────────────────┘    └──────────────────────┘    └──────────────────────┘
-500ms                       2000ms                      500ms
-pas de rép.                 ← touche                    pas de rép.
-                            Début du TR                 
+   Window 1: Fixation            Window 2: Stimulus             Window 3: Pause     
+┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+│                      │      │                      │      │                      │
+│          +           │  →   │     Rouge (vert)     │  →   │                      │
+│                      │      │                      │      │                      │
+└──────────────────────┘      └──────────────────────┘      └──────────────────────┘
+         500ms                         2000ms                        500ms          
+      pas de rép.                   ← touche                    pas de rép.      
+                                    Début du TR                                    
 
-Window 4: Feedback
+   Window 4: Feedback   
 ┌──────────────────────┐
 │                      │
 │      Correct !       │
 │                      │
 └──────────────────────┘
-1000ms
-pas de rép.
+         1000ms         
+      pas de rép.      
 ```
 
 Après avoir confirmé la timeline, choisissez votre plateforme. Un fichier exécutable (`.py` / `.js` / `.m`) et un README d'expérience sont générés.
@@ -135,24 +160,24 @@ Utilisateur      ❯ Oui, PsychoPy.
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · Fenêtres d'essai + Règles de réponse (critique)
                    Couleurs d'encre → f=rouge j=vert k=bleu. Timeline :
-                   Window 1: Fixation          Window 2: Stimulus          Window 3: Pause
-                   ┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-                   │                      │    │                      │    │                      │
-                   │          +           │ →  │    Rouge (vert)      │ →  │                      │
-                   │                      │    │                      │    │                      │
-                   └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
-                   500ms                       2000ms                      500ms
-                   pas de rép.                 f / j / k                   pas de rép.
-                                               ← Début du TR               
+                      Window 1: Fixation            Window 2: Stimulus             Window 3: Pause     
+                   ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+                   │                      │      │                      │      │                      │
+                   │          +           │  →   │     Rouge (vert)     │  →   │                      │
+                   │                      │      │                      │      │                      │
+                   └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
+                            500ms                         2000ms                        500ms          
+                         pas de rép.                   f / j / k                    pas de rép.      
+                                                     ← Début du TR                                   
 
-                   Window 4: Feedback
+                      Window 4: Feedback   
                    ┌──────────────────────┐
                    │                      │
                    │      Correct !       │
                    │                      │
                    └──────────────────────┘
-                   1000ms
-                   pas de rép.
+                            1000ms         
+                         pas de rép.      
                    Gate 1 ✅ Fenêtres complètes, mapping de réponse confirmé
 
 Utilisateur      ❯ Timeline et touches OK. ITI 400-800ms aléatoire.

@@ -1,21 +1,24 @@
 ---
 name: amazing-psycoder
 description: Entry point for the Amazing PsyCoder system. Routes user requests through the mandatory three-skill chain: Programming (5-phase design) → Coder (code generation) → Reviewer (audit). Supports PsychoPy, jsPsych, and Psychtoolbox with 38 paradigm references. Trigger for 心理学实验、实验代码、实验程序、PsychoPy实验、jsPsych实验、psychtoolbox实验、编写实验、生成实验代码、审计实验代码.
-version: 1.0
+version: 1.2
 status: stable
+compatibility: Claude Code, Codex, Hermes, OpenClaw (agentskills.io standard)
 ---
 
 # Amazing PsyCoder — System Orchestrator
 
 ## Version
 
-v1.0 — stable, 2026-05-30.
+v1.2 — stable, 2026-06-06.
 
 ## Purpose
 
 This is the single entry point for the Amazing PsyCoder experimental skill system. It orchestrates a **mandatory sequential chain** of three sub-skills that convert psychological experiment ideas into audited, production-quality code.
 
 **This skill does NOT generate code itself.** It routes the user through the correct sequence and enforces the chain: Programming → Coder → Reviewer. No step may be skipped.
+
+**Platforms**: Claude Code / Codex / Hermes / OpenClaw — follows the [agentskills.io](https://agentskills.io) open standard. See [PLATFORMS.md](PLATFORMS.md) for platform-specific installation and tool mapping.
 
 ## System Architecture
 
@@ -292,6 +295,8 @@ Code comments and README language MUST match the user's language:
 amazing-psycoder-skills/
 ├── amazing-psycoder/                       ← Entry orchestrator (this skill)
 │   ├── SKILL.md
+│   ├── PLATFORMS.md                        ← Platform adapter reference
+│   ├── install.sh                          ← Cross-platform installer
 │   ├── psych-experiment-programming/        ← ① Orchestration layer
 │   │   ├── SKILL.md                         ← 5-phase workflow + 10 red lines
 │   │   ├── README.md

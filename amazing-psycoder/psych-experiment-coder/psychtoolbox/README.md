@@ -50,7 +50,7 @@ psychtoolbox/
 ├── paradigms/                  ← L3: 范式参考（实验逻辑，非 API 参考）
 │   ├── README.md              ← 范式索引 + API 醒示
 │   └── *.md                   ← 5 个范式文件
-└── demo/                      ← L4: 原始代码示例（92 个 .md，按功能分类）
+└── demo/                      ← L4: 原始代码示例（100 个 .md，按功能分类）
     └── _raw/                  ← 仅参考实验逻辑，API 以 L1 spec 为准
         ├── getting-started/   ← 11 — 安装配置 + 最小窗口 + 精确计时 + 键盘队列
         ├── drawing-shapes/    ← 15 — dots, rectangles, fixation

@@ -6,6 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
+[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-red)](https://github.com/openclaw/openclaw)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-standard-333)](https://agentskills.io)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](README.md) · [**繁體中文**](docs/README_ZH-HANT.md) · [**English**](docs/README_EN.md) · [**日本語**](docs/README_JA.md) · [**Deutsch**](docs/README_DE.md) · [**Français**](docs/README_FR.md)
@@ -45,7 +49,7 @@
 
 光搞清楚 API 就要花几周。
 
-Amazing PsyCoder 把这些经验编码进了 Claude Code 的三个强制技能里——设计编排（5 阶段确认）、代码生成（统一流水线 + 9 项质量门）、代码审计（烟雾测试协议）。不管你的实验室用 PsychoPy、jsPsych 还是 Psychtoolbox，同一套流程生成对应代码。
+Amazing PsyCoder 把这些经验编码进了三个强制技能里——设计编排（5 阶段确认）、代码生成（统一流水线 + 9 项质量门）、代码审计（烟雾测试协议）。遵循 [agentskills.io](https://agentskills.io) 开放标准，支持 Claude Code / Codex / Hermes / OpenClaw。不管你的实验室用 PsychoPy、jsPsych 还是 Psychtoolbox，同一套流程生成对应代码。
 
 ---
 
@@ -61,25 +65,48 @@ Amazing PsyCoder 把这些经验编码进了 Claude Code 的三个强制技能�
 
 ## ⚡ 安装
 
-在 Claude Code 中输入以下指令，系统会自动完成安装：
+直接在 AI 对话中输入对应平台的命令：
 
+**Claude Code**
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
-Claude Code 会自动 clone 仓库，把技能文件注册到 `~/.claude/skills/`。完成后输入 `/amazing-psycoder` 即可启动。
+**Codex**
+```
+$skill-installer
+```
+输入仓库地址：`https://github.com/soupandpsy/amazing-psycoder-skills`
+
+**Hermes**
+```
+hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
+```
+
+**OpenClaw**
+```
+npm i -g clawhub && clawhub install amazing-psycoder
+```
+
+安装后输入 `/amazing-psycoder` 即可启动。
 
 <details>
-<summary><b>🛠️ 手动安装</b></summary>
+<summary><b>其他安装方式（平台命令不可用时）</b></summary>
 
 <br>
 
+**一键脚本**（自动检测平台）：
+
+```bash
+git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
+```
+
+**手动复制**：
+
 ```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills 目录>/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills 目录>/
 ```
 
 </details>
@@ -88,31 +115,31 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-review
 
 ## 🚀 快速开始
 
-在 Claude Code 中输入 `/amazing-psycoder`，然后描述你的实验：
+输入 `/amazing-psycoder`（或让 agent 自动匹配技能），然后描述你的实验：
 
 > "我要做一个 Stroop 任务，红绿蓝三色，按键反应，2 个 block 各 60 个试次"
 
 系统自动路由到编排器，引导完成 5 阶段设计。设计过程中，系统会生成试次窗口时间线图：
 
 ```
-Window 1: 注视点              Window 2: 刺激呈现            Window 3: 空屏等待
+    Window 1: 注视点             Window 2: 刺激呈现            Window 3: 空屏等待   
 ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
 │                      │      │                      │      │                      │
-│          +           │  →   │      红色"绿"        │  →   │                      │
+│          +           │  →   │       红色"绿"       │  →   │                      │
 │                      │      │                      │      │                      │
 └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-500ms                         2000ms                        500ms
-无反应                        ← 按键                        无反应
-                              RT 计时起点                   
+         500ms                         2000ms                        500ms          
+         无反应                       ← 按键                        无反应         
+                                    RT 计时起点                                     
 
-Window 4: 反馈
+     Window 4: 反馈     
 ┌──────────────────────┐
 │                      │
 │        正确!         │
 │                      │
 └──────────────────────┘
-1000ms
-无反应
+         1000ms         
+         无反应         
 ```
 
 确认时间线后，指定目标平台。输出可直接运行的平台文件（`.py` / `.js` / `.m`）和实验说明 README。
@@ -135,24 +162,24 @@ Amazing PsyCoder ❯ 🟢 Phase 1/5 · 诊断
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · 试次窗口 + 反应规则（最关键）
                    墨色红绿蓝 → f=红 j=绿 k=蓝。试次时间线：
-                   Window 1: 注视点              Window 2: 刺激呈现            Window 3: 空屏等待
+                       Window 1: 注视点             Window 2: 刺激呈现            Window 3: 空屏等待   
                    ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
                    │                      │      │                      │      │                      │
-                   │          +           │  →   │      红色"绿"        │  →   │                      │
+                   │          +           │  →   │       红色"绿"       │  →   │                      │
                    │                      │      │                      │      │                      │
                    └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-                   500ms                         2000ms                        500ms
-                   无反应                        f / j / k                     无反应
-                                                 ← RT起点                      
+                            500ms                         2000ms                        500ms          
+                            无反应                      f / j / k                       无反应         
+                                                        ← RT起点                                      
 
-                   Window 4: 反馈
+                        Window 4: 反馈     
                    ┌──────────────────────┐
                    │                      │
                    │        正确!         │
                    │                      │
                    └──────────────────────┘
-                   1000ms
-                   无反应
+                            1000ms         
+                            无反应         
                    Gate 1 ✅ 窗口完整、反应映射已确认
 
 用户             ❯ 时间线和按键没问题。ITI 400-800ms 随机。

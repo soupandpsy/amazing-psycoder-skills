@@ -31,31 +31,31 @@ Use this template to formalize an experiment before coding. Fill in what is know
 
 ## 4. Trial Event Sequence
 
-Represent as a **box timeline** (per Trial Window Timeline Rule). Each window must specify above the box: window name; inside the box: content; below the box: duration, response rule, file, condition, and data fields.
+Represent as a **box timeline** (per Trial Window Timeline Rule). Window name centered above the box, content centered inside, fields centered below. Box columns 24 chars wide with 6-space gaps. Arrow (→) between boxes in content row.
 
 ```text
-Window 1: Fixation              Window 2: Stimulus              Window 3: Response
-┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
-│                      │        │                      │        │                      │
-│          +           │   →    │      [MISSING]       │   →    │      [MISSING]       │
-│                      │        │                      │        │                      │
-└──────────────────────┘        └──────────────────────┘        └──────────────────────┘
-Duration: [MISSING]             Duration: [MISSING]             Duration: [MISSING]
-Response: none                  Response: [MISSING]             Response: [MISSING]
-File: none                      File: [MISSING]                 Condition: [MISSING]
-                                Condition: [MISSING]            Data: [MISSING]
-                                Data: none                      
+   Window 1: Fixation            Window 2: Stimulus            Window 3: Response   
+┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+│                      │      │                      │      │                      │
+│          +           │  →   │       [MISSING]      │  →   │       [MISSING]      │
+│                      │      │                      │      │                      │
+└──────────────────────┘      └──────────────────────┘      └──────────────────────┘
+     Duration: [MISSING]           Duration: [MISSING]          Duration: [MISSING]  
+      Response: none                Response: [MISSING]          Response: [MISSING]  
+        File: none                  File: [MISSING]              Condition: [MISSING]  
+                                Condition: [MISSING]              Data: [MISSING]     
+                                  Data: none                                          
 
-Window 4: Feedback              Window 5: ITI
-┌──────────────────────┐        ┌──────────────────────┐
-│                      │        │                      │
-│      [MISSING]       │   →    │                      │
-│                      │        │                      │
-└──────────────────────┘        └──────────────────────┘
-Duration: [MISSING]             Duration: [MISSING]
-Response: none                  Response: none
-Condition: none                 Condition: none
-Data: none                      Data: none
+  Window 4: Feedback           Window 5: ITI     
+┌──────────────────────┐      ┌──────────────────────┐
+│                      │      │                      │
+│       [MISSING]      │  →   │                      │
+│                      │      │                      │
+└──────────────────────┘      └──────────────────────┘
+     Duration: [MISSING]           Duration: [MISSING]
+      Response: none                Response: none    
+     Condition: none               Condition: none    
+        Data: none                   Data: none       
 ```
 
 Then fill the supporting table:

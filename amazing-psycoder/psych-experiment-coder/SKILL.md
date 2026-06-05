@@ -1,7 +1,7 @@
 ---
 name: psych-experiment-coder
 description: Use for generating, modifying, or debugging experiment code across platforms. Receives a completed config YAML and generates platform-specific code using a unified Generation Pipeline. Supports PsychoPy (27 paradigms), jsPsych (25 paradigms), and Psychtoolbox (5 paradigms + 100 demos). Handles timing, stimulus creation (including Chinese text), condition files, trial loops, data saving, and hardware integration. Trigger for 实验代码生成、编写实验、PsychoPy代码、psychopy实验、psychopy报错、psychtoolbox、jspsych.
-version: 1.0
+version: 1.2
 status: stable
 ---
 
@@ -9,7 +9,7 @@ status: stable
 
 ## Version
 
-v1.0 — multi-platform with platform directories, 2026-05-30.
+v1.2 — multi-platform with platform directories, 2026-06-06.
 
 ## Purpose
 
@@ -24,7 +24,7 @@ Core principles:
 - **骨架先行** — every generated script starts from the platform spec's Canonical Code Skeleton (spec/README.md). The skeleton is the single source of truth for all API patterns. Generated code that diverges structurally from the skeleton is incorrect.
 - **范式提供逻辑，骨架提供 API** — paradigm reference files define experiment logic (window sequence, accuracy rules, condition structure). They do NOT define API patterns. If a paradigm file's code example uses `KbCheck` for RT, the spec's `KbQueueCheck` wins.
 - **反模式零容忍** — `time.sleep()`, `event.getKeys(maxWait=)`, `KbCheck` for RT, in-loop disk I/O are blocked. The Post-Generation Quality Gate catches violations before delivery.
-- **代码生成优先级** — spec canonical skeleton > spec anti-patterns > config→code mapping > paradigm logic > Pavlovia demos (highest to lowest authority)
+- **代码生成优先级** — spec canonical skeleton > spec anti-patterns > config→code mapping > paradigm logic > demos (highest to lowest authority)
 - **生成后必经审计** — code generation is not the final step. After delivery, the user MUST run the code through `psych-experiment-code-reviewer` before collecting data. The reviewer is the mandatory quality gate between code generation and data collection.
 - **语言一致性（最高优先级）** — ALL text in generated code (instructions, stimuli, feedback, UI labels, comments, README) MUST match the user's language from the design workflow. Never copy Chinese/English example text from paradigm references or config schemas into generated output for users of a different language. This rule overrides all paradigm reference examples.
 

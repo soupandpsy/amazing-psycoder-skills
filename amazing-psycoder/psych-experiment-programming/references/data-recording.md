@@ -13,9 +13,9 @@ Every experiment must record these columns per trial:
 | trial | int | Trial number within block (1-indexed) |
 | condition | str | Condition label |
 | stimulus | str | Stimulus filename or ID |
-| correct_response | str | Expected key (or `None` for no-go) |
-| response | str | Actual key pressed (or `None` for timeout) |
-| rt | float | Reaction time in milliseconds (`None` if timeout) |
+| correct_response | str | Expected key (or `""` for no-go) |
+| response | str | Actual key pressed (or `""` for timeout) |
+| rt | float | Reaction time in milliseconds (empty if timeout) |
 | accuracy | int | 1=correct, 0=incorrect, -1=timeout |
 | timestamp | str | ISO 8601 timestamp of trial onset |
 

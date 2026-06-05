@@ -6,6 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
+[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-red)](https://github.com/openclaw/openclaw)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-standard-333)](https://agentskills.io)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
@@ -61,25 +65,46 @@ Amazing PsyCoder 把這些經驗編碼進了 Claude Code 的三個強制技能�
 
 ## ⚡ 安裝
 
-在 Claude Code 中輸入以下指令，系統會自動完成安裝：
+直接在 AI 對話中輸入對應平台的命令：
 
+**Claude Code**
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
-Claude Code 會自動 clone 倉庫，把技能文件註冊到 `~/.claude/skills/`。完成後輸入 `/amazing-psycoder` 即可啟動。
+**Codex**
+```
+$skill-installer
+```
+輸入倉庫地址：`https://github.com/soupandpsy/amazing-psycoder-skills`
+
+**Hermes**
+```
+hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
+```
+
+**OpenClaw**
+```
+npm i -g clawhub && clawhub install amazing-psycoder
+```
+
+安裝後輸入 `/amazing-psycoder` 即可啟動。
 
 <details>
-<summary><b>🛠️ 手動安裝</b></summary>
+<summary><b>其他安裝方式（平台命令不可用時）</b></summary>
 
 <br>
 
 ```bash
+git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
+```
+
+**Manual copy**:
+
+```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills-dir>/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills-dir>/
 ```
 
 </details>
@@ -88,31 +113,31 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-review
 
 ## 🚀 快速開始
 
-在 Claude Code 中輸入 `/amazing-psycoder`，然後描述你的實驗：
+輸入 `/amazing-psycoder`（或讓 agent 自動匹配技能），然後描述你的實驗：
 
 > "我要做一個 Stroop 任務，紅綠藍三色，按鍵反應，2 個 block 各 60 個試次"
 
 系統自動路由到編排器，引導完成 5 階段設計。設計過程中，系統會生成試次視窗時間線圖：
 
 ```
-Window 1: 注視點              Window 2: 刺激呈現            Window 3: 空屏等待
+    Window 1: 注視點             Window 2: 刺激呈現            Window 3: 空屏等待   
 ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
 │                      │      │                      │      │                      │
-│          +           │  →   │      紅色"綠"        │  →   │                      │
+│          +           │  →   │       紅色"綠"       │  →   │                      │
 │                      │      │                      │      │                      │
 └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-500ms                         2000ms                        500ms
-無反應                        ← 按鍵                        無反應
-                              RT 計時起點                   
+         500ms                         2000ms                        500ms          
+         無反應                       ← 按鍵                        無反應         
+                                    RT 計時起點                                     
 
-Window 4: 回饋
+     Window 4: 回饋     
 ┌──────────────────────┐
 │                      │
-│        正確!        │
+│        正確!         │
 │                      │
 └──────────────────────┘
-1000ms
-無反應
+         1000ms         
+         無反應         
 ```
 
 確認時間線後，指定目標平台。輸出可直接執行的平台檔案（`.py` / `.js` / `.m`）和實驗說明 README。
@@ -135,24 +160,24 @@ Amazing PsyCoder ❯ 🟢 Phase 1/5 · 診斷
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · 試次視窗 + 反應規則（最關鍵）
                    墨色紅綠藍 → f=紅 j=綠 k=藍。試次時間線：
-                   Window 1: 注視點              Window 2: 刺激呈現            Window 3: 空屏等待
+                       Window 1: 注視點             Window 2: 刺激呈現            Window 3: 空屏等待   
                    ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
                    │                      │      │                      │      │                      │
-                   │          +           │  →   │      紅色"綠"        │  →   │                      │
+                   │          +           │  →   │       紅色"綠"       │  →   │                      │
                    │                      │      │                      │      │                      │
                    └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-                   500ms                         2000ms                        500ms
-                   無反應                        f / j / k                     無反應
-                                                 ← RT起點                      
+                            500ms                         2000ms                        500ms          
+                            無反應                      f / j / k                       無反應         
+                                                        ← RT起點                                      
 
-                   Window 4: 回饋
+                        Window 4: 回饋     
                    ┌──────────────────────┐
                    │                      │
-                   │        正確!        │
+                   │        正確!         │
                    │                      │
                    └──────────────────────┘
-                   1000ms
-                   無反應
+                            1000ms         
+                            無反應         
                    Gate 1 ✅ 視窗完整、反應映射已確認
 
 使用者           ❯ 時間線和按鍵沒問題。ITI 400-800ms 隨機。

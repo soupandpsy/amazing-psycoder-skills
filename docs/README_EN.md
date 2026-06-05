@@ -6,6 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
+[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-red)](https://github.com/openclaw/openclaw)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-standard-333)](https://agentskills.io)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
@@ -45,7 +49,7 @@ Every lab has seniors who've stepped on every one of these mines, but that knowl
 
 Just figuring out the APIs takes weeks.
 
-Amazing PsyCoder encodes these lessons into three mandatory Claude Code skills — design orchestration (5-phase confirmation), code generation (unified pipeline + 9-item quality gate), and code audit (smoke test protocol). Whether your lab uses PsychoPy, jsPsych, or Psychtoolbox, the same pipeline generates platform-appropriate code.
+Amazing PsyCoder encodes these lessons into three mandatory skills — design orchestration (5-phase confirmation), code generation (unified pipeline + 9-item quality gate), and code audit (smoke test protocol). Whether your lab uses PsychoPy, jsPsych, or Psychtoolbox, the same pipeline generates platform-appropriate code.
 
 ---
 
@@ -61,25 +65,46 @@ Amazing PsyCoder encodes these lessons into three mandatory Claude Code skills �
 
 ## ⚡ Install
 
-In Claude Code, enter the following instruction and the system will install automatically:
+Type the command for your platform directly in your AI chat:
 
+**Claude Code**
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
-Claude Code will clone the repo and register the skill files into `~/.claude/skills/`. Once done, type `/amazing-psycoder` to launch.
+**Codex**
+```
+$skill-installer
+```
+Enter repo URL: `https://github.com/soupandpsy/amazing-psycoder-skills`
+
+**Hermes**
+```
+hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
+```
+
+**OpenClaw**
+```
+npm i -g clawhub && clawhub install amazing-psycoder
+```
+
+Then type `/amazing-psycoder` to launch.
 
 <details>
-<summary><b>🛠️ Manual install</b></summary>
+<summary><b>Other install methods</b></summary>
 
 <br>
 
 ```bash
+git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
+```
+
+**Manual copy**:
+
+```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills-dir>/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills-dir>/
 ```
 
 </details>
@@ -88,31 +113,31 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-review
 
 ## 🚀 Quick Start
 
-In Claude Code, type `/amazing-psycoder` and describe your experiment:
+Type `/amazing-psycoder` (or let the agent auto-match the skill) and describe your experiment:
 
 > "I want a Stroop task, red/green/blue text, key-press response, 2 blocks of 60 trials each"
 
 The system routes you to the orchestrator for the 5-phase design. During the process, it generates a trial window timeline:
 
 ```
-Window 1: Fixation          Window 2: Stimulus          Window 3: Blank
-┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-│                      │    │                      │    │                      │
-│          +           │ →  │     Red (green)      │ →  │                      │
-│                      │    │                      │    │                      │
-└──────────────────────┘    └──────────────────────┘    └──────────────────────┘
-500ms                       2000ms                      500ms
-no resp                     ← press                     no resp
-                            RT onset                    
+   Window 1: Fixation            Window 2: Stimulus             Window 3: Blank     
+┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+│                      │      │                      │      │                      │
+│          +           │  →   │     Red (green)      │  →   │                      │
+│                      │      │                      │      │                      │
+└──────────────────────┘      └──────────────────────┘      └──────────────────────┘
+         500ms                         2000ms                        500ms          
+        no resp                       ← press                      no resp         
+                                      RT onset                                      
 
-Window 4: Feedback
+   Window 4: Feedback   
 ┌──────────────────────┐
 │                      │
 │       Correct!       │
 │                      │
 └──────────────────────┘
-1000ms
-no resp
+         1000ms         
+        no resp         
 ```
 
 After confirming the timeline, choose your platform. Outputs a runnable file (`.py` / `.js` / `.m`) and an experiment README.
@@ -135,24 +160,24 @@ User             ❯ Yes, PsychoPy.
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · Trial Windows + Response Rules (most critical)
                    Ink colors → f=red j=green k=blue. Trial timeline:
-                   Window 1: Fixation          Window 2: Stimulus          Window 3: Blank
-                   ┌──────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-                   │                      │    │                      │    │                      │
-                   │          +           │ →  │     Red (green)      │ →  │                      │
-                   │                      │    │                      │    │                      │
-                   └──────────────────────┘    └──────────────────────┘    └──────────────────────┘
-                   500ms                       2000ms                      500ms
-                   no resp                     f / j / k                   no resp
-                                               ← RT onset                  
+                      Window 1: Fixation            Window 2: Stimulus             Window 3: Blank     
+                   ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
+                   │                      │      │                      │      │                      │
+                   │          +           │  →   │     Red (green)      │  →   │                      │
+                   │                      │      │                      │      │                      │
+                   └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
+                            500ms                         2000ms                        500ms          
+                           no resp                      f / j / k                      no resp         
+                                                       ← RT onset                                     
 
-                   Window 4: Feedback
+                      Window 4: Feedback   
                    ┌──────────────────────┐
                    │                      │
                    │       Correct!       │
                    │                      │
                    └──────────────────────┘
-                   1000ms
-                   no resp
+                            1000ms         
+                           no resp         
                    Gate 1 ✅ Windows complete, response mapping confirmed
 
 User             ❯ Timeline and keys look good. ITI 400-800ms random.

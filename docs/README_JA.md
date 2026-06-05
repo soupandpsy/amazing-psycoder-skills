@@ -6,6 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
+[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-red)](https://github.com/openclaw/openclaw)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-standard-333)](https://agentskills.io)
 [![Stars](https://img.shields.io/github/stars/soupandpsy/amazing-psycoder-skills?style=social)](https://github.com/soupandpsy/amazing-psycoder-skills)
 
 [**简体中文**](../README.md) · [**繁體中文**](README_ZH-HANT.md) · [**English**](README_EN.md) · [**日本語**](README_JA.md) · [**Deutsch**](README_DE.md) · [**Français**](README_FR.md)
@@ -61,25 +65,46 @@ Amazing PsyCoderはこれらの教訓をClaude Codeの3つの必須スキルに�
 
 ## ⚡ インストール
 
-Claude Codeで以下の指示を入力すると、システムが自動的にインストールします：
+AIチャットに直接プラットフォームのコマンドを入力してください：
 
+**Claude Code**
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
-Claude Codeがリポジトリをクローンし、スキルファイルを `~/.claude/skills/` に登録します。完了後、`/amazing-psycoder` と入力して起動します。
+**Codex**
+```
+$skill-installer
+```
+リポジトリURLを入力：`https://github.com/soupandpsy/amazing-psycoder-skills`
+
+**Hermes**
+```
+hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
+```
+
+**OpenClaw**
+```
+npm i -g clawhub && clawhub install amazing-psycoder
+```
+
+インストール後、`/amazing-psycoder` と入力して起動します。
 
 <details>
-<summary><b>🛠️ 手動インストール</b></summary>
+<summary><b>他のインストール方法</b></summary>
 
 <br>
 
 ```bash
+git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
+```
+
+**Manual copy**:
+
+```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills-dir>/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills-dir>/
 ```
 
 </details>
@@ -95,24 +120,24 @@ Claude Codeで `/amazing-psycoder` と入力し、実験の内容を説明しま
 システムがオーケストレーターにルーティングし、5段階の設計プロセスをガイドします。この過程で、試行ウィンドウのタイムラインが生成されます：
 
 ```
-Window 1: 注視点              Window 2: 刺激提示            Window 3: 空白
+    Window 1: 注視点             Window 2: 刺激提示              Window 3: 空白     
 ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
 │                      │      │                      │      │                      │
-│          +           │  →   │      赤 (緑)         │  →   │                      │
+│          +           │  →   │       赤 (緑)        │  →   │                      │
 │                      │      │                      │      │                      │
 └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-500ms                         2000ms                        500ms
-反応なし                      ← キー押下                    反応なし
-                              RT 開始時点                   
+         500ms                         2000ms                        500ms          
+        反応なし                    ← キー押下                     反応なし        
+                                    RT 開始時点                                     
 
 Window 4: フィードバック
 ┌──────────────────────┐
 │                      │
-│       正解！         │
+│        正解！        │
 │                      │
 └──────────────────────┘
-1000ms
-反応なし
+         1000ms         
+        反応なし        
 ```
 
 タイムラインを確認したら、対象プラットフォームを選択します。実行可能なファイル（`.py` / `.js` / `.m`）と実験用READMEが出力されます。
@@ -135,24 +160,24 @@ Amazing PsyCoder ❯ 🟢 Phase 1/5 · 診断
 
 Amazing PsyCoder ❯ 🟢 Phase 2/5 · 試行ウィンドウ + 反応ルール（最重要）
                    インク色 → f=赤 j=緑 k=青。試行タイムライン：
-                   Window 1: 注視点              Window 2: 刺激提示            Window 3: 空白
+                       Window 1: 注視点             Window 2: 刺激提示              Window 3: 空白     
                    ┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
                    │                      │      │                      │      │                      │
-                   │          +           │  →   │      赤 (緑)         │  →   │                      │
+                   │          +           │  →   │       赤 (緑)        │  →   │                      │
                    │                      │      │                      │      │                      │
                    └──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-                   500ms                         2000ms                        500ms
-                   反応なし                      赤=f 緑=j 青=k                反応なし
-                                                 ← RT開始時点                  
+                            500ms                         2000ms                        500ms          
+                           反応なし                   赤=f 緑=j 青=k                   反応なし        
+                                                      ← RT開始時点                                    
 
                    Window 4: フィードバック
                    ┌──────────────────────┐
                    │                      │
-                   │       正解！         │
+                   │        正解！        │
                    │                      │
                    └──────────────────────┘
-                   1000ms
-                   反応なし
+                            1000ms         
+                           反応なし        
                    Gate 1 ✅ ウィンドウ完全、反応マッピング確認済
 
 ユーザー         ❯ タイムラインとキーは問題なし。ITI 400-800ms ランダム。
