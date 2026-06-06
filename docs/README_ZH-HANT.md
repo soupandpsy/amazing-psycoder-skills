@@ -49,7 +49,7 @@
 
 光搞清楚 API 就要花幾週。
 
-Amazing PsyCoder 把這些經驗編碼進了 Claude Code 的三個強制技能裡——設計編排（5 階段確認）、程式碼生成（統一流水線 + 9 項品質門）、程式碼審計（煙霧測試協定）。不管你的實驗室用 PsychoPy、jsPsych 還是 Psychtoolbox，同一套流程生成對應程式碼。
+Amazing PsyCoder 把這些經驗編碼進了三個強制技能裡——設計編排（5 階段確認）、程式碼生成（統一流水線 + 9 項品質門）、程式碼審計（煙霧測試協定）。遵循 [agentskills.io](https://agentskills.io) 開放標準，支援 Claude Code / Codex / Hermes / OpenClaw。不管你的實驗室用 PsychoPy、jsPsych 還是 Psychtoolbox，同一套流程生成對應程式碼。
 
 ---
 

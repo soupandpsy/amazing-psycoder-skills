@@ -49,7 +49,7 @@ Jedes Labor hat erfahrene Kollegen, die all diese Fehler schon gemacht haben —
 
 Allein das Verstehen der APIs dauert Wochen.
 
-Amazing PsyCoder kodiert diese Lektionen in drei zwingende Claude Code Skills — Design-Orchestrierung (5-Phasen-Bestätigung), Code-Generierung (einheitliche Pipeline + 9-Punkte-Qualitätskontrolle) und Code-Audit (Smoke-Test-Protokoll). Egal ob Ihr Labor PsychoPy, jsPsych oder Psychtoolbox verwendet — dieselbe Pipeline erzeugt plattformgerechten Code.
+Amazing PsyCoder kodiert diese Lektionen in drei zwingende Skills — Design-Orchestrierung (5-Phasen-Bestätigung), Code-Generierung (einheitliche Pipeline + 9-Punkte-Qualitätskontrolle) und Code-Audit (Smoke-Test-Protokoll). Folgt dem [agentskills.io](https://agentskills.io) Standard und unterstützt Claude Code / Codex / Hermes / OpenClaw. Egal ob Ihr Labor PsychoPy, jsPsych oder Psychtoolbox verwendet — dieselbe Pipeline erzeugt plattformgerechten Code.
 
 ---
 

@@ -49,7 +49,7 @@
 
 APIを理解するだけで数週間かかります。
 
-Amazing PsyCoderはこれらの教訓をClaude Codeの3つの必須スキルにエンコードしました——設計オーケストレーション（5段階確認）、コード生成（統一パイプライン + 9項目の品質ゲート）、コード監査（スモークテストプロトコル）。研究室がPsychoPy、jsPsych、Psychtoolboxのどれを使っていても、同じパイプラインでプラットフォームに適したコードを生成します。
+Amazing PsyCoderはこれらの教訓を3つの必須スキルにエンコードしました——設計オーケストレーション（5段階確認）、コード生成（統一パイプライン + 9項目の品質ゲート）、コード監査（スモークテストプロトコル）。[agentskills.io](https://agentskills.io) オープン標準に準拠し、Claude Code / Codex / Hermes / OpenClaw に対応。研究室がPsychoPy、jsPsych、Psychtoolboxのどれを使っていても、同じパイプラインでプラットフォームに適したコードを生成します。
 
 ---
 
@@ -113,7 +113,7 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programmin
 
 ## 🚀 クイックスタート
 
-Claude Codeで `/amazing-psycoder` と入力し、実験の内容を説明します：
+`/amazing-psycoder` と入力し（またはエージェントに自動検出させて）、実験の内容を説明します：
 
 > "I want a Stroop task, red/green/blue text, key-press response, 2 blocks of 60 trials each"
 

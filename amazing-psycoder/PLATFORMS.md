@@ -184,7 +184,7 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-review
 | **Claude Code** | Fully tested. Native inter-skill communication. No restart needed after install. |
 | **Codex** | Must **restart** after install. `~/.codex/skills/` is legacy — prefer `~/.agents/skills/`. Sub-skill chaining needs `$skill-name` prefix. |
 | **Hermes** | `hermes skills install` supports GitHub URLs directly. Frontmatter `tags` field recommended for discovery. Description should include explicit trigger phrases. |
-| **OpenClaw** | `clawhub install` requires skill published to ClawHub first. Until published, manual copy to `~/.openclaw/workspace/skills/` works. Restart gateway after install. `metadata` must be single-line JSON. |
+| **OpenClaw** | Published on [ClawHub](https://clawhub.ai/soupandpsy/amazing-psycoder). `clawhub install amazing-psycoder` works directly. Restart gateway after install. `metadata` must be single-line JSON. |
 
 ---
 
