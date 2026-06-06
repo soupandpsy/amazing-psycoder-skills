@@ -264,6 +264,8 @@ Amazing PsyCoder ❯ 🔍 审计通过 · 就绪标签：ready_for_collection
 amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← 编排器（系统入口）
 │   ├── SKILL.md
+│   ├── PLATFORMS.md                   ← 平台适配参考
+│   ├── install.sh                     ← 全平台安装脚本
 │   ├── psych-experiment-programming/  ← ① 设计层（5 阶段工作流 + 38 范式）
 │   ├── psych-experiment-coder/        ← ② 代码生成层
 │   │   ├── psychopy/

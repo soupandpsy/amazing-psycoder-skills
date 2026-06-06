@@ -262,6 +262,8 @@ Amazing PsyCoder ❯ 🔍 監査合格 · 準備状態：ready_for_collection
 amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← オーケストレーター（エントリポイント）
 │   ├── SKILL.md
+├── PLATFORMS.md                   ← Platform adapter reference
+├── install.sh                     ← Cross-platform installer
 │   ├── psych-experiment-programming/  ← ① 設計層（5段階ワークフロー + 38パラダイム）
 │   ├── psych-experiment-coder/        ← ② コード生成層
 │   │   ├── psychopy/

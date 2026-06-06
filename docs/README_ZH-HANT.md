@@ -262,6 +262,8 @@ Amazing PsyCoder ❯ 🔍 審計通過 · 就緒標籤：ready_for_collection
 amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← 編排器（系統入口）
 │   ├── SKILL.md
+├── PLATFORMS.md                   ← Platform adapter reference
+├── install.sh                     ← Cross-platform installer
 │   ├── psych-experiment-programming/  ← ① 設計層（5 階段工作流 + 38 範式）
 │   ├── psych-experiment-coder/        ← ② 程式碼生成層
 │   │   ├── psychopy/

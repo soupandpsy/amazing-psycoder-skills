@@ -262,6 +262,8 @@ Amazing PsyCoder ❯ 🔍 Audit bestanden · Bereitschaft: ready_for_collection
 amazing-psycoder-skills/
 ├── amazing-psycoder/                  ← Orchestrator (Einstiegspunkt)
 │   ├── SKILL.md
+├── PLATFORMS.md                   ← Platform adapter reference
+├── install.sh                     ← Cross-platform installer
 │   ├── psych-experiment-programming/  ← ① Design-Schicht (5-Phasen-Workflow + 38 Paradigmen)
 │   ├── psych-experiment-coder/        ← ② Code-Generierungsschicht
 │   │   ├── psychopy/
