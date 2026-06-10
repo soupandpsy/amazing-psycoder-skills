@@ -2,7 +2,7 @@
 
 # 🧠 Amazing PsyCoder 💻
 
-> Von der Experiment-Idee zum produktionsreifen Code. Design → Generierung → Audit, drei zwingende Schritte. 🪄
+> Lass die Hürde des Programmierens in der Psychologieforschung komplett verschwinden.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
@@ -16,7 +16,7 @@
 
 <br>
 
-[📖 Warum](#-warum-es-dieses-projekt-gibt) · [⚡ Installation](#-installation) · [🚀 Schnellstart](#-schnellstart) · [🎬 Demo](#-demo) · [✨ Features](#-features) · [👥 Für wen](#-für-wen)
+[📖 Warum](#-warum-es-dieses-projekt-gibt) · [👥 Für Wen](#-für-wen) · [⚡ Installation](#-installation) · [🚀 Schnellstart](#-schnellstart) · [🧪 Experiment](#-experiment-programmierung) · [📊 Datenanalyse](#-datenanalyse) · [🎬 Demo](#-demo) · [📂 Dateistruktur](#-dateistruktur)
 
 </div>
 
@@ -25,41 +25,46 @@
 <table>
 <tr><td align="left">
 
-⏱️ &nbsp;Ab welchem Bildschirm beginnt die RT-Messung? Falscher Startpunkt — alle Messwerte sind unbrauchbar.<br>
-⌨️ &nbsp;Ist die Tastenzuordnung vertauscht? Die Versuchsperson drückt richtig, der Code bewertet es falsch.<br>
-🚦 &nbsp;Wie definiert man „korrekt" bei No-go? Drücken, wenn nicht gedrückt werden soll, nicht drücken, wenn gedrückt werden soll — die Logik verschwimmt.<br>
-💾 &nbsp;Überleben die Daten einen Absturz? Speichern erst am Ende bedeutet: Absturz = alles verloren.<br>
-🔤 &nbsp;Chinesische Instruktionen erscheinen als □□□ — keine CJK-Schriftart, Teilnehmer sehen nur Zeichensalat.<br>
-😇 &nbsp;Es läuft, aber ist es wirklich bereit für die Datenerhebung? RT-Genauigkeit, logische Korrektheit, Datenintegrität — keine systematische Garantie.
+🔬 &nbsp;Bevor aus einer Idee ein lauffähiges Experiment wird, muss man erst Python, JavaScript oder MATLAB lernen.<br>
+📦 &nbsp;Der Legacy-Code aus dem Labor läuft auf dem nächsten Rechner nicht mehr — keiner kennt die Abhängigkeiten, keiner traut sich an die Logik.<br>
+📊 &nbsp;Statistische Methoden werden nach Gewohnheit gewählt — „wir nehmen halt ANOVA". Eine Rückfrage des Reviewers, und man fängt von vorne an.<br>
+🔁 &nbsp;Die Analyseergebnisse kriegt nur man selbst reproduziert — anderer Rechner, anderer Seed, andere Schlussfolgerung.<br>
+✂️ &nbsp;Experiment und Analyse machen oft verschiedene Leute — nach der Erhebung stellt sich heraus: Beim Design hat niemand an die Auswertung gedacht.<br>
+📝 &nbsp;Das Journal verlangt eine Erklärung zur Reproduzierbarkeit — aber der Code wurde nie geprüft, nie dokumentiert, nie unabhängig validiert.
 
 </td></tr>
 </table>
 
-### ✨ Amazing PsyCoder löst genau das.
+### ✨ Genau dafür ist Amazing PsyCoder da.
 
-Keine Code-Vorlage, die Sie selbst anpassen — eher ein erfahrener Veteran der Experiment-Programmierung, der neben Ihnen sitzt. **Design klären → Code generieren → Vor der Erhebung auditieren.**
-
-Drei zwingende Schritte. Kein Überspringen. **Kein Code wird ohne bestandenes Audit ausgeliefert.**
+Du musst weder Python können noch Statistik verstehen. Du bringst deine Ideen und deine Daten mit — Amazing PsyCoder führt dich Schritt für Schritt durchs Design, generiert den Code und prüft alles, bevor es ernst wird. Was du am Ende in den Händen hältst, läuft auf Anhieb, und die Analyse hält auch dem Blick des Reviewers stand.
 
 ---
 
 ## 📖 Warum es dieses Projekt gibt
 
-Jedes Labor hat erfahrene Kollegen, die all diese Fehler schon gemacht haben — aber dieses Wissen wird selten systematisch weitergegeben. PsychoPy Builder oder Coder? Wie funktionieren jsPsych Timeline-Variablen? Warum braucht `Screen('Flip')` `vbl + (waitframes - 0.5) * ifi`?
+Auf dem Weg von der ersten Idee bis zur tatsächlichen Datenerhebung und Auswertung gibt es zwei Dinge, die am meisten Zeit kosten.
 
-Allein das Verstehen der APIs dauert Wochen.
+**Erstens: Experiment-Programmierung.** Bevor sich eine Hypothese testen lässt, muss das Experiment erst einmal programmiert werden. PsychoPy Builder ist zu unflexibel, für den Coder braucht man Python; jsPsych setzt JavaScript und Timeline-Logik voraus; Psychtoolbox erfordert MATLAB und Frame-Synchronisation. Fragen wie „Ab welchem Bildschirm startet die RT?" oder „Wie verhindere ich vertauschte Tasten?" oder „Wie speichere ich so, dass bei einem Absturz nichts verloren geht?" — das kostet Wochen. Von der Idee bis zum lauffähigen Experiment geht mehr Zeit verloren als für das eigentliche Experimentdesign.
 
-Amazing PsyCoder kodiert diese Lektionen in drei zwingende Skills — Design-Orchestrierung (5-Phasen-Bestätigung), Code-Generierung (einheitliche Pipeline + 9-Punkte-Qualitätskontrolle) und Code-Audit (Smoke-Test-Protokoll). Folgt dem [agentskills.io](https://agentskills.io) Standard und unterstützt Claude Code / Codex / Hermes / OpenClaw. Egal ob Ihr Labor PsychoPy, jsPsych oder Psychtoolbox verwendet — dieselbe Pipeline erzeugt plattformgerechten Code.
+**Zweitens: Datenanalyse.** Die Daten sind da — aber welche statistische Methode passt? Within-Subject-Design: gepaarter t-Test oder gemischtes Modell? Genauigkeit nahe der Decke — ist ANOVA noch zulässig? Und wenn der Reviewer fragt: „Warum diese Methode?" — was antwortet man dann? Läuft das Skript auf einem anderen Rechner überhaupt noch?
+
+Das ist keine Frage des Könnens, sondern eine Frage der richtigen Werkzeuge. Programmieren und Auswerten sollten die Forschung erleichtern, nicht aufhalten.
+
+Amazing PsyCoder kodiert dieses Erfahrungswissen in 7 Skills — 1 Orchestrator plus 6 Sub-Skills, die den kompletten Weg abdecken: vom Experiment bis zur publikationsreifen Analyse. Folgt dem [agentskills.io](https://agentskills.io) Standard und unterstützt Claude Code / Codex / Hermes / OpenClaw.
+
+Zeit für die Forschung. Nicht für die Technik.
 
 ---
 
-## 🎯 Die Drei Skills
+## 👥 Für Wen
 
-| Skill | Aufgabe | Ergebnis |
-|-------|---------|----------|
-| 1️⃣ **Design** `psych-experiment-programming` | 5-Phasen progressive Bestätigung: Trial-Zeitlinie → Antwortregeln → Bedingungstabelle → Block-Struktur → finale Prüfung | config YAML + Bedingungstabellen |
-| 2️⃣ **Code-Gen** `psych-experiment-coder` | 4-Schichten-Prioritätsarchitektur, 9-Punkte-Qualitätstor. `time.sleep()` / `KbCheck` für RT werden direkt abgelehnt | ausführbarer Code + README |
-| 3️⃣ **Audit** `psych-experiment-code-reviewer` | Smoke-Tests + Datenintegritätsprüfung + paradigmspezifische Fehlermuster-Analyse. RT-Startpunkt, Tastenzuordnung, Datensicherheit — Punkt für Punkt | Audit-Bericht + Bereitschaftslabel |
+- 🎓 Psychologie-Studierende und Doktoranden, die ein Experiment programmieren müssen oder bald werden
+- 🧠 Forschende in kognitiver, Verhaltens- oder Sozialpsychologie
+- 😵‍💫 Wer bei RT, Randomisierung und Bedingungstabellen schon mehrfach gestolpert ist und sich eine systematische Qualitätssicherung wünscht
+- 📊 Wer nach der Datenerhebung unsicher ist, welche Statistik die richtige ist — und ein durchdachtes Analyseverfahren möchte
+- 📝 Wer vor der Einreichung die Reproduzierbarkeit der Analyse bestätigen will — braucht ein unabhängiges Audit
+- 🐍 PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB Nutzer
 
 ---
 
@@ -68,22 +73,27 @@ Amazing PsyCoder kodiert diese Lektionen in drei zwingende Skills — Design-Orc
 Gib den Befehl für deine Plattform direkt in den KI-Chat ein:
 
 **Claude Code**
+
 ```
 Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
 **Codex**
+
 ```
 $skill-installer
 ```
+
 Repo-URL eingeben: `https://github.com/soupandpsy/amazing-psycoder-skills`
 
 **Hermes**
+
 ```
 hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
 ```
 
 **OpenClaw**
+
 ```
 npm i -g clawhub && clawhub install amazing-psycoder
 ```
@@ -91,20 +101,15 @@ npm i -g clawhub && clawhub install amazing-psycoder
 Danach `/amazing-psycoder` eingeben.
 
 <details>
-<summary><b>Weitere Installationsmethoden</b></summary>
+<summary><b>Terminal-Installation (plattformübergreifend)</b></summary>
 
 <br>
 
 ```bash
-git clone https://github.com/soupandpsy/amazing-psycoder-skills && cd amazing-psycoder-skills/amazing-psycoder && ./install.sh
-```
-
-**Manual copy**:
-
-```bash
-git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psycoder-skills
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder <skills-dir>/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programming,coder,code-reviewer} <skills-dir>/
+git clone https://github.com/soupandpsy/amazing-psycoder-skills
+cd amazing-psycoder-skills/amazing-psycoder
+./install.sh           # erkennt die Plattform automatisch
+# oder manuell: ./install.sh claude | codex | hermes | openclaw
 ```
 
 </details>
@@ -113,34 +118,89 @@ cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-{programmin
 
 ## 🚀 Schnellstart
 
-Geben Sie `/amazing-psycoder` ein (oder lassen Sie den Agenten die Fähigkeit automatisch erkennen) und beschreiben Sie Ihr Experiment:
+Nach der Installation gib `/amazing-psycoder` ein und beschreibe direkt, was du vorhast:
 
-> "I want a Stroop task, red/green/blue text, key-press response, 2 blocks of 60 trials each"
+> "Ich möchte eine Stroop-Aufgabe machen, rot/grün/blau, Tastenreaktion" → startet automatisch das Experiment-Design
 
-Das System leitet Sie zum Orchestrator weiter, der Sie durch den 5-Phasen-Designprozess führt. Dabei wird eine Trial-Zeitlinie generiert:
+> "Hilf mir bei der Stroop-Datenanalyse: Unterscheiden sich kongruente und inkongruente RTs?" → startet automatisch das Analyse-Design
 
-```
-   Window 1: Fixation            Window 2: Stimulus             Window 3: Pause     
-┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
-│                      │      │                      │      │                      │
-│          +           │  →   │     Rot (grün)      │  →   │                      │
-│                      │      │                      │      │                      │
-└──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-         500ms                         2000ms                        500ms          
-      keine Reak.                     ← Taste                    keine Reak.       
-                                      RT-Start                                      
+Du musst nicht angeben, welcher Skill zuständig ist — der Orchestrator erkennt deinen Bedarf automatisch. Danach führt dich der Skill Schritt für Schritt: Design bestätigen, Methode auswählen, Code generieren, Audit prüfen. Du musst nur die Fragen beantworten, die er dir stellt.
 
-   Window 4: Feedback   
-┌──────────────────────┐
-│                      │
-│       Richtig!       │
-│                      │
-└──────────────────────┘
-         1000ms         
-      keine Reak.       
-```
+---
 
-Nach Bestätigung der Zeitlinie wählen Sie Ihre Plattform. Ausgabe ist eine ausführbare Datei (`.py` / `.js` / `.m`) und eine Experiment-README.
+## 🧪 Experiment-Programmierung
+
+Von der ersten Idee zum erhebungsbereiten Experiment — in drei Schritten: Design, Code, Audit.
+
+### Skills
+
+| # | Skill | Aufgabe | Wichtige Details |
+|---|-------|---------|------------------|
+| ① | **Design** `psy-exp-designer` | Aus einer Experiment-Idee eine komplette Designspezifikation machen | 5-Phasen-Bestätigung. Phase 2 generiert eine Trial-Fenster-Zeitlinie — Dauer, Tasten, RT-Startpunkt auf einen Blick. 5 harte Gates. 38 Paradigmen-Referenzen |
+| ② | **Code** `psy-exp-coder` | Aus der Designspezifikation lauffähigen Code generieren | 4-Schichten-Prioritätsarchitektur. 9-Punkte-Qualitätstor: `time.sleep()`, `KbCheck` für RT — werden direkt abgelehnt. 12-Schritt-Codevorlage, Parameter oben |
+| ③ | **Audit** `psy-exp-reviewer` | Die letzte Prüfung vor der Datenerhebung | 5 Prüfmodi. Smoke-Test-Protokoll. Paradigmen-Fehlermuster-Check. Bei Nichtbestehen: konkreter Reparaturpfad. Bereitschaftslabel: `ready_for_collection` |
+
+### Plattformen
+
+| Plattform | Besonderheit |
+|-----------|-------------|
+| 🐍 **[PsychoPy](https://psychopy.org/)** | Python-Ökosystem, USB-HID-Hardware-Zeitstempel, RT-Präzision im Millisekundenbereich. Erste Wahl fürs lokale Labor |
+| 🌐 **[jsPsych](https://www.jspsych.org/v7/)** | JavaScript-Ökosystem, läuft im Browser, keine Installation nötig. Erste Wahl für Online-Experimente |
+| 🧮 **[Psychtoolbox](http://psychtoolbox.org/)** | MATLAB-Ökosystem, GPU-genaue Frame-Kontrolle. Erste Wahl bei höchsten Timing-Anforderungen |
+
+### Paradigmen-Abdeckung
+
+**38 Paradigmen**, jedes nach einheitlicher Meta-Logik aufbereitet: Wann verwenden → Kernlogik → Muss bestätigt werden → Nicht voraussetzen → Trial-Fenster-Zeitlinie → Bedingungstabelle → Datenanalyse → Varianten & Referenzen.
+
+| Kategorie | Paradigmen |
+|-----------|-----------|
+| 🎯 **Aufmerksamkeit & Inhibitionskontrolle** | Stroop · Eriksen Flanker · Simon · Go/No-go · Stop-signal · ANT · Posner Cuing · Visual Search · Dot-probe · Navon · CPT · Antisaccade |
+| 🧠 **Gedächtnis & Arbeitsgedächtnis** | N-back · Sternberg · Corsi Blocks · Change Detection · Drag and Drop |
+| 🔄 **Exekutive Funktionen & kognitive Flexibilität** | Task Switching · WCST · Choice RT |
+| 👥 **Soziale Kognition & Emotion** | Cyberball · Climate Reflection · Phone a Friend · Rating · Priming · IAT · EAST |
+| 💰 **Entscheidung & Belohnung** | BART · Delay Discounting · Rating to Choice · Ultimatum Game |
+| 👁️ **Wahrnehmung & Psychophysik** | Psychophysics Staircase · Multisensory Nature · Mental Rotation |
+| 🌱 **Entwicklung & individuelle Unterschiede** | Children Flanker · Bilingual Stroop · Numerical Stroop · Writing Distraction |
+
+---
+
+## 📊 Datenanalyse
+
+Sind die Daten erst einmal da, geht es ebenfalls in drei Schritten weiter: Analyse designen, Code generieren, Reproduzierbarkeit prüfen.
+
+### Skills
+
+| # | Skill | Aufgabe | Wichtige Details |
+|---|-------|---------|------------------|
+| ④ | **Analyse-Design** `psy-ana-designer` | Ausgehend von der wissenschaftlichen Frage ein vollständiges Analysekonzept entwerfen | 5-Phasen-Bestätigung. Phase 2 klärt die Datenorganisation (Einzeldateien oder zusammengefasst? Benennung? CSV/Excel/TSV?). Phase 3 vergleicht Methoden entlang 12 Dimensionen. Config-YAML als Single Source of Truth |
+| ⑤ | **Analyse-Code** `psy-ana-coder` | Aus dem Analysekonzept reproduzierbare Skripte generieren | Phase-0-Validierung → R/Python bestätigen → 12-Schritt-Generierung. 10-Punkte-Qualitätstor. R: tidyverse/lme4/ggplot2. Python: pandas/statsmodels/seaborn. Alles Config-gesteuert |
+| ⑥ | **Analyse-Audit** `psy-ana-reviewer` | Die letzte Prüfung vor der Publikation | 4 Prüfmodi. Automatisches Einlese-Protokoll. Prüfung auf statistische Korrektheit + Reproduzierbarkeit + Annahmen. Anti-Pattern-Erkennung für R und Python. Bei Nichtbestehen: Reparaturpfad. Bereitschaftslabel: `ready_for_publication` |
+
+### Plattformen
+
+| Plattform | Besonderheit |
+|-----------|-------------|
+| 📊 **[R](https://www.r-project.org/)** | Der Standard für statistische Berechnungen. tidyverse + lme4 + ggplot2 + RMarkdown. Erste Wahl für akademische Publikationen |
+| 🐍 **[Python](https://www.python.org/)** | Universelles Scientific Computing. pandas + statsmodels + seaborn + Jupyter. Reproduzierbare Analyse |
+
+### Analysemethoden
+
+**60 Methoden, 48 Diagrammtypen**. Jede Methodenentscheidung durchläuft einen 12-Dimensionen-Vergleich: Power · Fehler-1.-Art-Kontrolle · Datennutzung · Ausreißer-Sensitivität · Annahmen-Robustheit · Interpretierbarkeit · Akzeptanz im Feld · Effektstärken-Vergleichbarkeit · Reproduzierbarkeit · Erweiterbarkeit · Stichprobengrößen-Restriktion · Rechnerische Umsetzbarkeit.
+
+| Kategorie | Methoden (Beispiele) |
+|-----------|---------------------|
+| **Mittelwertsvergleiche** | Gepaarter/unabhängiger t-Test, Within-/Between-Subject-ANOVA, gemischte ANOVA, ANCOVA, MANOVA |
+| **Gemischte Modelle** | Lineares gemischtes Modell (LMM), logistisches gemischtes Modell (GLMM), Gamma-GLMM, gekreuzte Zufallseffekte |
+| **Mediation & Moderation** | Mediationsanalyse, Moderationsanalyse, moderierte Mediation, Strukturgleichungsmodelle |
+| **Regression & Längsschnitt** | Multiple Regression, Quantilsregression, Wachstumskurven, Cross-Lagged-Panel, Zeitreihen |
+| **Korrelation & Klassifikation** | Pearson/Spearman-Korrelation, Repeated-Measures-Korrelation, Chi-Quadrat-Test, kanonische Korrelation |
+| **Nonparametrisch & Robust** | Wilcoxon, Friedman, Permutationstests, Bootstrap, robuste Regression |
+| **Bayes-Statistik** | Bayes-t-Test, Bayes-ANOVA, bayesianisches gemischtes Modell |
+| **Messung & Skalierung** | Reliabilitätsanalyse (α/ω/ICC), explorative/konfirmatorische Faktorenanalyse, multidimensionale Skalierung |
+| **Signalentdeckung & Diagnostik** | d', ROC-Kurve, psychometrische Funktion |
+| **RT- & Entscheidungsmodellierung** | Ex-Gaussian-Verteilung, Drift-Diffusions-Modell (DDM) |
+| **Metaanalyse & Power** | Metaanalyse, Poweranalyse, Äquivalenztests |
+| **Spezielle Verfahren** | Multiple Imputation, LASSO/Ridge, Netzwerkanalyse, Clusteranalyse, latente Klassenanalyse |
 
 ---
 
@@ -148,10 +208,10 @@ Nach Bestätigung der Zeitlinie wählen Sie Ihre Plattform. Ausgabe ist eine aus
 
 ### 🐍 PsychoPy — Stroop-Aufgabe
 
-> "I want a Stroop task, red/green/blue text, judge ink color, 50:50 congruent:incongruent, 2 blocks × 60 trials"
+> "Ich möchte eine Stroop-Aufgabe, rote/grüne/blaue Schrift, Tastendruck beurteilt die Druckfarbe, 50:50 kongruent:inkongruent, 2 Blöcke mit je 60 Durchgängen"
 
 ```
-Nutzer           ❯ I want a Stroop task
+Nutzer           ❯ Ich möchte eine Stroop-Aufgabe
 
 Amazing PsyCoder ❯ 🟢 Phase 1/5 · Diagnose
                    Paradigma Stroop · Plattform PsychoPy bestätigen?
@@ -209,50 +269,74 @@ Amazing PsyCoder ❯ ✅ stroop_task.py + README.md generiert
 Amazing PsyCoder ❯ 🔍 Audit bestanden · Bereitschaft: ready_for_collection
                    Bereit für die Datenerhebung.
 ```
----
 
-## ✨ Features
+### 📊 R — Stroop-Datenanalyse
 
-| Feature | Beschreibung |
-|---------|--------------|
-| 🔬 **Häufige Fehler blockiert** | `time.sleep()`, `KbCheck` für RT — abgelehnt bevor Sie sie überhaupt sehen |
-| 🚀 **Direkt lauffähig** | Alle editierbaren Parameter am Anfang der Datei — kein Suchen |
-| 🌏 **CJK-Text funktioniert** | Erkennt chinesischen Text automatisch und konfiguriert Schriftarten — kein □□□ |
-| 🧪 **Absturzsichere Daten** | Jeder Trial wird sofort gespeichert — Absturz verliert keine erhobenen Daten |
-| 🎛️ **Ein System, drei Plattformen** | Dieselbe Pipeline, egal ob Sie PsychoPy, jsPsych oder Psychtoolbox nutzen |
+> "Hilf mir mit den Stroop-Daten: Unterscheiden sich die RTs zwischen kongruenten und inkongruenten Bedingungen?"
 
-**Weniger Debugging um Mitternacht, mehr Sicherheit vor der Erhebung. 🧪✨**
+```
+Nutzer           ❯ Hilf mir mit den Stroop-Daten: kongruente vs. inkongruente RTs?
 
----
+Amazing PsyCoder ❯ 🟢 Phase 1/5 · Experiment & wissenschaftliche Frage verstehen
+                   Bitte gib die Experiment-Config an oder beschreibe das Design
 
-## 📦 Plattform-Unterstützung
+Nutzer           ❯ Within-Subject, UV: condition(kongruent/inkongruent), AV: rt+acc. 30 Vpn
 
-| Plattform | Version | Einsatzbereich | Paradigmen | Demos |
-|----------|---------|----------|:--:|:--:|
-| 🐍 **[PsychoPy](https://psychopy.org/)** | 2024.x+ | Lokales Labor, USB HID Hardware-Zeitstempel | 27 | 45 |
-| 🌐 **[jsPsych](https://www.jspsych.org/v7/)** | 7.x | Online-Experimente, Browser-Deployment | 25 | 23 |
-| 🧮 **[Psychtoolbox](http://psychtoolbox.org/)** | 3.0.21+ | GPU-genaue Frame-Kontrolle | 5 | 100 |
+Amazing PsyCoder ❯ 🟢 Phase 2/5 · Datenstruktur verstehen
+                   Wie sind die Daten gespeichert? Eine Datei pro Vpn oder zusammengefasst?
 
----
+Nutzer           ❯ Eine CSV pro Vpn, Benennung sub-001_stroop.csv
+                   Spalten: subject_id, condition, rt, acc, trial
 
-## 👥 Für Wen
+Amazing PsyCoder ❯ Bestätigt: 30 Vpn × 1 Datei pro Vpn. Gate 2 ✅
 
-- 👶 Wenig Programmiererfahrung, aber ein Experiment muss fertig werden
-- 🎓 Studierende und Doktoranden, die Experiment-Code schreiben (oder schreiben werden)
-- 🧠 Forschende in kognitiver, Verhaltens- oder Sozialpsychologie
-- 🐍 PsychoPy fürs Labor · 🌐 jsPsych für online · 🧮 Psychtoolbox / MATLAB
-- 😵‍💫 Schon mehrfach über RT, Randomisierung und Bedingungstabellen gestolpert — auf der Suche nach systematischer Qualitätssicherung
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · Datencharakteristika + Methode auswählen
+                   RT rechtsschief? Genauigkeit nahe der Decke?
 
----
+Nutzer           ❯ RT etwas rechtsschief, Genauigkeit ca. 95%
 
-## 📦 Paradigmen-Abdeckung
+Amazing PsyCoder ❯ Genauigkeit nahe der Decke → glmer(binomial) für acc
+                   Für RT, 12-Dimensionen-Vergleich A vs. B:
 
-**38 Paradigmen**: 14 Kern-Paradigmen (vollständige Designspezifikation) + 24 erweiterte (Referenzbeschreibungen)
+                   ┌────────────┬─────────────────────┬─────────────────────┐
+                   │ Dimension   │ A: Gepaarter t-Test  │ B: Gemischtes Modell │
+                   ├────────────┼─────────────────────┼─────────────────────┤
+                   │ Power       │ 30 Punkte (Vpn-Mw.)  │ 1800 Punkte (Trials) │
+                   │ Datennutzung│ Pro Vpn 1 Wert       │ Alle Trials         │
+                   │ Erweiterbar │ Kovariate → Neustart │ Formel ergänzen     │
+                   │ Interpret.  │ d=0.5 jeder versteht │ Zufallseffekte erkl. │
+                   └────────────┴─────────────────────┴─────────────────────┘
 
-| Typ | Paradigmen |
-|------|-----------|
-| **Kern** | Go/No-go · Navon · Priming · Stroop · Eriksen Flanker · Simon · Rating · Stop-signal · IAT · N-back · Dot-probe · Visual Search · Task Switching · EAST |
-| **Erweitert** | Antisaccade · ANT · BART · Bilingual Stroop · Change Detection · Choice RT · CPT · Corsi Blocks · Cyberball · Delay Discounting · Mental Rotation · Posner Cuing · Sternberg · WCST u.a. |
+                   Fokus auf Power & Erweiterbarkeit → B. Fokus auf Einfachheit → A.
+
+Nutzer           ❯ B
+
+Amazing PsyCoder ❯ Gate 3 ✅ Methode gewählt (mit 12-Dimensionen-Begründung)
+
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Analysedetails
+                   Bereinigung: RT 150-2000ms · korrekte Trials · Vpn acc<60% aus.
+                   · ±2.5 SD Trial-Ausschluss · Grafik: Raincloud + individuelle Linien ⚠️
+
+Nutzer           ❯ Bestätigt
+
+Amazing PsyCoder ❯ 🟢 Phase 5/5 · Finale Prüfung
+                   ┌──────────────────────────────────────────────────┐
+                   │ Analyse-Entscheidungsregister                     │
+                   │ Fragestellung: kongruent vs. inkongruent  ← Nutzer│
+                   │ Methode: lmer (Nutzer wählte B)          ← Nutzer│
+                   │ RT 150-2000ms · Vpn acc<60%              ← Default│
+                   │ Grafik: Raincloud + indiv. Linien        ← Default│
+                   └──────────────────────────────────────────────────┘
+                   Gate 5 ✅ analysis_config.yaml gespeichert → Code-Generierung
+
+Nutzer           ❯ Generieren.
+
+Amazing PsyCoder ❯ ✅ analysis.R + report.Rmd generiert
+                   Config-gesteuert · 10-Punkte-Qualitätstor · 12-Schritt-Skript
+                   → Automatisch zum Analyse-Audit
+
+Amazing PsyCoder ❯ 🔍 Audit bestanden · Bereitschaft: ready_for_publication
+```
 
 ---
 
@@ -260,17 +344,20 @@ Amazing PsyCoder ❯ 🔍 Audit bestanden · Bereitschaft: ready_for_collection
 
 ```
 amazing-psycoder-skills/
-├── amazing-psycoder/                  ← Orchestrator (Einstiegspunkt)
-│   ├── SKILL.md
-├── PLATFORMS.md                   ← Platform adapter reference
-├── install.sh                     ← Cross-platform installer
-│   ├── psych-experiment-programming/  ← ① Design-Schicht (5-Phasen-Workflow + 38 Paradigmen)
-│   ├── psych-experiment-coder/        ← ② Code-Generierungsschicht
-│   │   ├── psychopy/
-│   │   ├── jspsych/
-│   │   └── psychtoolbox/
-│   └── psych-experiment-code-reviewer/ ← ③ Audit-Schicht (5 Modi + Smoke-Tests)
-├── docs/                              ← Mehrsprachige READMEs
+├── amazing-psycoder/                  ← Orchestrator (System-Einstieg, v1.3)
+│   ├── SKILL.md · PLATFORMS.md · install.sh
+│   │
+│   │   # 🧪 Experiment-Programmierung
+│   ├── psy-exp-designer/              ← ① Experiment-Design (5 Phasen + 38 Paradigmen + 9 Referenzdateien)
+│   ├── psy-exp-coder/                 ← ② Experiment-Code (PsychoPy/jsPsych/Psychtoolbox)
+│   └── psy-exp-reviewer/              ← ③ Experiment-Audit (5 Modi + Smoke-Test + Recovery-Loop)
+│   │
+│   │   # 📊 Datenanalyse
+│   ├── psy-ana-designer/              ← ④ Analyse-Design (5 Phasen + 60 Methoden + 48 Diagramme)
+│   ├── psy-ana-coder/                 ← ⑤ Analyse-Code (R/Python)
+│   └── psy-ana-reviewer/              ← ⑥ Analyse-Audit (4 Modi + Einlese-Protokoll + Recovery-Loop)
+│
+├── docs/                              ← Mehrsprachige READMEs (简/繁/英/日/德/法)
 └── README.md
 ```
 
@@ -278,6 +365,7 @@ amazing-psycoder-skills/
 
 <div align="center">
 
-Made by [soupandpsy](https://github.com/soupandpsy) · MIT License
+💡 Ideen oder Vorschläge? Schreib an [tangdingyi04@outlook.com](mailto:tangdingyi04@outlook.com)<br>
+🪄 Made by [soupandpsy](https://github.com/soupandpsy) · MIT License
 
 </div>

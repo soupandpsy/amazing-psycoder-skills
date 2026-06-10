@@ -1,7 +1,7 @@
 ---
 name: amazing-psycoder
-description: Entry point for the Amazing PsyCoder system. Routes user requests through the mandatory three-skill chain: Programming (5-phase design) → Coder (code generation) → Reviewer (audit). Supports PsychoPy, jsPsych, and Psychtoolbox with 38 paradigm references. Trigger for 心理学实验、实验代码、实验程序、PsychoPy实验、jsPsych实验、psychtoolbox实验、编写实验、生成实验代码、审计实验代码.
-version: 1.2
+description: Entry point for the Amazing PsyCoder system. Routes user requests through two mandatory three-skill chains — Experiment: Designer(5-phase design)→Coder→Reviewer, and Analysis: Designer(5-phase progressive)→Coder→Reviewer. Supports PsychoPy, jsPsych, Psychtoolbox (38 paradigms) for experiments; R and Python for data analysis (60 methods + 48 charts). Trigger for 心理学实验、实验代码、PsychoPy实验、编写实验、数据分析、统计分析、analysis plan、生成分析代码、审计实验代码、审计分析代码.
+version: 1.3
 status: stable
 compatibility: Claude Code, Codex, Hermes, OpenClaw (agentskills.io standard)
 ---
@@ -10,24 +10,29 @@ compatibility: Claude Code, Codex, Hermes, OpenClaw (agentskills.io standard)
 
 ## Version
 
-v1.2 — stable, 2026-06-06.
+v1.3 — stable, 2026-06-10. Adds analysis pipeline (psy-ana-designer → psy-ana-coder → psy-ana-reviewer).
 
 ## Purpose
 
-This is the single entry point for the Amazing PsyCoder experimental skill system. It orchestrates a **mandatory sequential chain** of three sub-skills that convert psychological experiment ideas into audited, production-quality code.
+This is the single entry point for the Amazing PsyCoder system. It orchestrates two **mandatory sequential chains** that convert psychological experiments from idea to audited code, and experimental data from raw files to publication-ready analysis:
 
-**This skill does NOT generate code itself.** It routes the user through the correct sequence and enforces the chain: Programming → Coder → Reviewer. No step may be skipped.
+- **Experiment Pipeline**: psy-exp-designer (5-phase design) → psy-exp-coder (code generation) → psy-exp-reviewer (audit)
+- **Analysis Pipeline**: psy-ana-designer (5-phase progressive) → psy-ana-coder (R/Python code) → psy-ana-reviewer (audit)
+
+**This skill does NOT generate code itself.** It routes the user through the correct sequence and enforces that no step may be skipped.
 
 **Platforms**: Claude Code / Codex / Hermes / OpenClaw — follows the [agentskills.io](https://agentskills.io) open standard. See [PLATFORMS.md](PLATFORMS.md) for platform-specific installation and tool mapping.
 
 ## System Architecture
+
+### Experiment Pipeline
 
 ```
 User describes experiment (English / 中文)
        │
        ▼
 ┌──────────────────────────────────────┐
-│ ① psych-experiment-programming      │  Orchestration layer
+│ ① psy-exp-designer      │  Orchestration layer
 │   Input: natural language description│  5-phase design workflow
 │   Output: config YAML + conditions   │  Design Decision Registry
 │   Gates: Gate 1→2→3→4→5             │  Progressive confirmation
@@ -35,7 +40,7 @@ User describes experiment (English / 中文)
                │ config YAML (internal artifact, not shown to user)
                ▼
 ┌──────────────────────────────────────┐
-│ ② psych-experiment-coder            │  Code generation layer
+│ ② psy-exp-coder            │  Code generation layer
 │   Input: config YAML + conditions    │  12-step code template
 │   Output: runnable code + README     │  4-layer priority architecture
 │   Gate: 9-item post-generation check │  Canonical Code Skeleton
@@ -43,59 +48,136 @@ User describes experiment (English / 中文)
                │ Runnable experiment code
                ▼
 ┌──────────────────────────────────────┐
-│ ③ psych-experiment-code-reviewer    │  Audit layer (final mandatory gate)
+│ ③ psy-exp-reviewer    │  Audit layer (final mandatory gate)
 │   Input: code / config / plan        │  5 review modes
 │   Output: audit report + readiness   │  Platform-aware checks
 │   Gate: 0 Critical + 0 Major         │  Severity grading
 └──────────────────────────────────────┘
 ```
 
-> **All three steps are mandatory — none can be skipped.** Programming → Coder → Reviewer. No experiment code is considered complete without passing reviewer audit with `ready_for_collection` or `ready_after_minor_fixes`.
+### Analysis Pipeline
+
+```
+User has experiment data + scientific questions
+       │
+       ▼
+┌──────────────────────────────────────┐
+│ ④ psy-ana-designer      │  Analysis design layer
+│   Input: experiment config + questions│  5-phase progressive confirmation
+│   Output: analysis config YAML        │  12-dimension method comparison
+│   Gates: Gate 1→2→3→4→5             │  60 methods + 48 charts refs
+└──────────────┬───────────────────────┘
+               │ analysis config YAML
+               ▼
+┌──────────────────────────────────────┐
+│ ⑤ psy-ana-coder              │  Analysis code generation
+│   Input: analysis config YAML        │  12-step script structure
+│   Output: analysis.R/.py + report    │  R (tidyverse/lme4/ggplot2)
+│   Gate: 10-item Quality Gate         │  Python (pandas/statsmodels/seaborn)
+└──────────────┬───────────────────────┘
+               │ Runnable analysis script
+               ▼
+┌──────────────────────────────────────┐
+│ ⑥ psy-ana-reviewer      │  Analysis audit layer
+│   Input: analysis script + data      │  4 review modes
+│   Output: audit report + readiness   │  Statistical correctness checks
+│   Gate: 0 Critical + 0 Major         │  Reproducibility scoring
+└──────────────────────────────────────┘
+```
+
+> **Two independent pipelines. Seven skills total (1 orchestrator + 6 sub-skills). Same rigorous standard.** Experiment: Designer→Coder→Reviewer. Analysis: Designer→Coder→Reviewer.
+
+> **All steps in both pipelines are mandatory — none can be skipped.** Experiment: Designer → Coder → Reviewer. Analysis: Designer → Coder → Reviewer. No experiment code is complete without passing reviewer audit. No analysis script is publishable without reproducibility audit.
 
 ## How to Use This Skill
 
-When a user invokes this skill, determine where they are in the pipeline and route accordingly:
+When a user invokes this skill, **analyze their request** to determine which pipeline and stage they need. The user's own words tell you where to route them — no forced stage-selection question unless their intent is genuinely ambiguous.
 
 ### Routing Decision Tree
 
+Route directly based on the user's expressed need:
+
 ```
-User request
+Analyze the user's request — what do they actually want?
   │
-  ├─ "I want to build an experiment" / "我要做一个…实验"
-  │    → Invoke psych-experiment-programming (start Phase 1)
+  ├─ 🧪 EXPERIMENT — they want to build/design/code/review an experiment
   │
-  ├─ "Generate code for this config" / "生成代码"
-  │    → Check: has Programming Gate 5 passed?
-  │       Yes → Invoke psych-experiment-coder
-  │       No  → Route back to psych-experiment-programming first
+  │   ├─ "I want to build an experiment" / "我要做一个…实验" / "设计一个…范式"
+  │   │    → psy-exp-designer (start Phase 1)
+  │   │
+  │   ├─ "Generate experiment code from this config" / "用这个config生成实验代码"
+  │   │    → User has config → psy-exp-coder
+  │   │
+  │   ├─ "Generate experiment code" / "生成实验代码"  (no config visible)
+  │   │    → "你有实验 config YAML 吗？如果没有，需要先通过 psy-exp-designer 设计实验。"
+  │   │       Has config → psy-exp-coder
+  │   │       No config → psy-exp-designer
+  │   │
+  │   ├─ "Review this experiment code" / "审计这个实验" / "实验代码有没有问题"
+  │   │    → psy-exp-reviewer
+  │   │
+  │   └─ "Experiment code error" / "实验代码报错"
+  │        → Design error → psy-exp-designer
+  │           Code error   → psy-exp-coder
   │
-  ├─ "Review this experiment code" / "审计这个实验"
-  │    → Invoke psych-experiment-code-reviewer
+  ├─ 📊 ANALYSIS — they want to design/code/review a data analysis
   │
-  ├─ "I got an error" / "代码报错"
-  │    → Check the error type:
-  │       Design error → psych-experiment-programming
-  │       Code error   → psych-experiment-coder (see Debugging & Iteration Loop)
+  │   ├─ "Design my analysis" / "设计分析方案" / "用什么统计方法" / "怎么分析这个数据"
+  │   │    → psy-ana-designer (start Phase 1)
+  │   │
+  │   ├─ "Analyze my data" / "分析我的数据" / "帮我做统计分析"
+  │   │    → psy-ana-designer (design before code — never jump straight to coder)
+  │   │
+  │   ├─ "Generate analysis code from this config" / "用这个analysis config生成代码"
+  │   │    → User has analysis_config.yaml → psy-ana-coder
+  │   │
+  │   ├─ "Generate analysis code" / "生成分析代码"  (no config visible)
+  │   │    → "你有 analysis_config.yaml 吗？如果没有，需要先通过 psy-ana-designer 设计分析方案。"
+  │   │       Has config → psy-ana-coder
+  │   │       No config → psy-ana-designer
+  │   │
+  │   ├─ "Review this analysis" / "审计分析代码" / "检查分析脚本"
+  │   │    → psy-ana-reviewer
+  │   │
+  │   └─ "Analysis script error" / "分析代码报错" / "分析结果不对"
+  │        → Design error (wrong method) → psy-ana-designer
+  │           Code error (API misuse)    → psy-ana-coder
   │
-  ├─ "Review found issues" / "审计不通过" / "代码有问题需要修"
-  │    → Check the severity:
-  │       Critical/Major issues → Fix in psych-experiment-coder, re-audit after
-  │       Minor only → User can collect data; fix when convenient
+  ├─ 🔀 CROSS-PIPELINE — experiment done, now want analysis
   │
-  ├─ "What paradigms are available?" / "有哪些范式"
-  │    → Show [Paradigm Coverage Matrix](#paradigm-coverage-matrix)
+  │   ├─ "Experiment passed review, now analyze the data" / "实验做完了，分析数据"
+  │   │    → psy-ana-designer
+  │   │    → "如果有实验 config YAML 可以直接复用；没有的话我帮你手动收集实验信息。"
+  │   │
+  │   └─ "Build experiment AND analyze" / "设计实验并分析数据"
+  │        → psy-exp-designer first → after pipeline completes, remind user to return for analysis
   │
-  └─ "How does this system work?" / "这个系统怎么用"
-       → Show system overview + three-step chain
+  ├─ ❓ AMBIGUOUS — unclear which pipeline
+  │
+  │   └─ "帮我做 Stroop" / "I want to do a Stroop study"
+  │        → "你需要设计实验程序，还是分析已有数据？"
+  │           Build experiment → psy-exp-designer
+  │           Analyze data      → psy-ana-designer
+  │
+  └─ ℹ️ GENERAL
+       ├─ "有哪些范式" → Paradigm Coverage Matrix
+       ├─ "有哪些分析方法" → 60 methods + 48 charts summary
+       └─ "这个系统怎么用" → System overview + both pipelines
 ```
 
 ### Mandatory Execution Order
 
-1. **First**: Invoke `psych-experiment-programming` — guide user through 5-phase design. Output: complete config YAML (internal, not shown to user)
-2. **Second**: Invoke `psych-experiment-coder` — generate platform code from config. Output: `.py`/`.js`/`.m` + README
-3. **Third**: Invoke `psych-experiment-code-reviewer` — audit the generated code. Output: audit report + readiness label
+**Experiment Pipeline:**
+1. **First**: Invoke `psy-exp-designer` — guide user through 5-phase design. Output: experiment config YAML
+2. **Second**: Invoke `psy-exp-coder` — generate platform code from config. Output: `.py`/`.js`/`.m` + README
+3. **Third**: Invoke `psy-exp-reviewer` — audit the generated code. Output: audit report + readiness label
 
-**Never skip a step. Never generate code before the trial window timeline is confirmed.**
+**Analysis Pipeline:**
+1. **First**: Invoke `psy-ana-designer` — guide user through 5-phase progressive confirmation. Output: analysis config YAML
+2. **Second**: Invoke `psy-ana-coder` — generate R or Python analysis script. Output: `analysis.R`/`.py` + report
+3. **Third**: Invoke `psy-ana-reviewer` — audit the analysis script. Output: audit report + readiness label
+
+**Never skip a step. Never generate experiment code before the trial window timeline is confirmed. Never generate analysis code before the scientific question and method are confirmed.**
 
 ---
 
@@ -104,34 +186,41 @@ User request
 | # | Principle | Description | Applies to |
 |---|-----------|-------------|------------|
 | 1 | **Output is deliverable** | Every phase produces complete, usable artifacts | All |
-| 2 | **Progressive confirmation** | Design decisions confirmed phase by phase; defaults flagged `[ASSUMED]` | Programming |
-| 3 | **Decision traceability** | Design Decision Registry records source of every decision | Programming |
-| 4 | **Skeleton-first generation** | All code generation MUST start from platform spec Canonical Code Skeleton | Coder |
-| 5 | **Paradigms provide logic, skeleton provides API** | Paradigm files define experiment logic; API patterns from spec skeleton | Coder |
-| 6 | **Anti-pattern zero-tolerance** | `time.sleep()`, `event.getKeys(maxWait=)`, `KbCheck` for RT, `jsPsych.init()`, `WaitSecs` — blocked | Coder, Reviewer |
-| 7 | **Your experiment, our standards** | User owns the experimental design; system guarantees code quality | All |
-| 8 | **Window timeline before code** | No code generation before trial window timeline is validated | Programming, Coder |
-| 9 | **Post-generation audit mandatory** | All generated code must pass through Reviewer before data collection | Coder, Reviewer |
-| 10 | **Input bounds output** | Reviewer's conclusions cannot exceed what the input supports | Reviewer |
+| 2 | **Progressive confirmation** | Design decisions confirmed phase by phase; defaults flagged ⚠️ | Both Designers |
+| 3 | **Decision traceability** | Decision Registry records source of every decision | Both Designers |
+| 4 | **Skeleton-first generation** | All code generation MUST start from platform spec Canonical Code Skeleton | Both Coders |
+| 5 | **Spec provides API, reference provides logic** | Paradigms/methods define logic; API patterns from spec | Both Coders |
+| 6 | **Anti-pattern zero-tolerance** | Blocking APIs, wrong RT sources, missing random effects — blocked | Both Coders & Reviewers |
+| 7 | **Your experiment/analysis, our standards** | User owns the design; system guarantees code quality | All |
+| 8 | **Design before code** | No code generation before design is confirmed | Both pipelines |
+| 9 | **Post-generation audit mandatory** | All generated code must pass through Reviewer before use | Both Coders & Reviewers |
+| 10 | **Input bounds output** | Reviewer's conclusions cannot exceed what the input supports | Both Reviewers |
+| 11 | **Scientific question drives method** | Analysis methods chosen by scientific question, not habit | psy-ana-designer |
+| 12 | **12-dimension comparison** | Every method choice backed by structured A vs B comparison | psy-ana-designer |
+| 13 | **Method before code** | Analysis method must be confirmed before generating analysis code | psy-ana-designer, psy-ana-coder |
+| 14 | **Recovery path always provided** | Audit reports with Critical/Major issues MUST include explicit fix path back to the correct upstream skill | Both Reviewers |
 
 ---
 
 ## Red Lines (System-Wide Absolute Prohibitions)
 
-These rules span all three skills. Violation is never acceptable:
+These rules span all six pipeline skills. Violation is never acceptable:
 
 | # | Rule | Owned by | Consequence of violation |
 |---|------|---------|--------------------------|
-| R1 | **No code generation before trial window timeline is complete** | Programming | Structural errors, expensive late-stage fixes |
-| R2 | **No assumed response mapping** | Programming | Guessing key mapping invalidates accuracy data |
-| R3 | **No `time.sleep()` in experiment code** | Coder | Blocks event loop, Escape unresponsive |
-| R4 | **No `event.getKeys(maxWait=...)`** | Coder | Blocks event loop |
-| R5 | **No data saved only at experiment end** | Coder | Crash = all data lost |
-| R6 | **No silent filling of `[MISSING]` values** | Programming | Every gap must be resolved by asking user or offering flagged default |
-| R7 | **No Chinese/CJK text without explicit font** | Coder | PsychoPy default font lacks CJK glyphs; text renders as tofu (□□□) |
-| R8 | **No skipping paradigm Must-Confirm items** | Programming | Unconfirmed items produce broken experiments |
-| R9 | **No `rt_onset` omitted on response windows** | Coder | Missing/incorrect RT onset invalidates all reaction time data |
+| R1 | **No code generation before trial window timeline is complete** | psy-exp-designer | Structural errors, expensive late-stage fixes |
+| R2 | **No assumed response mapping** | psy-exp-designer | Guessing key mapping invalidates accuracy data |
+| R3 | **No `time.sleep()` in experiment code** | psy-exp-coder | Blocks event loop, Escape unresponsive |
+| R4 | **No `event.getKeys(maxWait=...)`** | psy-exp-coder | Blocks event loop |
+| R5 | **No data saved only at experiment end** | psy-exp-coder | Crash = all data lost |
+| R6 | **No silent filling of `[MISSING]` values** | psy-exp-designer | Every gap must be resolved by asking user or offering flagged default |
+| R7 | **No Chinese/CJK text without explicit font** | psy-exp-coder | PsychoPy default font lacks CJK glyphs; text renders as tofu (□□□) |
+| R8 | **No skipping paradigm Must-Confirm items** | psy-exp-designer | Unconfirmed items produce broken experiments |
+| R9 | **No `rt_onset` omitted on response windows** | psy-exp-coder | Missing/incorrect RT onset invalidates all reaction time data |
 | R10 | **No code delivery without Reviewer pass** | All | All code must pass reviewer audit before data collection |
+| R11 | **No analysis method recommendation without 12-dimension comparison** | psy-ana-designer | Unexamined method choice risks statistical validity |
+| R12 | **No analysis code without seed + exclusion log + effect size** | psy-ana-coder | Missing elements break reproducibility |
+| R13 | **No analysis script delivery without session info output** | psy-ana-coder | Non-reproducible without environment capture |
 
 ---
 
@@ -161,19 +250,19 @@ Layer 4: demo/          ← Lowest: raw demo code, logic reference only, never A
 
 ## Code Template (Overview)
 
-All generated code follows a 12-step structure: imports → parameters → display setup → stimulus preloading → condition loading → helpers → instructions → practice → main loop (blocks → randomization → per-trial windows) → incremental data save → cleanup → package with README. The full template with detailed per-step requirements is in the [coder SKILL.md](psych-experiment-coder/SKILL.md#code-template).
+All generated code follows a 12-step structure: imports → parameters → display setup → stimulus preloading → condition loading → helpers → instructions → practice → main loop (blocks → randomization → per-trial windows) → incremental data save → cleanup → package with README. The full template with detailed per-step requirements is in the [coder SKILL.md](psy-exp-coder/SKILL.md#code-template).
 
 ---
 
 ## Post-Generation Quality Gate (Overview)
 
-Before delivery, all generated code must pass the 9-item Quality Gate defined in the [coder SKILL.md](psych-experiment-coder/SKILL.md#post-generation-quality-gate-mandatory). Covers: spec skeleton compliance, anti-pattern scan, API patterns, parameter placement, escape handling, RT source, incremental save, preloading, and CJK font config. **Any failure = fix before delivery.**
+Before delivery, all generated code must pass the 9-item Quality Gate defined in the [coder SKILL.md](psy-exp-coder/SKILL.md#post-generation-quality-gate-mandatory). Covers: spec skeleton compliance, anti-pattern scan, API patterns, parameter placement, escape handling, RT source, incremental save, preloading, and CJK font config. **Any failure = fix before delivery.**
 
 ---
 
 ## Review Modes and Readiness Labels
 
-### Review Modes (auto-selected by Reviewer)
+### Experiment Review Modes (psy-exp-reviewer)
 
 | Mode | Input | Maximum label |
 |------|-------|--------------|
@@ -183,26 +272,37 @@ Before delivery, all generated code must pass the 9-item Quality Gate defined in
 | `triage-only` | Natural-language description | None (missing-info list only) |
 | `blocked` | Insufficient input | None (state what's needed) |
 
+### Analysis Review Modes (psy-ana-reviewer)
+
+| Mode | Input | Maximum label |
+|------|-------|--------------|
+| `analysis-audit` | Complete analysis script + data | `ready_for_publication` |
+| `plan-review` | Analysis config YAML | `analysis_plan_ready` |
+| `triage-only` | Research question | None (missing-info list only) |
+| `blocked` | Insufficient input | None |
+
 ### Readiness Labels
 
-| Label | Meaning |
-|-------|---------|
-| `ready_for_collection` | Zero Critical + zero Major — can collect data |
-| `ready_after_minor_fixes` | Only Minor issues remain |
-| `not_ready_for_collection` | Critical or Major issues exist — do NOT collect |
-| `pre_code_ready` | Design complete, ready for code generation |
-| `needs_experiment_info` | Key design information missing |
-| `blocked` | Input insufficient for any review |
+| Label | Pipeline | Meaning |
+|-------|---------|---------|
+| `ready_for_collection` | Experiment | Zero Critical + zero Major — can collect data |
+| `ready_for_publication` | Analysis | Zero Critical + zero Major — reproducible and complete |
+| `ready_after_minor_fixes` | Both | Only Minor issues remain |
+| `not_ready_for_collection` | Experiment | Critical or Major issues exist — do NOT collect |
+| `not_ready` | Analysis | Critical or Major issues exist |
+| `pre_code_ready` | Experiment | Design complete, ready for code generation |
+| `analysis_plan_ready` | Analysis | Analysis design complete, ready for code generation |
+| `blocked` | Both | Input insufficient for any review |
 
 ---
 
 ## Severity Classification
 
-| Severity | Definition | Can collect data? |
-|----------|-----------|-------------------|
-| **Critical** | Invalidates all data; must fix before any collection | No |
-| **Major** | Degrades data quality; fix before formal collection | No |
-| **Minor** | Does not affect data quality; fix when convenient | Yes |
+| Severity | Definition | Can proceed? |
+|----------|-----------|-------------|
+| **Critical** | Invalidates all data; must fix before any collection | No — fix before any data collection or publication |
+| **Major** | Degrades data quality; fix before formal collection | No — fix before formal data collection (exp) or publication (ana) |
+| **Minor** | Does not affect data quality; fix when convenient | Yes — fix when convenient |
 
 ---
 
@@ -210,11 +310,11 @@ Before delivery, all generated code must pass the 9-item Quality Gate defined in
 
 ### Core Paradigms (14) — Full Programming-Layer Spec
 
-All 10 required sections filled (When to Use, Core Logic, Must Confirm, Do Not Assume, Condition File Columns, Trial Window Timeline, Data Output Columns, Randomization Checks, Common Failure Modes, Example):
+All 10 required sections filled (When to Use, Core Logic, Must Confirm, Do Not Assume, Condition File Columns, Trial Window Timeline, Data Analysis, Variants, References, Example):
 
 Go/No-go · Navon · Priming · Stroop · Eriksen Flanker · Simon · Rating · Stop-signal · IAT · N-back · Dot-probe · Visual Search · Task Switching · EAST
 
-### Extended Paradigms (24) — Programming-Layer Reference Descriptions
+### Extended Paradigms (24) — Full Programming-Layer Spec
 
 Antisaccade · ANT · BART · Bilingual Stroop · Change Detection · Children Flanker · Choice RT · Climate Reflection · CPT · Corsi Blocks · Cyberball · Delay Discounting · Drag and Drop · Mental Rotation · Multisensory Nature · Numerical Stroop · Phone a Friend · Posner Cuing · Psychophysics Staircase · Rating to Choice · Sternberg · Ultimatum Game · WCST · Writing Distraction
 
@@ -244,42 +344,79 @@ Antisaccade · ANT · BART · Bilingual Stroop · Change Detection · Children F
 
 ---
 
+## Analysis Platform API Quick Reference
+
+| Dimension | R | Python |
+|-----------|-----|--------|
+| Data import | `readr::read_csv()` | `pandas.read_csv()` |
+| Filtering | `dplyr::filter()` | `df[df['col'] > x]` |
+| Grouped stats | `group_by() %>% summarise()` | `df.groupby().agg()` |
+| Paired t-test | `t.test(paired=TRUE)` | `scipy.stats.ttest_rel()` |
+| Mixed model | `lme4::lmer()` | `statsmodels.MixedLM()` |
+| GLMM (binomial) | `lme4::glmer(family=binomial)` | `statsmodels.Logit()` / `pymer4` |
+| Effect size | `effectsize::cohens_d()` / `repeated_measures_d()` | `pingouin.compute_effsize()` |
+| Post-hoc | `emmeans::emmeans()` + `pairs()` | `statsmodels.stats.multicomp` |
+| Visualization | `ggplot2` + `ggrain` | `matplotlib` + `seaborn` |
+| Reproducibility | `set.seed()` + `sessionInfo()` | `np.random.seed()` + `sys.version` |
+
+---
+
 ## Inter-Skill Communication Protocol
 
-### Programming → Coder
+### Experiment Pipeline
 
+**psy-exp-designer → psy-exp-coder:**
 - **Artifact**: Complete `config.yaml` (internal, never shown to user)
 - **Precondition**: Gate 5 passed (user confirmed full Design Decision Registry)
 - **Coder's duty**: Load config → select platform → copy skeleton → map code → Quality Gate → deliver
 
-### Coder → Reviewer
-
+**Coder → Reviewer:**
 - **Artifact**: Generated experiment code (`.py` / `.js` / `.m`) + condition files + README
 - **Precondition**: Coder's Post-Generation Quality Gate passed
 - **Reviewer's duty**: Detect platform → load corresponding spec → audit each dimension → output graded report + readiness label
+
+### Analysis Pipeline
+
+**Designer → Coder:**
+- **Artifact**: `analysis_config.yaml` (saved to working directory)
+- **Precondition**: Gate 5 passed (user confirmed full Analysis Decision Registry)
+- **Coder's duty**: Phase 0 validate config → confirm language (R/Python) → preview plan → generate code → deliver
+
+**Coder → Reviewer:**
+- **Artifact**: Generated analysis script (`analysis.R`/`.py`) + report (`.Rmd`/`.ipynb`)
+- **Precondition**: Coder's 10-item Quality Gate passed
+- **Reviewer's duty**: Intake → detect platform → Gate 0 grep scan → 5-dimension audit → output graded report + readiness label + recovery path
 
 ### Shared Artifacts
 
 | Artifact | Producer | Consumer | Format |
 |----------|---------|---------|--------|
-| config YAML | Programming | Coder | `.yaml` (internal, not displayed) |
-| Condition files | Programming | Coder | `.xlsx` / `.csv` |
-| Experiment code | Coder | Reviewer, User | `.py` / `.js` / `.m` |
-| Experiment README | Coder | Reviewer, User | `.md` (alongside code) |
-| Audit report | Reviewer | User | Markdown (graded + readiness label) |
+| Experiment config YAML | psy-exp-designer | psy-exp-coder | `.yaml` (internal) |
+| Condition files | psy-exp-designer | psy-exp-coder | `.xlsx` / `.csv` |
+| Experiment code | psy-exp-coder | psy-exp-reviewer | `.py` / `.js` / `.m` |
+| Experiment README | psy-exp-coder | psy-exp-reviewer | `.md` |
+| Analysis config YAML | psy-ana-designer | psy-ana-coder | `.yaml` (saved to disk) |
+| Analysis script | psy-ana-coder | psy-ana-reviewer | `.R` / `.py` |
+| Analysis report | psy-ana-coder | psy-ana-reviewer | `.Rmd` / `.ipynb` |
+| Audit report | Both Reviewers | User | Markdown (graded + readiness label) |
 
 ---
 
 ## Code Output Specification
 
-### Deliverables
-
-Every code generation produces two files:
+### Experiment Deliverables
 
 | File | Format | Content |
-|------|--------|---------|
+|------|--------|--------|
 | Platform experiment file | `.py` / `.js` / `.m` | Runnable code, all parameters at top, `FONT_CONFIG` toggle if CJK used |
 | Experiment README | `.md` | Window sequence diagram, condition/block structure, response rules, data columns, how to run, parameter line numbers, known limitations |
+
+### Analysis Deliverables
+
+| File | Format | Content |
+|------|--------|--------|
+| Analysis script | `.R` / `.py` | Config-driven, 12-step structure, seed + exclusion log + effect sizes + session info |
+| Analysis report | `.Rmd` / `.ipynb` | Exclusion summary, descriptive stats, model results, figures, environment info |
 
 ### Language Consistency
 
@@ -297,32 +434,39 @@ amazing-psycoder-skills/
 │   ├── SKILL.md
 │   ├── PLATFORMS.md                        ← Platform adapter reference
 │   ├── install.sh                          ← Cross-platform installer
-│   ├── psych-experiment-programming/        ← ① Orchestration layer
-│   │   ├── SKILL.md                         ← 5-phase workflow + 10 red lines
+│   │
+│   │   # === Experiment Pipeline ===
+│   ├── psy-exp-designer/        ← ① Experiment design
+│   │   ├── SKILL.md                         ← 5-phase workflow + red lines
 │   │   ├── README.md
 │   │   ├── paradigms/                       ← 38 paradigm reference files
-│   │   └── references/                      ← Design references (config-schema, timing, etc.)
-│   ├── psych-experiment-coder/              ← ② Code generation layer
-│   │   ├── SKILL.md                         ← Generation flow + 4-layer arch + 9-item gate
+│   │   └── references/                      ← config-schema, timing, data-recording
+│   ├── psy-exp-coder/              ← ② Experiment code generation
+│   │   ├── SKILL.md                         ← 4-layer arch + 9-item gate
 │   │   ├── README.md
 │   │   ├── psychopy/                        ← PsychoPy (full auto)
-│   │   │   ├── spec/README.md               ← Canonical Skeleton + anti-patterns
-│   │   │   ├── mapping/README.md            ← Config→code mapping
-│   │   │   ├── paradigms/                    ← 27 paradigm references
-│   │   │   └── demo/_raw/                   ← 45 demo .py files
 │   │   ├── jspsych/                         ← jsPsych
-│   │   │   ├── spec/README.md               ← Canonical Skeleton + anti-patterns
-│   │   │   ├── mapping/README.md            ← Config→timeline + migration table
-│   │   │   ├── paradigms/                    ← 25 paradigm references
-│   │   │   └── demo/_raw/                   ← 23 demo .js files
 │   │   └── psychtoolbox/                    ← PTB
-│   │       ├── spec/README.md               ← Canonical Skeleton + anti-patterns
-│   │       ├── mapping/README.md            ← Config→MATLAB + frame loops
-│   │       ├── paradigms/                    ← 5 paradigm references
-│   │       └── demo/_raw/                     ← 100 API demos by category
-│   └── psych-experiment-code-reviewer/      ← ③ Audit layer
-│       ├── SKILL.md                         ← 5 review modes + platform-aware audit
-│       └── README.md
+│   ├── psy-exp-reviewer/      ← ③ Experiment audit
+│   │   ├── SKILL.md                         ← 5 review modes + platform-aware audit
+│   │   └── README.md
+│   │
+│   │   # === Analysis Pipeline ===
+│   ├── psy-ana-designer/        ← ④ Analysis design
+│   │   ├── SKILL.md                         ← 5-phase progressive + 12-dimension comparison
+│   │   ├── README.md
+│   │   ├── methods/                         ← 60 analysis method references
+│   │   └── plots/                           ← 48 chart type references
+│   ├── psy-ana-coder/               ← ⑤ Analysis code generation
+│   │   ├── SKILL.md                         ← 12-step script + R↔Python mapping
+│   │   ├── README.md
+│   │   ├── r/                               ← R platform (spec/mapping/checklist/demo)
+│   │   └── python/                          ← Python platform (spec/mapping/checklist/demo)
+│   └── psy-ana-reviewer/       ← ⑥ Analysis audit
+│       ├── SKILL.md                         ← 4 review modes + reproducibility scoring
+│       ├── README.md
+│       ├── r/checklist/                     ← R audit checklist
+│       └── python/checklist/                ← Python audit checklist
 ├── docs/                                    ← Multi-language READMEs
 │   ├── README_EN.md
 │   ├── README_ZH-HANT.md
@@ -337,5 +481,7 @@ amazing-psycoder-skills/
 ## When NOT to Use This Skill
 
 - **Quick PsychoPy/jsPsych/PTB API questions**: Answer directly; don't invoke the full workflow
-- **General Python/JavaScript/MATLAB questions**: Answer directly
+- **Quick R/Python stats questions**: Answer directly; don't invoke the full analysis pipeline
+- **General Python/JavaScript/MATLAB/R questions**: Answer directly
 - **Non-experiment programming tasks**: Not in scope
+- **Data analysis without experiment context**: The analysis pipeline CAN handle standalone data — psy-ana-designer will manually collect experiment information if no config YAML exists

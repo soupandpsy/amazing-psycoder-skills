@@ -1,6 +1,6 @@
 # Platform Adapter Reference
 
-Amazing PsyCoder follows the [agentskills.io](https://agentskills.io) open standard (v2026). All `SKILL.md` files use only the 6 standard frontmatter fields — `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools` — and work across platforms without modification.
+Amazing PsyCoder follows the [agentskills.io](https://agentskills.io) open standard (v2026). All `SKILL.md` files use standard frontmatter fields (`name`, `description`) plus optional fields (`version`, `status`, `compatibility`) and work across platforms without modification.
 
 ---
 
@@ -37,9 +37,9 @@ All platforms below implement this common specification. Key rules:
 | Install (auto) | `Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills` |
 | Invoke | `/amazing-psycoder` (slash command) |
 | Sub-skill invocation | `Skill` tool or `Agent` tool with sub-agent routing |
-| Status | **Fully tested** — three-skill chain with inter-skill communication works natively |
+| Status | **Fully tested** — both experiment (3-skill) and analysis (3-skill) chains work natively |
 
-Claude Code auto-clones the repo and registers skill files. The one-line install command triggers this flow. All sub-skills (Programming → Coder → Reviewer) are invoked via the orchestrator's routing tree.
+Claude Code auto-clones the repo and registers skill files. The one-line install command triggers this flow. All sub-skills (Experiment: Designer → Coder → Reviewer; Analysis: Designer → Coder → Reviewer) are invoked via the orchestrator's routing tree.
 
 ---
 
@@ -150,28 +150,40 @@ git clone https://github.com/soupandpsy/amazing-psycoder-skills /tmp/amazing-psy
 
 # Claude Code
 cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.claude/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-designer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-coder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-reviewer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-designer ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-coder ~/.claude/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-reviewer ~/.claude/skills/
 
 # Codex (current path: $HOME/.agents/skills/)
 cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.agents/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.agents/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.agents/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-designer ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-coder ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-reviewer ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-designer ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-coder ~/.agents/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-reviewer ~/.agents/skills/
 # Restart Codex after install
 
 # Hermes
 cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.hermes/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.hermes/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.hermes/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-designer ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-coder ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-reviewer ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-designer ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-coder ~/.hermes/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-reviewer ~/.hermes/skills/
 
 # OpenClaw (workspace path)
 cp -r /tmp/amazing-psycoder-skills/amazing-psycoder ~/.openclaw/workspace/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-programming ~/.openclaw/workspace/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-coder ~/.openclaw/workspace/skills/
-cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psych-experiment-code-reviewer ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-designer ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-coder ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-exp-reviewer ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-designer ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-coder ~/.openclaw/workspace/skills/
+cp -r /tmp/amazing-psycoder-skills/amazing-psycoder/psy-ana-reviewer ~/.openclaw/workspace/skills/
 # Restart gateway: openclaw gateway restart
 ```
 

@@ -36,12 +36,13 @@ fi
 if [[ "$PLATFORM" == /* ]]; then
     SKILLS_DIR="$PLATFORM"
 else
-    declare -A DIRS
-    DIRS[claude]="$HOME/.claude/skills"
-    DIRS[codex]="$HOME/.agents/skills"
-    DIRS[hermes]="$HOME/.hermes/skills"
-    DIRS[openclaw]="$HOME/.openclaw/workspace/skills"
-    SKILLS_DIR="${DIRS[$PLATFORM]}"
+    case "$PLATFORM" in
+        claude)   SKILLS_DIR="$HOME/.claude/skills" ;;
+        codex)    SKILLS_DIR="$HOME/.agents/skills" ;;
+        hermes)   SKILLS_DIR="$HOME/.hermes/skills" ;;
+        openclaw) SKILLS_DIR="$HOME/.openclaw/workspace/skills" ;;
+        *)        echo "未知平台: $PLATFORM"; exit 1 ;;
+    esac
 fi
 
 echo "平台: $PLATFORM"
@@ -67,9 +68,19 @@ install_dir() {
 echo "安装 Amazing PsyCoder..."
 
 install_dir "$SKILL_ROOT"                                      "amazing-psycoder"
-install_dir "$SKILL_ROOT/psych-experiment-programming"         "psych-experiment-programming"
-install_dir "$SKILL_ROOT/psych-experiment-coder"               "psych-experiment-coder"
-install_dir "$SKILL_ROOT/psych-experiment-code-reviewer"       "psych-experiment-code-reviewer"
+install_dir "$SKILL_ROOT/psy-exp-designer"         "psy-exp-designer"
+install_dir "$SKILL_ROOT/psy-exp-coder"               "psy-exp-coder"
+install_dir "$SKILL_ROOT/psy-exp-reviewer"       "psy-exp-reviewer"
+install_dir "$SKILL_ROOT/psy-ana-designer"         "psy-ana-designer"
+install_dir "$SKILL_ROOT/psy-ana-coder"               "psy-ana-coder"
+install_dir "$SKILL_ROOT/psy-ana-reviewer"       "psy-ana-reviewer"
 
 echo ""
-echo "完成。输入 /amazing-psycoder 启动。"
+echo "完成。启动方式（因平台而异）："
+echo "  Claude Code: /amazing-psycoder"
+echo "  Codex:       \$amazing-psycoder"
+echo "  Hermes:      /amazing-psycoder (或自动匹配)"
+echo "  OpenClaw:    /amazing-psycoder (或自动匹配)"
+echo ""
+echo "实验流水线: psy-exp-designer → psy-exp-coder → psy-exp-reviewer"
+echo "分析流水线: psy-ana-designer → psy-ana-coder → psy-ana-reviewer"
