@@ -23,7 +23,7 @@
 <br>
 
 <table>
-<tr><td align="left">
+<tr><td align="center">
 
 🔬 &nbsp;Pour transformer une idée en expérience capable de collecter des données, il faut d'abord apprendre Python, JavaScript ou MATLAB.<br>
 📦 &nbsp;Le code hérité du labo ne tourne plus dès qu'on change d'ordinateur — personne ne sait quelles dépendances installer, personne n'ose toucher à la logique.<br>
@@ -35,9 +35,13 @@
 </td></tr>
 </table>
 
+<div align="center">
+
 ### ✨ C'est exactement ce que résout Amazing PsyCoder.
 
 Pas besoin de savoir programmer, pas besoin d'être statisticien. Vous apportez vos idées et vos données — il vous guide pas à pas pour confirmer le design, générer le code, et auditer le résultat. Le code que vous obtenez est prêt à lancer, et vos analyses tiennent face aux reviewers les plus exigeants.
+
+</div>
 
 ---
 

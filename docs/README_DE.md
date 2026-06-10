@@ -23,7 +23,7 @@
 <br>
 
 <table>
-<tr><td align="left">
+<tr><td align="center">
 
 🔬 &nbsp;Bevor aus einer Idee ein lauffähiges Experiment wird, muss man erst Python, JavaScript oder MATLAB lernen.<br>
 📦 &nbsp;Der Legacy-Code aus dem Labor läuft auf dem nächsten Rechner nicht mehr — keiner kennt die Abhängigkeiten, keiner traut sich an die Logik.<br>
@@ -35,9 +35,13 @@
 </td></tr>
 </table>
 
+<div align="center">
+
 ### ✨ Genau dafür ist Amazing PsyCoder da.
 
 Du musst weder Python können noch Statistik verstehen. Du bringst deine Ideen und deine Daten mit — Amazing PsyCoder führt dich Schritt für Schritt durchs Design, generiert den Code und prüft alles, bevor es ernst wird. Was du am Ende in den Händen hältst, läuft auf Anhieb, und die Analyse hält auch dem Blick des Reviewers stand.
+
+</div>
 
 ---
 

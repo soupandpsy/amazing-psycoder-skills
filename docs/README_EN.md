@@ -23,7 +23,7 @@
 <br>
 
 <table>
-<tr><td align="left">
+<tr><td align="center">
 
 🔬 &nbsp;An idea won't become a data-collection-ready experiment until you learn Python, JavaScript, or MATLAB first.<br>
 📦 &nbsp;The lab's legacy code crashes on a different machine — nobody can explain the dependencies, nobody dares touch the logic.<br>
@@ -35,9 +35,13 @@
 </td></tr>
 </table>
 
+<div align="center">
+
 ### ✨ Amazing PsyCoder solves exactly these.
 
 You don't need to know Python. You don't need to know statistics. You just need to bring your ideas and your data — it walks you through confirming the design step by step, generates the code, and audits the result. What you get runs right out of the box, and the analysis holds up to reviewer scrutiny.
+
+</div>
 
 ---
 
