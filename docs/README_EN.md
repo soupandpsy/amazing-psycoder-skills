@@ -22,38 +22,30 @@
 
 <br>
 
-<table>
-<tr><td align="center">
-
-🔬 &nbsp;An idea won't become a data-collection-ready experiment until you learn Python, JavaScript, or MATLAB first.<br>
-📦 &nbsp;The lab's legacy code crashes on a different machine — nobody can explain the dependencies, nobody dares touch the logic.<br>
-📊 &nbsp;Statistical methods chosen by habit — "everyone uses ANOVA" — until a reviewer's question sends you back to square one.<br>
-🔁 &nbsp;Results only reproducible on your machine; change the environment or random seed and the conclusions might flip.<br>
-✂️ &nbsp;Experiment builders and data analysts are often different people — you collect data only to realize the design never accounted for how it'd be analyzed.<br>
-📝 &nbsp;A journal asks for a reproducibility statement, but the code was never audited, never documented, never independently verified.
-
-</td></tr>
-</table>
-
-<div align="center">
-
-### ✨ Amazing PsyCoder solves exactly these.
-
-You don't need to know Python. You don't need to know statistics. You just need to bring your ideas and your data — it walks you through confirming the design step by step, generates the code, and audits the result. What you get runs right out of the box, and the analysis holds up to reviewer scrutiny.
-
-</div>
 
 ---
 
 ## 📖 Why
 
-For a psychology researcher, two things eat up the most time between having an idea and actually collecting data and getting results.
+### 🔍 Current Pain Points in Psychology Research
+
+🔬 An idea won't become a data-collection-ready experiment until you learn Python, JavaScript, or MATLAB first.<br>
+📦 The lab's legacy code crashes on a different machine — nobody can explain the dependencies, nobody dares touch the logic.<br>
+📊 Statistical methods chosen by habit — "everyone uses ANOVA" — until a reviewer's question sends you back to square one.<br>
+🔁 Results only reproducible on your machine; change the environment or random seed and the conclusions might flip.<br>
+✂️ Experiment builders and data analysts are often different people — you collect data only to realize the design never accounted for how it'd be analyzed.
+
+### 🧱 Two Major Barriers to Getting Experiments Done
 
 **First: experiment programming.** To test a hypothesis, you first have to code the experiment. PsychoPy's Builder isn't flexible enough; Coder means learning Python. jsPsych means learning JavaScript and timeline logic. Psychtoolbox means learning MATLAB and frame synchronization. Just figuring out "which screen does RT start from," "how do I not map the keys backwards," and "how do I save data so a crash doesn't wipe everything" can take weeks. The distance between an idea in your head and a working experiment often takes longer than designing the experiment itself.
 
 **Second: data analysis.** Data's collected — now what statistical method? Within-subject design: paired t-test or mixed model? Accuracy near ceiling — is ANOVA still valid? When a reviewer asks "why this method," what do you say? If someone runs your code on a different machine, will they get the same result?
 
 These aren't skill problems. They're tool problems. Writing code and running analyses should make research smoother, not be the thing that stalls you.
+
+### ✨ Amazing PsyCoder's Solution
+
+You don't need to know Python. You don't need to know statistics. You just need to bring your ideas and your data — it walks you through confirming the design step by step, generates the code, and audits the result. What you get runs right out of the box, and the analysis holds up to reviewer scrutiny.
 
 Amazing PsyCoder encodes hard-won experience in experiment programming and data analysis into 7 skills — 1 orchestrator plus 6 sub-skills, following the agentskills.io open standard, supporting Claude Code / Codex / Hermes / OpenClaw.
 
@@ -67,7 +59,6 @@ So you can give the time back to the research itself.
 - 🧠 Researchers running cognitive, behavioral, or social psychology experiments
 - 😵‍💫 Anyone who's tripped over RT timing, randomization, and condition tables one too many times — and wants systematic quality assurance
 - 📊 Anyone who's collected data and isn't sure which statistical method to use — and wants a structured analysis plan
-- 📝 Anyone preparing a manuscript and wanting an independent reproducibility audit before submission
 - 🐍 PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB users
 
 ---

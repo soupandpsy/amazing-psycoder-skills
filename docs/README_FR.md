@@ -22,38 +22,27 @@
 
 <br>
 
-<table>
-<tr><td align="center">
-
-🔬 &nbsp;Pour transformer une idée en expérience capable de collecter des données, il faut d'abord apprendre Python, JavaScript ou MATLAB.<br>
-📦 &nbsp;Le code hérité du labo ne tourne plus dès qu'on change d'ordinateur — personne ne sait quelles dépendances installer, personne n'ose toucher à la logique.<br>
-📊 &nbsp;On choisit ses statistiques par habitude — « tout le monde utilise l'ANOVA » — et une remarque de reviewer suffit à tout recommencer.<br>
-🔁 &nbsp;Les résultats ne sortent que sur votre machine : changez d'environnement ou de graine aléatoire, et les conclusions changent.<br>
-✂️ &nbsp;Ceux qui programment l'expérience et ceux qui l'analysent ne sont souvent pas les mêmes — on récolte les données pour découvrir que l'analyse n'a pas été pensée en amont.<br>
-📝 &nbsp;Le journal exige une déclaration de reproductibilité, mais le code n'a jamais été audité, documenté, ni vérifié par un tiers.
-
-</td></tr>
-</table>
-
-<div align="center">
-
-### ✨ C'est exactement ce que résout Amazing PsyCoder.
-
-Pas besoin de savoir programmer, pas besoin d'être statisticien. Vous apportez vos idées et vos données — il vous guide pas à pas pour confirmer le design, générer le code, et auditer le résultat. Le code que vous obtenez est prêt à lancer, et vos analyses tiennent face aux reviewers les plus exigeants.
-
-</div>
-
----
-
 ## 📖 Pourquoi ce projet
 
-Pour un chercheur en psychologie, deux choses prennent un temps démesuré entre le moment où l'idée germe et celui où les résultats sont prêts à publier.
+### 🔍 Points de friction dans la recherche en psychologie
 
-**La première : programmer l'expérience.** Vous voulez tester une hypothèse, il faut d'abord coder la tâche. PsychoPy Builder n'est pas assez flexible, PsychoPy Coder demande d'apprendre Python ; jsPsych demande JavaScript et sa logique de timeline ; Psychtoolbox demande MATLAB et la synchronisation d'images. Définir correctement « à partir de quel écran on mesure le TR », « comment mapper les touches sans les inverser », « comment sauvegarder les données sans tout perdre au moindre crash » — rien que ça, c'est des semaines. Le temps passé entre l'idée et le premier lancement dépasse souvent celui consacré à la conception même de l'expérience.
+🔬 Pour transformer une idée en expérience capable de collecter des données, il faut d'abord apprendre Python, JavaScript ou MATLAB.<br>
+📦 Le code hérité du labo ne tourne plus dès qu'on change d'ordinateur — personne ne sait quelles dépendances installer, personne n'ose toucher à la logique.<br>
+📊 On choisit ses statistiques par habitude — « tout le monde utilise l'ANOVA » — et une remarque de reviewer suffit à tout recommencer.<br>
+🔁 Les résultats ne sortent que sur votre machine : changez d'environnement ou de graine aléatoire, et les conclusions changent.<br>
+✂️ Ceux qui programment l'expérience et ceux qui l'analysent ne sont souvent pas les mêmes — on récolte les données pour découvrir que l'analyse n'a pas été pensée en amont.
 
-**La deuxième : analyser les données.** Les données sont là — mais quelle méthode choisir ? Un test t apparié ou un modèle mixte pour un plan intra-sujets ? L'ANOVA tient-elle quand la précision est proche du plafond ? Que répondre au reviewer qui demande « pourquoi cette méthode » ? Et si on change d'ordinateur, est-ce que le script tourne encore ?
+### 🧱 Les deux grands obstacles à la réalisation d'une expérience
+
+**Premier obstacle : programmer l'expérience.** Vous voulez tester une hypothèse, il faut d'abord coder la tâche. PsychoPy Builder n'est pas assez flexible, PsychoPy Coder demande d'apprendre Python ; jsPsych demande JavaScript et sa logique de timeline ; Psychtoolbox demande MATLAB et la synchronisation d'images. Définir correctement « à partir de quel écran on mesure le TR », « comment mapper les touches sans les inverser », « comment sauvegarder les données sans tout perdre au moindre crash » — rien que ça, c'est des semaines. Le temps passé entre l'idée et le premier lancement dépasse souvent celui consacré à la conception même de l'expérience.
+
+**Deuxième obstacle : analyser les données.** Les données sont là — mais quelle méthode choisir ? Un test t apparié ou un modèle mixte pour un plan intra-sujets ? L'ANOVA tient-elle quand la précision est proche du plafond ? Que répondre au reviewer qui demande « pourquoi cette méthode » ? Et si on change d'ordinateur, est-ce que le script tourne encore ?
 
 Ce n'est pas une question de compétence — c'est une question d'outils. Coder et analyser devraient faciliter la recherche, pas la freiner.
+
+### ✨ La solution Amazing PsyCoder
+
+Pas besoin de savoir programmer, pas besoin d'être statisticien. Vous apportez vos idées et vos données — il vous guide pas à pas pour confirmer le design, générer le code, et auditer le résultat. Le code que vous obtenez est prêt à lancer, et vos analyses tiennent face aux reviewers les plus exigeants.
 
 Amazing PsyCoder encode l'expérience accumulée en programmation d'expériences et en analyse de données dans 7 skills — 1 orchestrateur et 6 sous-skills, conformes au standard ouvert agentskills.io, compatibles avec Claude Code / Codex / Hermes / OpenClaw.
 
@@ -67,7 +56,6 @@ Pour que vous puissiez vous concentrer sur ce qui compte vraiment : la recherche
 - 🧠 Chercheurs en psychologie cognitive, comportementale ou sociale
 - 😵‍💫 Ceux qui ont déjà buté sur des problèmes de TR, de randomisation ou de tableaux de conditions — et qui veulent une assurance qualité systématique
 - 📊 Ceux qui ont des données mais hésitent sur la méthode statistique, et cherchent une démarche d'analyse structurée
-- 📝 Ceux qui veulent confirmer la reproductibilité de leur analyse avant soumission — besoin d'un audit indépendant
 - 🐍 Utilisateurs de PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB
 
 ---

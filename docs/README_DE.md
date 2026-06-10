@@ -22,38 +22,27 @@
 
 <br>
 
-<table>
-<tr><td align="center">
-
-🔬 &nbsp;Bevor aus einer Idee ein lauffähiges Experiment wird, muss man erst Python, JavaScript oder MATLAB lernen.<br>
-📦 &nbsp;Der Legacy-Code aus dem Labor läuft auf dem nächsten Rechner nicht mehr — keiner kennt die Abhängigkeiten, keiner traut sich an die Logik.<br>
-📊 &nbsp;Statistische Methoden werden nach Gewohnheit gewählt — „wir nehmen halt ANOVA". Eine Rückfrage des Reviewers, und man fängt von vorne an.<br>
-🔁 &nbsp;Die Analyseergebnisse kriegt nur man selbst reproduziert — anderer Rechner, anderer Seed, andere Schlussfolgerung.<br>
-✂️ &nbsp;Experiment und Analyse machen oft verschiedene Leute — nach der Erhebung stellt sich heraus: Beim Design hat niemand an die Auswertung gedacht.<br>
-📝 &nbsp;Das Journal verlangt eine Erklärung zur Reproduzierbarkeit — aber der Code wurde nie geprüft, nie dokumentiert, nie unabhängig validiert.
-
-</td></tr>
-</table>
-
-<div align="center">
-
-### ✨ Genau dafür ist Amazing PsyCoder da.
-
-Du musst weder Python können noch Statistik verstehen. Du bringst deine Ideen und deine Daten mit — Amazing PsyCoder führt dich Schritt für Schritt durchs Design, generiert den Code und prüft alles, bevor es ernst wird. Was du am Ende in den Händen hältst, läuft auf Anhieb, und die Analyse hält auch dem Blick des Reviewers stand.
-
-</div>
-
----
-
 ## 📖 Warum es dieses Projekt gibt
 
-Auf dem Weg von der ersten Idee bis zur tatsächlichen Datenerhebung und Auswertung gibt es zwei Dinge, die am meisten Zeit kosten.
+### 🔍 Aktuelle Schmerzpunkte in der psychologischen Forschung
+
+🔬 Bevor aus einer Idee ein lauffähiges Experiment wird, muss man erst Python, JavaScript oder MATLAB lernen.
+📦 Der Legacy-Code aus dem Labor läuft auf dem nächsten Rechner nicht mehr — keiner kennt die Abhängigkeiten, keiner traut sich an die Logik.
+📊 Statistische Methoden werden nach Gewohnheit gewählt — „wir nehmen halt ANOVA". Eine Rückfrage des Reviewers, und man fängt von vorne an.
+🔁 Die Analyseergebnisse kriegt nur man selbst reproduziert — anderer Rechner, anderer Seed, andere Schlussfolgerung.
+✂️ Experiment und Analyse machen oft verschiedene Leute — nach der Erhebung stellt sich heraus: Beim Design hat niemand an die Auswertung gedacht.
+
+### 🧱 Die zwei großen Hürden bei der Umsetzung von Experimenten
 
 **Erstens: Experiment-Programmierung.** Bevor sich eine Hypothese testen lässt, muss das Experiment erst einmal programmiert werden. PsychoPy Builder ist zu unflexibel, für den Coder braucht man Python; jsPsych setzt JavaScript und Timeline-Logik voraus; Psychtoolbox erfordert MATLAB und Frame-Synchronisation. Fragen wie „Ab welchem Bildschirm startet die RT?" oder „Wie verhindere ich vertauschte Tasten?" oder „Wie speichere ich so, dass bei einem Absturz nichts verloren geht?" — das kostet Wochen. Von der Idee bis zum lauffähigen Experiment geht mehr Zeit verloren als für das eigentliche Experimentdesign.
 
 **Zweitens: Datenanalyse.** Die Daten sind da — aber welche statistische Methode passt? Within-Subject-Design: gepaarter t-Test oder gemischtes Modell? Genauigkeit nahe der Decke — ist ANOVA noch zulässig? Und wenn der Reviewer fragt: „Warum diese Methode?" — was antwortet man dann? Läuft das Skript auf einem anderen Rechner überhaupt noch?
 
 Das ist keine Frage des Könnens, sondern eine Frage der richtigen Werkzeuge. Programmieren und Auswerten sollten die Forschung erleichtern, nicht aufhalten.
+
+### ✨ Die Lösung von Amazing PsyCoder
+
+Du musst weder Python können noch Statistik verstehen. Du bringst deine Ideen und deine Daten mit — Amazing PsyCoder führt dich Schritt für Schritt durchs Design, generiert den Code und prüft alles, bevor es ernst wird. Was du am Ende in den Händen hältst, läuft auf Anhieb, und die Analyse hält auch dem Blick des Reviewers stand.
 
 Amazing PsyCoder kodiert dieses Erfahrungswissen in 7 Skills — 1 Orchestrator plus 6 Sub-Skills, die den kompletten Weg abdecken: vom Experiment bis zur publikationsreifen Analyse. Folgt dem [agentskills.io](https://agentskills.io) Standard und unterstützt Claude Code / Codex / Hermes / OpenClaw.
 
@@ -67,7 +56,6 @@ Zeit für die Forschung. Nicht für die Technik.
 - 🧠 Forschende in kognitiver, Verhaltens- oder Sozialpsychologie
 - 😵‍💫 Wer bei RT, Randomisierung und Bedingungstabellen schon mehrfach gestolpert ist und sich eine systematische Qualitätssicherung wünscht
 - 📊 Wer nach der Datenerhebung unsicher ist, welche Statistik die richtige ist — und ein durchdachtes Analyseverfahren möchte
-- 📝 Wer vor der Einreichung die Reproduzierbarkeit der Analyse bestätigen will — braucht ein unabhängiges Audit
 - 🐍 PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB Nutzer
 
 ---
