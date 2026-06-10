@@ -23,7 +23,7 @@
 <br>
 
 <table>
-<tr><td align="center">
+<tr><td align="left">
 
 🔬 &nbsp;一个 idea 要变成能收数据的实验程序，得先学 Python 或 JavaScript 或 MATLAB。<br>
 📦 &nbsp;实验室祖传代码换台电脑就崩，没人说得清依赖、没人改得动逻辑。<br>
@@ -35,13 +35,9 @@
 </td></tr>
 </table>
 
-<div align="center">
-
 ### ✨ Amazing PsyCoder 解决的就是这些。
 
 不需要你会 Python，不需要你懂统计，你只需要把实验想法和数据交给它——它会引导你一步步确认设计、生成代码、完成审计。最终拿到的代码打开就能跑，分析结果期刊审稿人也挑不出毛病。
-
-</div>
 
 ---
 
