@@ -24,7 +24,7 @@
 
 ## 📖 Pourquoi ce projet
 
-### 🔍 Points de friction dans la recherche en psychologie
+<h3 align="center">🔍 Points de friction dans la recherche en psychologie</h3>
 
 🔬 Pour transformer une idée en expérience capable de collecter des données, il faut d'abord apprendre Python, JavaScript ou MATLAB.<br>
 📦 Le code hérité du labo ne tourne plus dès qu'on change d'ordinateur — personne ne sait quelles dépendances installer, personne n'ose toucher à la logique.<br>
@@ -32,7 +32,7 @@
 🔁 Les résultats ne sortent que sur votre machine : changez d'environnement ou de graine aléatoire, et les conclusions changent.<br>
 ✂️ Ceux qui programment l'expérience et ceux qui l'analysent ne sont souvent pas les mêmes — on récolte les données pour découvrir que l'analyse n'a pas été pensée en amont.
 
-### 🧱 Les deux grands obstacles à la réalisation d'une expérience
+<h3 align="center">🧱 Les deux grands obstacles à la réalisation d'une expérience</h3>
 
 **Premier obstacle : programmer l'expérience.** Vous voulez tester une hypothèse, il faut d'abord coder la tâche. PsychoPy Builder n'est pas assez flexible, PsychoPy Coder demande d'apprendre Python ; jsPsych demande JavaScript et sa logique de timeline ; Psychtoolbox demande MATLAB et la synchronisation d'images. Définir correctement « à partir de quel écran on mesure le TR », « comment mapper les touches sans les inverser », « comment sauvegarder les données sans tout perdre au moindre crash » — rien que ça, c'est des semaines. Le temps passé entre l'idée et le premier lancement dépasse souvent celui consacré à la conception même de l'expérience.
 
@@ -40,7 +40,7 @@
 
 Ce n'est pas une question de compétence — c'est une question d'outils. Coder et analyser devraient faciliter la recherche, pas la freiner.
 
-### ✨ La solution Amazing PsyCoder
+<h3 align="center">✨ La solution Amazing PsyCoder</h3>
 
 Pas besoin de savoir programmer, pas besoin d'être statisticien. Vous apportez vos idées et vos données — il vous guide pas à pas pour confirmer le design, générer le code, et auditer le résultat. Le code que vous obtenez est prêt à lancer, et vos analyses tiennent face aux reviewers les plus exigeants.
 

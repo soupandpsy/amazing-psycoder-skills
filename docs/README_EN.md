@@ -27,7 +27,7 @@
 
 ## 📖 Why
 
-### 🔍 Current Pain Points in Psychology Research
+<h3 align="center">🔍 Current Pain Points in Psychology Research</h3>
 
 🔬 An idea won't become a data-collection-ready experiment until you learn Python, JavaScript, or MATLAB first.<br>
 📦 The lab's legacy code crashes on a different machine — nobody can explain the dependencies, nobody dares touch the logic.<br>
@@ -35,7 +35,7 @@
 🔁 Results only reproducible on your machine; change the environment or random seed and the conclusions might flip.<br>
 ✂️ Experiment builders and data analysts are often different people — you collect data only to realize the design never accounted for how it'd be analyzed.
 
-### 🧱 Two Major Barriers to Getting Experiments Done
+<h3 align="center">🧱 Two Major Barriers to Getting Experiments Done</h3>
 
 **First: experiment programming.** To test a hypothesis, you first have to code the experiment. PsychoPy's Builder isn't flexible enough; Coder means learning Python. jsPsych means learning JavaScript and timeline logic. Psychtoolbox means learning MATLAB and frame synchronization. Just figuring out "which screen does RT start from," "how do I not map the keys backwards," and "how do I save data so a crash doesn't wipe everything" can take weeks. The distance between an idea in your head and a working experiment often takes longer than designing the experiment itself.
 
@@ -43,7 +43,7 @@
 
 These aren't skill problems. They're tool problems. Writing code and running analyses should make research smoother, not be the thing that stalls you.
 
-### ✨ Amazing PsyCoder's Solution
+<h3 align="center">✨ Amazing PsyCoder's Solution</h3>
 
 You don't need to know Python. You don't need to know statistics. You just need to bring your ideas and your data — it walks you through confirming the design step by step, generates the code, and audits the result. What you get runs right out of the box, and the analysis holds up to reviewer scrutiny.
 

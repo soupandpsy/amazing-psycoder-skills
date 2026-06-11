@@ -24,7 +24,7 @@
 
 ## 📖 Warum es dieses Projekt gibt
 
-### 🔍 Aktuelle Schmerzpunkte in der psychologischen Forschung
+<h3 align="center">🔍 Aktuelle Schmerzpunkte in der psychologischen Forschung</h3>
 
 🔬 Bevor aus einer Idee ein lauffähiges Experiment wird, muss man erst Python, JavaScript oder MATLAB lernen.
 📦 Der Legacy-Code aus dem Labor läuft auf dem nächsten Rechner nicht mehr — keiner kennt die Abhängigkeiten, keiner traut sich an die Logik.
@@ -32,7 +32,7 @@
 🔁 Die Analyseergebnisse kriegt nur man selbst reproduziert — anderer Rechner, anderer Seed, andere Schlussfolgerung.
 ✂️ Experiment und Analyse machen oft verschiedene Leute — nach der Erhebung stellt sich heraus: Beim Design hat niemand an die Auswertung gedacht.
 
-### 🧱 Die zwei großen Hürden bei der Umsetzung von Experimenten
+<h3 align="center">🧱 Die zwei großen Hürden bei der Umsetzung von Experimenten</h3>
 
 **Erstens: Experiment-Programmierung.** Bevor sich eine Hypothese testen lässt, muss das Experiment erst einmal programmiert werden. PsychoPy Builder ist zu unflexibel, für den Coder braucht man Python; jsPsych setzt JavaScript und Timeline-Logik voraus; Psychtoolbox erfordert MATLAB und Frame-Synchronisation. Fragen wie „Ab welchem Bildschirm startet die RT?" oder „Wie verhindere ich vertauschte Tasten?" oder „Wie speichere ich so, dass bei einem Absturz nichts verloren geht?" — das kostet Wochen. Von der Idee bis zum lauffähigen Experiment geht mehr Zeit verloren als für das eigentliche Experimentdesign.
 
@@ -40,7 +40,7 @@
 
 Das ist keine Frage des Könnens, sondern eine Frage der richtigen Werkzeuge. Programmieren und Auswerten sollten die Forschung erleichtern, nicht aufhalten.
 
-### ✨ Die Lösung von Amazing PsyCoder
+<h3 align="center">✨ Die Lösung von Amazing PsyCoder</h3>
 
 Du musst weder Python können noch Statistik verstehen. Du bringst deine Ideen und deine Daten mit — Amazing PsyCoder führt dich Schritt für Schritt durchs Design, generiert den Code und prüft alles, bevor es ernst wird. Was du am Ende in den Händen hältst, läuft auf Anhieb, und die Analyse hält auch dem Blick des Reviewers stand.
 
