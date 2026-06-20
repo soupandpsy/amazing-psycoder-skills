@@ -1,9 +1,9 @@
 ---
 name: amazing-psycoder
 description: Entry point for the Amazing PsyCoder system. Routes user requests through two mandatory three-skill chains — Experiment: Designer(5-phase design)→Coder→Reviewer, and Analysis: Designer(5-phase progressive)→Coder→Reviewer. Supports PsychoPy, jsPsych, Psychtoolbox (38 paradigms) for experiments; R and Python for data analysis (60 methods + 48 charts). Trigger for 心理学实验、实验代码、PsychoPy实验、编写实验、数据分析、统计分析、analysis plan、生成分析代码、审计实验代码、审计分析代码.
-version: 1.3
+version: 1.4
 status: stable
-compatibility: Claude Code, Codex, Hermes, OpenClaw (agentskills.io standard)
+compatibility: Claude Code, Codex, Hermes, OpenClaw (agentskills.io standard), PsyCoder Studio (3-stage AI pipeline)
 ---
 
 # Amazing PsyCoder — System Orchestrator
@@ -257,6 +257,17 @@ All generated code follows a 12-step structure: imports → parameters → displ
 ## Post-Generation Quality Gate (Overview)
 
 Before delivery, all generated code must pass the 9-item Quality Gate defined in the [coder SKILL.md](psy-exp-coder/SKILL.md#post-generation-quality-gate-mandatory). Covers: spec skeleton compliance, anti-pattern scan, API patterns, parameter placement, escape handling, RT source, incremental save, preloading, and CJK font config. **Any failure = fix before delivery.**
+
+## PsyCoder Studio Compatibility
+
+This skill set is the designated professional context source for [PsyCoder Studio](PSYCODER_STUDIO.md)'s three-stage AI generation pipeline. The Studio uses a Skill Reference Engine to:
+
+- Route relevant skill documents by stage + platform + paradigm with token budgets
+- Inject skill context into AI prompts at Interpreter, Code Generator, and Reviewer stages
+- Enforce Review Gate semantics: unresolved critical/major issues block artifact packaging
+- Record skill version and selected documents in pipeline metadata
+
+See [PSYCODER_STUDIO.md](PSYCODER_STUDIO.md) for full pipeline integration contracts.
 
 ---
 

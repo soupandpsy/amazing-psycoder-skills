@@ -1,15 +1,25 @@
 ---
 name: psy-exp-reviewer
 description: Use for reviewing psychological experiment code quality at any stage — from early design idea through completed code. Supports five modes: code-audit (full platform-aware code review with smoke test protocol), config-audit (pre-code design review), implementation-plan-review (architecture review), triage-only (missing-information checklist from natural-language idea), and blocked (insufficient input). Does NOT generate or fix code. Trigger for 检查实验代码、code review、实验程序审查、能不能正式采集、代码有没有问题、check experiment code、实验设计有没有问题、帮我看看这个实验方案 / 実験コードレビュー、実験監査 / Experiment-Code-Review, Code-Audit, Experiment prufen / revue de code experimental, audit de code.
-version: 1.3
+version: 1.4
 status: stable
+compatibility: PsyCoder Studio (Review Gate compatible)
 ---
 
 # Psychological Experiment Code Reviewer
 
 ## Version
 
-v1.3 — stable, 2026-06-10. Sub-skill of [amazing-psycoder](../SKILL.md).
+v1.4 — PsyCoder Studio-compatible, 2026-06-21. Sub-skill of [amazing-psycoder](../SKILL.md).
+
+### v1.4 Changes
+
+- **Review Gate semantics**: `ready_for_packaging` is a pipeline-level gate derived from `ready_for_collection`. `unresolved_critical_count > 0` or `unresolved_major_count > 0` → `ready_for_packaging = false`.
+- **Repair tracking**: `issues_before_repair` and `issues_after_repair` must be separated. `repair_notes` do NOT prove resolution.
+- **Reviewed files**: `reviewed_files` must contain the complete final repaired files (not just fix diffs).
+- **Schema**: Formal ReviewReport and ReviewIssue schemas defined in [references/review-report-schema.md](references/review-report-schema.md).
+- **Gate**: Formal review gate rules defined in [references/review-gate.md](references/review-gate.md).
+- PsyCoder Studio pipeline integration contract in [PSYCODER_STUDIO.md](../PSYCODER_STUDIO.md).
 
 ## Purpose
 
@@ -639,3 +649,35 @@ When the audit passes with `ready_for_collection` or `ready_after_minor_fixes`:
 | [../psy-exp-designer/paradigms/](../psy-exp-designer/paradigms/) | Paradigm failure mode cross-reference |
 | [../psy-exp-designer/references/data-recording.md](../psy-exp-designer/references/data-recording.md) | Data output column validation |
 | [../psy-exp-designer/references/config-schema.md](../psy-exp-designer/references/config-schema.md) | Config validation rules |
+| [references/review-report-schema.md](references/review-report-schema.md) | ReviewReport + ReviewIssue schema (v1.4) |
+| [references/review-gate.md](references/review-gate.md) | Review Gate packaging rules (v1.4) |
+
+## Review Gate Rules (v1.4)
+
+### Repair Tracking
+
+- `issues_before_repair`: all issues found on first review pass
+- `repairs_applied`: list of repair actions taken (one per issue attempted)
+- `issues_after_repair`: all issues remaining AFTER repair pass
+- `repair_notes` do NOT prove resolution — a repaired issue is only `resolved: true` if verified
+
+### Reviewed Files
+
+`reviewed_files` MUST contain the **complete final repaired files** — not just fix diffs, not just changed files. Every required file from the original set must appear in `reviewed_files` with its final (repaired or original) content.
+
+### Unresolved Issues Gate
+
+- `unresolved_critical_count > 0` → `ready_for_collection = false`, `ready_for_packaging = false`
+- `unresolved_major_count > 0` → `ready_for_collection = false`, `ready_for_packaging = false` (MVP rule)
+- `ready_for_packaging` is a pipeline-level gate. Skill defines readiness. Pipeline enforces the block.
+
+### Check→Fix→Re-Check Loop
+
+The ideal process (defined in v1.3) is: reviewer finds issues → coder fixes → reviewer re-audits → repeat until zero critical and zero major. If the pipeline only performs one repair pass (no loop), the reviewer MUST explicitly report unresolved issues in `issues_after_repair` and set `ready_for_packaging = false` if any critical or major remain.
+
+### Skill vs. Pipeline Responsibility
+
+| Layer | Responsibility |
+|-------|---------------|
+| **Skill (this file)** | Defines critical/major/minor classifications, API correctness, data recording standards, platform-specific anti-patterns |
+| **Pipeline (PsyCoder Studio)** | Enforces: if `unresolved_critical_count > 0` → block packaging; if `ready_for_packaging = false` → block packaging; Local Validator checks file existence and path safety only |
