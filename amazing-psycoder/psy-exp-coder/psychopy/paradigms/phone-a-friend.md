@@ -30,7 +30,6 @@ The "warn_user" routine is shown when all 10 calls are exhausted -- it displays 
 Complete runnable PsychoPy code for Phone-a-Friend task:
 
 ```python
-```
 # Source: phone_a_friend (demos/phone_a_friend)
 # Project URL: https://gitlab.pavlovia.org/demos/phone_a_friend
 # Original file: phone_a_friend_lastrun.py

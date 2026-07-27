@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazing PsyCoder"
+  short_description: "Route experiment and analysis work through PsyCoder"
+  default_prompt: "Use $amazing-psycoder to route my psychology research task through the right workflow."

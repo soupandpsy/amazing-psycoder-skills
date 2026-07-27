@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psycoder.studio/schemas/runtime-evidence.schema.json",
+  "title": "PsyCoder Target-Machine Runtime Evidence",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "artifact_set_hash",
+    "target",
+    "tests",
+    "started_at",
+    "completed_at",
+    "recorded_by"
+  ],
+  "properties": {
+    "evidence_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "artifact_set_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "target": {
+      "type": "object",
+      "required": ["platform", "os", "runtime_version", "hardware"],
+      "properties": {
+        "platform": { "enum": ["psychopy", "jspsych", "psychtoolbox"] },
+        "os": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "runtime_version": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "hardware": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      },
+      "additionalProperties": false
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["id", "result", "procedure", "evidence_paths"],
+        "properties": {
+          "id": {
+            "enum": ["launch_exit", "full_short_session", "data_integrity", "incremental_recovery", "timing_device_check"]
+          },
+          "result": { "enum": ["passed", "failed", "blocked"] },
+          "procedure": { "type": "string", "minLength": 1, "maxLength": 12000 },
+          "evidence_paths": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": { "type": "string", "minLength": 1, "maxLength": 2000 }
+          },
+          "notes": { "type": "string", "maxLength": 12000 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "recorded_by": { "type": "string", "minLength": 1, "maxLength": 500 }
+  },
+  "additionalProperties": false
+}

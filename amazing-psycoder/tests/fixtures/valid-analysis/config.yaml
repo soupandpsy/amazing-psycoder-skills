@@ -1,0 +1,67 @@
+version: "1.2"
+analysis_mode: confirmatory
+runtime:
+  language: python
+  language_version: "3.12.4"
+  dependency_strategy: lockfile
+  dependency_file: requirements.lock
+  target_environment: "CI fixture"
+preregistration:
+  reference: null
+  alpha: 0.05
+experiment:
+  config_path: ../valid-stroop/config.yaml
+  data_path: data/
+  file_pattern: sub-{subject_id}_stroop.csv
+  file_format: csv
+  loader_options: {}
+  multi_file: true
+  n_subjects: 40
+  id_columns:
+    subject: subject_id
+    item: stimulus
+    session: null
+design:
+  ivs:
+    - name: condition
+      type: categorical
+      levels: [congruent, incongruent]
+  dvs:
+    - name: rt
+      type: continuous
+      unit: ms
+  design_type: within
+  observation_level: trial
+  clustering: [subject_id, stimulus]
+questions:
+  - id: Q1
+    question: Does incongruency increase reaction time?
+    dv: rt
+    role: primary
+    estimand: Population mean RT contrast, incongruent minus congruent
+    hypothesis: directional
+    selected_method: linear_mixed_model
+    alternatives_considered: [paired_t_test]
+    rationale: Trial-level repeated observations are clustered by subject and stimulus.
+    model_formula: rt ~ condition + (1 + condition | subject_id) + (1 | stimulus)
+    dependence_structure: Subject random intercept/slope and stimulus random intercept.
+cleaning:
+  rt_lower: 100
+  rt_upper: 1500
+  accuracy_min: null
+  trial_exclusion: none
+  missing_policy: Preserve timeout as missing RT; likelihood analysis under documented assumptions.
+  sensitivity_rules: [repeat with log-RT model]
+model:
+  stochastic: false
+  seed: null
+  contrast: sum
+  correction: none
+  diagnostics: [residual diagnostics, convergence, singular fit]
+output:
+  save_path: output/
+  report_format: Quarto
+  figures: [distribution, model contrast]
+  effect_sizes: [estimated marginal contrast with 95% CI]
+  environment_capture: true
+  execution_log: analysis-run.json

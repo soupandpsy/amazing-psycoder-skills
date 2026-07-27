@@ -13,8 +13,11 @@ sca;
 % Setup PTB with some default values
 PsychDefaultSetup(2);
 
-% Seed the random number generator
-rng('shuffle');
+% The generated project must resolve this field from the confirmed seed scope
+% (task version + participant/session when declared) and save it on every row.
+randomSeed = config.randomization.resolvedSeed;
+assert(isscalar(randomSeed) && isfinite(randomSeed), 'A resolved random seed is required');
+rng(randomSeed, 'twister');
 
 % Set the screen number to the external secondary monitor if there is one
 % connected

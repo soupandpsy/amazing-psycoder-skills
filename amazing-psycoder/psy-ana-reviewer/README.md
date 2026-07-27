@@ -1,87 +1,39 @@
-# psy-ana-reviewer — 分析代码审计层
+# psy-ana-reviewer — 分析审计层
 
-> **版本**: v1.3 | **角色**: 对分析脚本进行统计正确性和可重复性审计，输出问题分级报告 + 就绪标签。不修改代码。amazing-psycoder 子技能。
+> **版本**: v1.4.0 | 审计分析设计、脚本或已执行结果；不直接修改代码。
 
-## 一句话说明
+## 审查模式与证据上限
 
-输入分析脚本 + 数据，审计统计方法是否正确、结果是否可重复，标注就绪状态。
+| 模式 | 最低输入 | 最大标签 |
+|------|----------|---------|
+| `plan-review` | `analysis_config.yaml` | `analysis_plan_ready` |
+| `analysis-audit` | config + 完整脚本 + 数据 schema | `ready_for_execution` |
+| `result-audit` | 上述材料 + clean execution log + 生成的表/图 + 环境信息 | `ready_for_publication` |
+| `triage-only` | 研究问题/错误描述 | 缺失信息与风险清单 |
+| `blocked` | 无法判断范围或缺少关键输入 | `blocked` |
 
-## 4 种审查模式
+静态审查通过只表示脚本可以进入执行验证，不能证明结果正确或可发表。`ready_for_publication` 必须有成功执行和结果审查证据。
 
-| 模式 | 输入 | 最大标签 |
-|------|------|---------|
-| `analysis-audit` | 完整分析脚本 + 数据 | `ready_for_publication` |
-| `plan-review` | 分析 config YAML | `analysis_plan_ready` |
-| `triage-only` | 研究问题描述 | 缺失信息清单 |
-| `blocked` | 输入不足 | 说明需要什么 |
+## 核心审计
 
-## 就绪标签
+- 研究问题、estimand、观测层级与模型公式一致；重复测量、项目和会话依赖未被忽略。
+- 变量类型与似然/链接函数匹配；重复二元数据不能把普通 `statsmodels.Logit()` 标成 GLMM。
+- 排除、缺失、变换和派生变量均有来源、理由、计数与敏感性策略。
+- 诊断针对实际模型；不机械要求所有模型做 Shapiro 检验。
+- 每个实质性结论由目标效应估计与不确定性支持，而非仅报告 p 值或 R²。
+- 随机种子只在随机过程存在时要求；始终记录包/运行环境和输入输出清单。
+- 结果审查核对执行日志、样本流转、表图数值、警告/收敛、方向和单位。
 
-| 标签 | 含义 |
-|------|------|
-| `ready_for_publication` | 零 Critical + 零 Major |
-| `ready_after_minor_fixes` | 仅 Minor 问题 |
-| `not_ready` | 存在 Critical 或 Major |
-| `analysis_plan_ready` | 分析设计完成，可生成代码 |
+## 严重性
 
-## 严重性分级
+| 级别 | 判定依据 |
+|------|----------|
+| **Critical** | 会改变主要结论、使用错误数据/模型，或结果无法追溯 |
+| **Major** | 可能实质影响估计/不确定性/重复性，发表前必须解决 |
+| **Minor** | 不改变实质结论的清晰度、维护性或文档问题 |
 
-| 级别 | 定义 |
-|------|------|
-| **Critical** | 结果无效，必须修复 |
-| **Major** | 降低可重复性，发表前修复 |
-| **Minor** | 不影响正确性，方便时修复 |
+## 最小输出
 
-## 审计维度
+报告必须包含：审查模式、审查范围、证据状态、就绪标签、按严重性分组且带文件/稳定定位的发现、每项修复路径，以及仍未验证的事项。
 
-### 统计正确性
-- 模型匹配设计类型（被试内→paired/lmer，被试间→ind t/aov）
-- 随机效应结构合理
-- 效应量类型正确
-- 多重比较已校正
-
-### 可重复性
-- seed 已设
-- sessionInfo / pip freeze 输出
-- 排除日志完整（每步数量+原因）
-- 无硬编码路径
-
-### 假设检验
-- 正态性已验证，违规有备选
-- 方差齐性已验证（被试间）
-- 球对称已验证（被试内>2水平）
-
-### 图表质量
-- 误差线已定义（SE/CI）
-- 个体数据可见（被试内设计）
-- 坐标轴标签清晰
-
-## 平台反模式清单
-
-每平台独立维护：
-
-| 平台 | 检查清单 |
-|------|---------|
-| R | [r/checklist/README.md](r/checklist/README.md) — 12项Quality Gate + 9项反模式grep |
-| Python | [python/checklist/README.md](python/checklist/README.md) — 12项Quality Gate + 9项反模式grep |
-
-## 输出格式
-
-```
-## 审计模式: analysis-audit
-## 就绪标签: ready_for_publication / not_ready
-## Critical Issues: (如有)
-## Major Issues: (如有)
-## Minor Issues: (如有)
-## 总体判断: 1-2句总结
-```
-
-## 关键文件
-
-| 文件 | 用途 |
-|------|------|
-| [SKILL.md](SKILL.md) | 完整审计工作流规范 |
-| [r/checklist/README.md](r/checklist/README.md) | R 平台独立审计清单（12项Gate + grep模式） |
-| [python/checklist/README.md](python/checklist/README.md) | Python 平台独立审计清单（12项Gate + grep模式） |
-| [../psy-ana-coder/r/spec/README.md](../psy-ana-coder/r/spec/README.md) | Coder R API规范 + 15项反模式（参考） |
-| [../psy-ana-coder/python/spec/README.md](../psy-ana-coder/python/spec/README.md) | Coder Python API规范 + 12项反模式（参考） |
+完整工作流见 [SKILL.md](SKILL.md)；平台清单见 [R checklist](r/checklist/README.md) 与 [Python checklist](python/checklist/README.md)。

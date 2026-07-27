@@ -1,6 +1,6 @@
 # jsPsych Paradigm Index
 
-> 25 paradigm reference files (Layer 3). API patterns from spec/ (jsPsych 7.x), not from these files.
+> 25 legacy logic sources (Layer 3). Treat every code block as quarantined; current API patterns come only from the pinned jsPsych 8.x spec/mapping.
 
 ## Paradigm list
 

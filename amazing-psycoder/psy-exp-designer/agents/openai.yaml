@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experiment Designer"
+  short_description: "Turn experiment ideas into confirmed implementation specs"
+  default_prompt: "Use $psy-exp-designer to turn my experiment idea into a confirmed config."

@@ -32,7 +32,6 @@ The Simon effect arises from the condition file design: congruent trials pair a 
 Complete runnable PsychoPy code for Simon task:
 
 ```python
-```
 # Source: butterfly_simon (demos/butterfly_simon)
 # Project URL: https://gitlab.pavlovia.org/demos/butterfly_simon
 # Original file: Simon.py

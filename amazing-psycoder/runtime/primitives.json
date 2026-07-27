@@ -1,0 +1,32 @@
+{
+  "contractVersion": "1.4.0",
+  "executionModel": "ExecutionPlan",
+  "primitives": [
+    "display_text",
+    "display_image",
+    "play_audio",
+    "play_video",
+    "display_fixation",
+    "blank_interval",
+    "keyboard_response",
+    "mouse_response",
+    "manual_continue",
+    "static_feedback",
+    "condition_field_binding",
+    "generated_condition_table",
+    "uploaded_condition_table",
+    "sequence_loop",
+    "sequence_shuffle",
+    "counterbalancing",
+    "computed_condition_field",
+    "adaptive_state_update",
+    "incremental_trial_save",
+    "linked_event_save"
+  ],
+  "rules": [
+    "A paradigm or family label never selects executable logic.",
+    "Every primitive and field binding must be present in the confirmed ExperimentSpec.",
+    "Platform adapters translate an ExecutionPlan without changing its experimental semantics.",
+    "Templates may initialize editable state but are not generation authority."
+  ]
+}

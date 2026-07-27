@@ -1,355 +1,143 @@
-# Skill Writing Standard
+# Amazing PsyCoder Skill Writing Standard
 
-This file defines the required rules for writing and modifying Claude Skills.
+Use this reference when creating, modifying, or reviewing any skill in the Amazing PsyCoder package.
 
-## 1. Basic Skill Structure
+## Contents
 
-Every Skill must be a self-contained folder.
+1. [Keep each skill responsible for one stage](#1-keep-each-skill-responsible-for-one-stage)
+2. [Use portable frontmatter](#2-use-portable-frontmatter)
+3. [Design descriptions as routing rules](#3-design-descriptions-as-routing-rules)
+4. [Keep activation context lean](#4-keep-activation-context-lean)
+5. [Use progressive disclosure](#5-use-progressive-disclosure)
+6. [Use imperative instructions and explicit gates](#6-use-imperative-instructions-and-explicit-gates)
+7. [Define handoff artifacts](#7-define-handoff-artifacts)
+8. [Define evidence-bounded outputs](#8-define-evidence-bounded-outputs)
+9. [Maintain UI metadata](#9-maintain-ui-metadata)
+10. [Validate before delivery](#10-validate-before-delivery)
 
-Each Skill folder must contain one required file:
+## 1. Keep each skill responsible for one stage
+
+- `amazing-psycoder`: route broad, ambiguous, multi-stage, and cross-pipeline requests.
+- `psy-exp-designer`: resolve experiment-design decisions and produce experiment config.
+- `psy-exp-coder`: implement or debug experiment code from confirmed config/code.
+- `psy-exp-reviewer`: audit experiment artifacts without modifying them.
+- `psy-ana-designer`: resolve analysis decisions and produce analysis config.
+- `psy-ana-coder`: implement or debug R/Python analysis code.
+- `psy-ana-reviewer`: audit analysis artifacts without modifying them.
+
+Do not duplicate an entire neighboring workflow. Route to it and define the handoff artifact.
+
+## 2. Use portable frontmatter
+
+Start every `SKILL.md` with only `name` and `description`:
+
+```yaml
+---
+name: psy-exp-coder
+description: >-
+  Generate, modify, or debug runnable psychological experiment code when a
+  completed experiment config YAML or concrete existing code is available.
+  Do not design unresolved experiment logic or issue readiness verdicts.
+---
+```
+
+Requirements:
+
+- Match `name` to the skill directory exactly.
+- Use lowercase letters, digits, and hyphens only.
+- Keep the description within 1024 characters.
+- State what the skill does, concrete trigger contexts, required input state, and adjacent skills to use instead.
+- Quote or fold descriptions that contain colons so YAML remains valid.
+- Put version/status information in the body, not frontmatter.
+
+## 3. Design descriptions as routing rules
+
+Avoid broad keyword lists that make several skills activate for the same request. Prefer intent and artifact state:
+
+| User state | Route |
+|------------|-------|
+| Idea or incomplete protocol | Designer |
+| Confirmed config or existing code needing implementation/debugging | Coder |
+| Artifact needing assessment/readiness judgment | Reviewer |
+| Ambiguous, multi-stage, or cross-pipeline request | Orchestrator |
+
+Include Chinese trigger phrases when they materially improve discovery, but do not repeat long multilingual synonym lists when the intent is already clear.
+
+## 4. Keep activation context lean
+
+- Keep the `SKILL.md` body under 500 lines.
+- Keep routing, required inputs, core workflow, red lines, resource-loading rules, and output contract in `SKILL.md`.
+- Move detailed schemas, examples, API mappings, checklists, and platform/paradigm knowledge into `references/`, `paradigms/`, or platform folders.
+- Link every resource directly from `SKILL.md` and state exactly when to load it.
+- Avoid duplicating the same rule in multiple files; identify one authoritative source.
+- Add a table of contents to reference files over 100 lines.
+
+## 5. Use progressive disclosure
+
+Load only the resources needed for the current task:
+
+1. Detect pipeline and stage.
+2. Detect platform, paradigm, method, or chart type.
+3. Load the matching platform contract and any exact optional design reference.
+4. Avoid loading demos unless a lower-priority logic example is needed.
+
+For experiment code generation, preserve priority:
 
 ```text
-SKILL.md
+confirmed config/ExecutionPlan > platform spec > config mapping > exact optional design reference > raw demos
 ```
 
-A minimal Skill has this structure:
+For review, use the same authoritative platform spec as the coder rather than maintaining a second anti-pattern list.
 
-```
-skill-name/
-└── SKILL.md
-```
+## 6. Use imperative instructions and explicit gates
 
-A complex Skill may include references, examples, scripts, or assets:
+- Write operational rules as commands: “Load…”, “Verify…”, “Do not…”, “Route…”.
+- Distinguish blocking gates from recommendations.
+- Define what evidence is required to pass a gate.
+- Never claim runtime success from static inspection alone.
+- Never silently infer critical design or analysis choices.
+- Ask at most three focused questions per round when user input is genuinely required.
 
-```
-skill-name/
-├── SKILL.md
-├── references/
-├── examples/
-├── scripts/
-└── assets/
-```
+## 7. Define handoff artifacts
 
-Do not put unrelated files into a Skill folder.
+Every transition must name its artifact and precondition:
 
-## 2. Required YAML Frontmatter
+| Handoff | Required artifact | Precondition |
+|---------|-------------------|--------------|
+| Experiment Designer → Coder | experiment config + condition files | Gate 5 confirmed |
+| Experiment Coder → Reviewer | code + conditions + run instructions | coder Quality Gate passed |
+| Analysis Designer → Coder | `analysis_config.yaml` | analysis Gate 5 confirmed |
+| Analysis Coder → Reviewer | script + report/notebook | coder Quality Gate passed |
 
-Every SKILL.md must start with YAML frontmatter.
+Direct review of existing code may enter at Reviewer without replaying upstream stages. End-to-end generation must still pass the full pipeline.
 
-Required fields:
+## 8. Define evidence-bounded outputs
+
+- Designer: confirmed decision registry + internal config + generated condition artifacts when required.
+- Coder: runnable files + run instructions + Quality Gate results.
+- Reviewer: scope, mode, evidence-backed findings, severity, readiness label, and recovery path.
+- Do not let a reviewer fix code in the same role; send fixes to the matching Coder and re-audit afterward.
+
+## 9. Maintain UI metadata
+
+Add `agents/openai.yaml` with quoted strings:
 
 ```yaml
----
-name: skill-name
-description: Clear trigger condition and task boundary.
----
+interface:
+  display_name: "Experiment Coder"
+  short_description: "Generate and debug cross-platform experiment code"
+  default_prompt: "Use $psy-exp-coder to generate experiment code from my confirmed config."
 ```
 
-The name must match the folder name.
-
-Correct:
-
-```yaml
----
-name: psy-exp-designer
-description: Use for psychological experiment programming tasks, including designing experiment specifications, trial/window timelines, condition tables, randomization rules, response rules, and data fields. Trigger for 中文/English requests about 心理学实验程序、实验代码、trial/block结构、刺激呈现、随机化、反应时、条件表、Go/No-go、Navon、Stroop、priming.
----
-```
-
-Incorrect:
-
-```yaml
----
-name: psych-exp
-description: This is a useful skill.
----
-```
-
-## 3. Description Is a Trigger Rule
-
-The description is not a general introduction. It controls when the Skill should activate.
-
-A good description must include:
-
-1. What the Skill does
-2. When to use it
-3. Key trigger words or user intents
-4. When not to use it, if there is possible ambiguity
-
-For Chinese users, include Chinese trigger terms.
-
-Example:
-
-```yaml
-description: Use for generating, modifying, or debugging PsychoPy experiment code. Trigger for PsychoPy代码、psychopy实验、psychopy报错、Builder转代码、刺激呈现、keyboard response、RT计时、中文文本、EEG trigger、data saving.
-```
-
-Avoid vague descriptions:
-
-```yaml
-description: Helps with coding.
-```
-
-Avoid overly broad descriptions:
-
-```yaml
-description: Use for all psychology questions.
-```
-
-## 4. Naming Rules
-
-Use kebab-case for all Skill folders and Markdown resource files.
-
-Correct:
-
-```
-psy-exp-designer
-psy-exp-coder
-psy-exp-reviewer
-go-nogo.md
-priming.md
-config-schema.md
-```
-
-Incorrect:
-
-```
-psych_exp_programming
-psychExpProgramming
-go_nogo.md
-primingTarget.md
-ExperimentSpecification.md
-```
-
-The `name` field in YAML must match the Skill folder name.
-
-Correct:
-
-```
-folder: psy-exp-coder
-name: psy-exp-coder
-```
-
-Incorrect:
-
-```
-folder: psy-exp-coder
-name: psych-code-generator
-```
-
-## 5. Skill Boundary Rule
-
-Each Skill should have one clear responsibility.
-
-Do not make one Skill do everything.
-
-Preferred structure:
-
-```
-psy-exp-designer/      # Orchestration and experiment specification
-psy-exp-coder/            # Code generation across platforms
-psy-exp-reviewer/    # Code review and production-readiness audit
-```
-
-The main Skill should coordinate and route. Platform Skills should implement. Review Skills should inspect.
-
-## 6. Recommended SKILL.md Sections
-
-A well-structured SKILL.md should usually include:
-
-```
-# Skill Name
-## Purpose
-## When to Use
-## When Not to Use
-## Workflow
-## Required Inputs
-## Missing Information Policy
-## Output Format
-## Examples
-```
-
-Not every Skill needs every section, but complex Skills should include most of them.
-
-## 7. Resource Files
-
-Use resource files when a Skill becomes too long or when knowledge is reusable.
-
-Examples:
-
-```
-references/spec-template.md
-references/data-recording.md
-references/randomization.md
-paradigms/go-nogo.md
-paradigms/navon.md
-```
-
-The main SKILL.md must explicitly say when to read each resource file.
-
-Bad:
-
-> See paradigms folder.
-
-Good:
-
-> If the user mentions Go/No-go, read `paradigms/go-nogo.md` before asking questions or generating code. The paradigm file contains both the paradigm rules and a complete specification example at the end.
-
-## 8. Examples Are Required for Complex Skills
-
-If a Skill handles complex work, include examples.
-
-Examples should show:
-
-1. User input
-2. Parsed interpretation
-3. Missing information
-4. Expected output structure
-
-Examples should be realistic, not toy examples. Complex paradigms should embed a full example at the end of the paradigm file under `## Example`, showing the complete unified workflow from user request to expected code architecture. See `paradigms/go-nogo.md` for the canonical pattern.
-
-## 9. Missing Information Rule
-
-Never silently invent critical task logic.
-
-For psychological experiment programming, do not guess:
-
-- phase structure
-- trial window sequence
-- timing values
-- response mapping
-- correctness rule
-- feedback logic
-- block order
-- randomization rule
-- data columns
-
-If information is missing, output:
-
-```
-## Known Information
-...
-## Missing Information
-...
-## Safe Assumptions
-...
-## Questions
-1.
-2.
-3.
-```
-
-Ask no more than 3 questions per round.
-
-## 10. Output Format Rule
-
-Every Skill must define its expected output format.
-
-For new experiment code, use:
-
-```
-## Experiment Specification Summary
-## Trial Window Timeline
-## Missing Information / Assumptions
-## Code Architecture
-## Full Code
-## Data Output Fields
-## How to Run
-## Pre-collection Checklist
-```
-
-For code review, use:
-
-```
-## Overall Verdict
-## Critical Issues
-## Major Issues
-## Minor Issues
-## Section-by-Section Report
-## Suggested Fixes
-```
-
-## 11. Do Not Overload SKILL.md
-
-Do not put all details into SKILL.md.
-
-Use this rule:
-
-| File | Purpose |
-|------|---------|
-| SKILL.md | routing, workflow, core rules |
-| references/ | reusable standards |
-| paradigms/ | domain-specific rules |
-| examples/ | input-output examples |
-| scripts/ | executable helper scripts, if needed |
-| assets/ | static files, if needed |
-
-## 12. Avoid False Capabilities
-
-Do not write that a Skill can do something unless the instructions actually explain how.
-
-Bad:
-
-```yaml
-description: Handles EEG triggers.
-```
-
-But the Skill contains no EEG trigger rules.
-
-Good:
-
-```markdown
-## EEG Trigger Rule
-Use `win.callOnFlip(port.setData, trigger_code)` to synchronize triggers with stimulus onset.
-```
-
-## 13. Avoid Over-Prompting
-
-A Skill should not ask the user too many questions at once.
-
-Use priority-based questioning:
-
-1. Ask questions that affect program structure first
-2. Ask implementation details later
-3. Ask no more than 3 questions per round
-
-## 14. Do Not Assume Cross-Skill Invocation Works Like an API
-
-A main Skill can route to another Skill, but should not assume another Skill is automatically invoked as a function.
-
-Use wording like:
-
-> If the platform is PsychoPy, apply `psy-exp-coder` if available. If not automatically loaded, explicitly read `../psy-exp-coder/SKILL.md`.
-
-Avoid:
-
-> Invoke psy-exp-coder.
-
-## 15. Versioning
-
-When a Skill becomes stable, mark it informally in the file:
-
-```markdown
-## Version
-v1.2 — stable initial version.
-```
-
-When modifying a Skill, preserve existing behavior unless the user explicitly asks for a redesign.
-
-## 16. Final Checklist Before Saving a Skill
-
-Before saving or modifying a Skill, check:
-
-- [ ] Does SKILL.md start with YAML frontmatter?
-- [ ] Does YAML include `name` and `description`?
-- [ ] Does `name` match the folder name?
-- [ ] Is `description` written as a trigger rule?
-- [ ] Are Chinese trigger terms included if the user works in Chinese?
-- [ ] Is the Skill boundary clear?
-- [ ] Is the workflow explicit?
-- [ ] Are missing-information rules defined?
-- [ ] Is the output format defined?
-- [ ] Are resource files referenced explicitly?
-- [ ] Are examples included for complex tasks?
-- [ ] Are filenames in kebab-case?
-- [ ] Are unsupported capabilities removed or fully explained?
+Keep `short_description` between 25 and 64 characters. Make `default_prompt` one short sentence that explicitly names `$skill-name`.
+
+## 10. Validate before delivery
+
+- Run `python3 amazing-psycoder/scripts/validate_skills.py` from the repository root.
+- Run the official `quick_validate.py` against every skill directory.
+- Parse all frontmatter as YAML and verify directory/name equality.
+- Verify all local Markdown links resolve.
+- Verify every `SKILL.md` body stays under 500 lines.
+- Verify every skill has matching `agents/openai.yaml` metadata.
+- Search for stale counts, versions, contradictory gates, and duplicated authoritative rules.
+- Preserve unrelated user changes and review the final diff.

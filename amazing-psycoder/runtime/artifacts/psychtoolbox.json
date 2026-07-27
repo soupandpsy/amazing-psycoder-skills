@@ -1,0 +1,13 @@
+{
+  "platform": "psychtoolbox",
+  "language": "matlab",
+  "entrypoint": "main.m",
+  "files": [
+    {"path": "main.m", "required": true, "owner": "model", "priority": 1},
+    {"path": "conditions.csv", "required": true, "owner": "compiler", "priority": 2},
+    {"path": "execution_plan.json", "required": true, "owner": "compiler", "priority": 3},
+    {"path": "README.md", "required": true, "owner": "compiler", "priority": 4},
+    {"path": "audit_report.md", "required": true, "owner": "compiler", "priority": 5},
+    {"path": "experiment_config.json", "required": true, "owner": "compiler", "priority": 6}
+  ]
+}

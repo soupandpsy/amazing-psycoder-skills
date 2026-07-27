@@ -58,7 +58,7 @@ Munoz, D. P., & Everling, S. (2004). Look away: The anti-saccade task and the vo
 - Do not assume the target always appears on the opposite side. 在标准反眼跳任务中，朝向眼跳试次（目标与线索同侧）通常与反眼跳试次随机混合呈现。必须明确确认试次混合比例，以及两种试次类型在条件文件中如何编码（如 `trial_type` 列标记为 `"pro"` 或 `"anti"`）。
 - Do not assume keyboard response is the only input mode. 反眼跳任务支持键盘、鼠标点击和悬停（hover）三种输入方式。需在实验开始前让被试选择输入模式，并确认对应的按键映射或响应区域定义。若不确认，生成的代码可能只实现键盘模式，导致无法在触摸屏或无键盘设备上运行。
 - Do not assume the target is always a letter requiring identification. 目标刺激可能是字母（需字母识别，如判断字母是 A 还是 E）、箭头（方向判断，如左箭头按左键）、或简单探测点（检测是否出现）。目标身份影响正确反应的定义方式和条件文件中 `corr_ans` 列的取值。
-- Do not assume there is no response deadline. 目标呈现时间通常很短（100–150 ms），但反应窗口可能设有截止时间（如 2000 ms）。需确认是否设置最大反应时间、超时后如何编码（`acc = -1` 或 `acc = 0` 且 `timeout = 1`）。
+- Do not assume there is no response deadline. 目标呈现时间可短于反应窗口；具体时长必须由协议确认。需明确最大反应时间和遗漏反应语义：RT 保持缺失，记录 `response_status: timeout`；若该试次按任务规则属于错误遗漏，可令 `accuracy = 0`，但不得用 `-1` 等数值哨兵伪装缺失值。
 - Do not assume eye-tracking data is always required. 许多反眼跳实验仅使用手动反应（按键或点击）来测量行为抑制指标（错误率、反应时），而无需眼动仪。需明确是否需要集成眼动追踪硬件，若不需要，则无需在代码中包含 EyeLink 或 Tobii 的通信逻辑。
 - Do not assume the cue-target interval is always zero. 线索消失到目标出现之间的间隔（cue-target asynchrony, CTA）可能为 0 ms（无间隔）、200 ms（gap条件），或在实验中系统变化。CTA 影响反眼跳潜伏期和错误率，需在生成代码前确认具体参数。
 
@@ -74,7 +74,7 @@ Munoz, D. P., & Everling, S. (2004). Look away: The anti-saccade task and the vo
 
 ## Variants
 
-- **Gap/Overlap Antisaccade Task（间隙/重叠反眼跳任务）**：在固定点消失（gap条件，固定点在线索出现前消失200 ms）或不消失（overlap条件，固定点持续显示）后呈现外周线索。Gap条件降低了反眼跳潜伏期，用于研究注意脱离（attentional disengagement）和眼动准备机制。相关范式：[gap-overlap](./gap-overlap.md)
+- **Gap/Overlap Antisaccade Task（间隙/重叠反眼跳任务）**：在固定点消失（gap条件，固定点在线索出现前消失200 ms）或不消失（overlap条件，固定点持续显示）后呈现外周线索。Gap条件降低了反眼跳潜伏期，用于研究注意脱离（attentional disengagement）和眼动准备机制。相关范式：gap-overlap
 - **Memory-Guided Antisaccade Task（记忆引导反眼跳任务）**：目标仅在极短时间内闪现（如 50–100 ms），被试需在延迟期（数秒）后向目标镜像位置执行眼跳。增加了工作记忆负荷，用于分离抑制控制与空间工作记忆成分，常见于精神分裂症和额叶损伤研究。
 - **Mixed Pro/Anti Blocked Design（混合/分块设计反眼跳任务）**：将朝向眼跳和反眼跳试次按 block 分离（而非随机混合），每个 block 内试次类型相同。Block 起始有明确的线索提示当前 block 类型。用于研究任务切换成本（switch cost）和自上而下的抑制准备效应。
 

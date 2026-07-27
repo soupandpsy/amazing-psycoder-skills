@@ -1,6 +1,6 @@
 # PsychoPy — Platform Index
 
-> **状态**: Full auto code generation | **范式**: 27 | **Demo**: 45 `.py`
+> **状态**: Full auto code generation | **范式**: 28 | **Demo**: 45 `.py`
 
 ## Quick links
 
@@ -8,7 +8,7 @@
 |-------|------|---------|
 | L1 Spec | [spec/README.md](spec/README.md) | Canonical Code Skeleton + 19 anti-patterns + API spec |
 | L2 Mapping | [mapping/README.md](mapping/README.md) | Config→code mapping, 3 window modes, 3-version comparison |
-| L3 Paradigms | [paradigms/](paradigms/) | 27 paradigm reference files |
+| L3 Paradigms | [paradigms/](paradigms/) | 28 paradigm reference files |
 | L4 Demos | [demo/_raw/](demo/_raw/) | 45 Pavlovia-exported `.py` files |
 
 ## Mandatory API quick reference

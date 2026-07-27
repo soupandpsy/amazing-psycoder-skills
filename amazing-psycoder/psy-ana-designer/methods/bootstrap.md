@@ -113,8 +113,7 @@ parameterEstimates(fit, boot.ci.type = "bca.simple", level = 0.95)
 
 ## 备选方法
 
-- [置换检验](/methods/permutation-test) — 适用于假设检验而非区间估计
-- [稳健回归](/methods/robust-regression) — 处理异常值时替代传统回归
-- [贝叶斯方法](/methods/bayesian-analysis) — 提供整个后验分布而非点估计区间
-
+- 置换检验 — 适用于假设检验而非区间估计
+- 稳健回归 — 处理异常值时替代传统回归
+- 贝叶斯方法 — 提供整个后验分布而非点估计区间
 

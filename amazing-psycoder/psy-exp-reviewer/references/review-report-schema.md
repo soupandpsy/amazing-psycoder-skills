@@ -1,111 +1,149 @@
-# Review Report Schema
+# Review and Evidence Contracts
 
-v1.4 — PsyCoder Studio-compatible.
+v1.4.0 — unified, evidence-gated, and PsyCoder Studio-compatible.
 
 ## Purpose
 
-Define the structured output format for the AI Code Reviewer stage in PsyCoder Studio's three-stage pipeline. All fields marked `[GATE]` are used by the pipeline's Stage 4 (Local Validator) to decide whether to block packaging.
+PsyCoder Studio uses four separate records so that a model cannot repair its
+own review, duplicate large files inside a report, or self-certify readiness.
+The executable JSON Schemas under `../../runtime/schemas/` are authoritative.
+
+| Record | Producer | Contains | Must not contain |
+|---|---|---|---|
+| `ReviewReport` | Reviewer | scope, primitive findings, reviewed hashes | file content, repairs, counts, readiness |
+| `RepairAttempt` | Coder | allowlisted model-owned replacement files | compiler-owned files, a new plan, readiness |
+| `RuntimeEvidence` | target-machine workflow + reviewer inspection | structured observed tests and evidence paths | inferred or planned results |
+| `ReadinessSnapshot` | deterministic backend | derived packaging/collection state | free-form model judgment |
 
 ## ReviewReport
 
+Schema: `../../runtime/schemas/review-output.schema.json`.
+
 ```json
 {
-  "readiness_label": "ready_for_collection | ready_after_minor_fixes | not_ready_for_collection",
-  "ready_for_collection": true,
-  "ready_for_packaging": true,
-  "critical": 0,
-  "major": 0,
-  "minor": 0,
-  "unresolved_critical_count": 0,
-  "unresolved_major_count": 0,
-  "issues_before_repair": [],
-  "repairs_applied": [],
-  "issues_after_repair": [],
-  "reviewed_files": [],
-  "summary": ""
+  "review_id": "review_018",
+  "artifact_set_hash": "64 lowercase hex characters",
+  "execution_plan_hash": "64 lowercase hex characters",
+  "mode": "code-audit",
+  "scope": {
+    "reviewed": ["execution_plan.json", "main.py", "conditions.csv"],
+    "not_reviewed": ["target-machine timing"]
+  },
+  "issues": [
+    {
+      "id": "REV-001",
+      "severity": "major",
+      "category": "DesignFidelity",
+      "message": "The response mapping differs from the immutable plan.",
+      "suggestion": "Regenerate the model-owned entrypoint from responses.mapping.",
+      "file": "main.py",
+      "line": 184,
+      "evidence": ["ExecutionPlan response key f maps to red; code maps f to green."]
+    }
+  ],
+  "reviewed_files": [
+    {
+      "path": "main.py",
+      "sha256": "64 lowercase hex characters"
+    }
+  ],
+  "summary": "One blocking design-fidelity issue.",
+  "reviewed_at": "2026-07-23T10:30:00+08:00"
 }
 ```
 
-### Field Definitions
-
-| Field | Type | Required | [GATE] | Description |
-|-------|------|----------|--------|-------------|
-| `readiness_label` | string | ✅ | — | One of: `ready_for_collection`, `ready_after_minor_fixes`, `not_ready_for_collection` |
-| `ready_for_collection` | boolean | ✅ | — | Zero critical AND zero major |
-| `ready_for_packaging` | boolean | ✅ | ✅ | Derived gate: false if unresolved issues remain |
-| `critical` | integer | ✅ | — | Total critical issues found (before repair) |
-| `major` | integer | ✅ | — | Total major issues found (before repair) |
-| `minor` | integer | ✅ | — | Total minor issues found (before repair) |
-| `unresolved_critical_count` | integer | ✅ | ✅ | Pipeline MUST block packaging if > 0 |
-| `unresolved_major_count` | integer | ✅ | ✅ | Pipeline SHOULD block packaging if > 0 (MVP rule: MUST block) |
-| `issues_before_repair` | ReviewIssue[] | ✅ | — | All issues found on first pass |
-| `repairs_applied` | string[] | ✅ | — | Description of each repair applied |
-| `issues_after_repair` | ReviewIssue[] | ✅ | — | Issues remaining after repair (unresolved ones) |
-| `reviewed_files` | FileObject[] | ✅ | — | Complete final files (repaired where possible) |
-| `summary` | string | ✅ | — | Human-readable summary |
+Issue counts are computed from `issues[].severity`. A report is immutable and
+describes exactly one `artifact_set_hash`. After a repair, recompute every file
+hash and run a new review with a new ID. There are no
+`issues_before_repair`, `issues_after_repair`, or `repairs_applied` fields.
 
 ## ReviewIssue
 
-```json
-{
-  "severity": "critical | major | minor",
-  "category": "Timing | Response | Data | Feedback | Safety | Completeness",
-  "message": "What is wrong",
-  "suggestion": "How to fix it",
-  "file": "main.py",
-  "line_hint": "approximate area",
-  "resolved": false
-}
+Each finding records an ID, evidence-based severity, category, message,
+actionable suggestion, safe project-relative file path, optional line, and
+inspectable evidence. A finding never carries a model-controlled `resolved`
+flag. It ceases to block only when a fresh review of a new artifact set no
+longer reports it.
+
+### Severity
+
+- `critical`: the artifact cannot safely launch/exit/save, or primary-outcome
+  integrity is systematically compromised.
+- `major`: implementation materially diverges from the confirmed design,
+  required data are missing, or an important runtime behavior is wrong.
+- `minor`: maintainability, documentation, or polish issue that does not alter
+  scientific interpretation or participant/data safety.
+
+Severity follows impact, scope, recoverability, and testability—not a fixed
+percentage or the mere presence of an anti-pattern.
+
+## FileObject
+
+Review reports store only a safe project-relative `path` and the `sha256` of
+the exact bytes reviewed. They never duplicate file content. The backend
+resolves the content-addressed artifact set, verifies every hash, and rejects
+absolute paths, parent traversal, backslashes, unreadable files, or scope/hash
+mismatches.
+
+## RepairAttempt
+
+Schema: `../../runtime/schemas/repair-attempt.schema.json`.
+
+A Coder repair is authorized by one review ID and explicit issue IDs, declares
+the target `platform`, echoes the input artifact and plan hashes, and may
+replace only model-owned allowlisted paths. `_pipeline/`, the ExperimentSpec, ExecutionPlan, conditions, compiler
+README/config, and prior evidence are protected. The backend permits at most
+two attempts, re-runs structural/static validation, creates a new artifact-set
+hash, and requests a new read-only review.
+
+## RuntimeEvidence
+
+Schema: `../../runtime/schemas/runtime-evidence.schema.json`.
+
+Required tests for the generic experiment profile are:
+
+- `launch_exit`
+- `full_short_session`
+- `data_integrity`
+- `incremental_recovery`
+
+Add `timing_device_check` whenever timing precision, audio, triggers, eye
+tracking, specialized input, display calibration, or another hardware claim
+depends on the target system. Every test records `result`, the exact procedure,
+target OS/runtime/hardware, timestamps, and non-empty `evidence_paths`.
+Statements such as “it ran fine,” planned procedures, model inference, or a
+missing evidence path are not passing evidence.
+
+## ReadinessSnapshot
+
+Schema: `../../runtime/schemas/readiness-snapshot.schema.json`.
+
+The backend derives:
+
+```text
+static_review_passed =
+  current review has zero critical and zero major findings
+
+ready_for_packaging =
+  static_review_passed
+  AND artifact ownership/path/hash/required-file checks pass
+
+smoke_test_status =
+  passed only when every required RuntimeEvidence test passes
+
+ready_for_collection =
+  ready_for_packaging AND smoke_test_status == passed
 ```
 
-### Field Definitions
+Missing runtime evidence may still allow packaging for smoke testing; it never
+allows collection readiness. Contradictory booleans are rejected by schema and
+the derivation logic.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `severity` | string | ✅ | `critical`, `major`, or `minor` |
-| `category` | string | ✅ | Issue category |
-| `message` | string | ✅ | Clear description of the problem |
-| `suggestion` | string | ✅ | How to fix (actionable) |
-| `file` | string | ✅ | Which file the issue is in |
-| `line_hint` | string | — | Approximate area for human debugging |
-| `resolved` | boolean | ✅ | Whether this issue was resolved after repair |
+## Fail-Closed Rules
 
-## Severity Definitions
-
-### Critical
-
-- Code will not run or will crash mid-experiment
-- Data integrity is compromised (wrong RT source, missing columns, lost trials)
-- Escape/abort is broken (participant cannot quit)
-- Platform anti-pattern present (e.g., `time.sleep()` in PsychoPy)
-- Required file is missing or empty
-- Quality Gate item 1-9 failure
-
-### Major
-
-- Experiment logic does not match spec (wrong block structure, wrong timing)
-- Response mapping incorrect
-- Feedback logic wrong (practice feedback shown in formal blocks or vice versa)
-- Missing required data fields
-- No participant dialog
-- No error handling for missing files
-
-### Minor
-
-- Missing README run instructions
-- Missing pilot checklist
-- Hardcoded values that should be parameters
-- No inline comments in generated code
-- Code style inconsistencies
-
-## Gate Contract
-
-The pipeline's Stage 4 (Local Validator) reads these fields from the review report:
-
-| Condition | Action |
-|-----------|--------|
-| `ready_for_packaging = false` | **BLOCK** — do not package |
-| `unresolved_critical_count > 0` | **BLOCK** — do not package |
-| `unresolved_major_count > 0` | **BLOCK** — do not package (MVP) |
-| `reviewed_files` is empty or missing | **BLOCK** — do not package |
-| All gates pass | Proceed to Stage 5 (Packaging) |
+- Invalid or incomplete ReviewReport → no gate transition.
+- Unsafe path, hash mismatch, or incomplete reviewed scope → packaging blocked.
+- Any current Critical or Major finding → packaging blocked.
+- Missing/failed/blocked required RuntimeEvidence → collection blocked.
+- A Reviewer response containing file rewrites, repair claims, counts, or
+  readiness fields → schema rejection.

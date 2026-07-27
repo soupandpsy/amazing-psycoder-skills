@@ -2,7 +2,7 @@
 
 ## 概述
 
-CLPM是纵向数据分析中检验**因果方向**的核心方法。通过同时估计X→Y和Y→X的交叉滞后路径,检验是X预测Y的变化,还是Y预测X的变化。
+CLPM 描述纵向变量间的自回归与交叉滞后关联。路径方向提供时间先后下的预测证据，但在没有充分识别假设、干预或自然实验时不能单独确定因果方向。
 
 **典型场景**: 焦虑和睡眠质量在3个时间点上的相互预测关系。焦虑(t1)→睡眠(t2),还是睡眠(t1)→焦虑(t2)?
 
@@ -10,9 +10,9 @@ CLPM是纵向数据分析中检验**因果方向**的核心方法。通过同时
 
 | 条件 | 要求 |
 |------|------|
-| 设计类型 | 纵向追踪设计,至少3个时间点(≥3 waves)。2个时间点无法区分因果方向 |
+| 设计类型 | 纵向追踪；两波可估计有限的交叉滞后关联，三波以上才有更多平稳性/动态结构信息，但波次数量本身不建立因果识别 |
 | 因变量类型 | 连续变量。两个构念在每波均需同时测量,且测量间隔相同 |
-| 样本量 | SEM要求大样本,一般 N ≥ 200。时间点越多、路径越复杂,所需样本越大 |
+| 样本信息 | 由波数、可靠性、缺失、随机截距/斜率、效应大小和估计器决定；用设计模拟而非通用 N 门槛 |
 | 关键假设 | **平稳性**:交叉滞后路径在不同时间间隔保持稳定;**同步性**:每次测量需在同一时间窗口完成;**测量不变性**:同一构念在不同时间点的测量具有相同结构(建议先检验metric invariance);**无遗留混淆**:模型中已包含主要的第三变量 |
 
 ## 模型
@@ -50,4 +50,4 @@ fit <- sem(model, data=data)
 
 ## 报告
 
-> A random-intercept cross-lagged panel model examined the bidirectional relationship between anxiety and sleep across 3 waves. The cross-lagged path from anxiety(t1) to sleep(t2) was significant (β=-.18, p=.003), but sleep(t1)→anxiety(t2) was not (β=-.03, p=.61), suggesting anxiety drives sleep disruption rather than vice versa.
+> A random-intercept cross-lagged panel model examined bidirectional lagged associations between anxiety and sleep across 3 waves. Anxiety at t1 predicted lower subsequent sleep conditional on the model (β=-.18, p=.003), whereas the reverse path was imprecisely estimated (β=-.03, p=.61). This asymmetry does not by itself establish that anxiety causally drives sleep disruption; that interpretation depends on the stated identification assumptions and sensitivity analyses.

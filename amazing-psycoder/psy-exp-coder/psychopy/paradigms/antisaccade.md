@@ -30,7 +30,6 @@ In the "feedback" routine, correctness is evaluated with a three-branch conditio
 Complete runnable PsychoPy code for Antisaccade task:
 
 ```python
-```
 # Source: antisaccade (demos/antisaccade)
 # Project URL: https://gitlab.pavlovia.org/demos/antisaccade
 # Original file: antisaccade_lastrun.py

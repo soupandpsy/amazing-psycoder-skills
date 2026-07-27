@@ -1,0 +1,4 @@
+# Exact versions used by the v1.4.0 release validation suite.
+jsonschema==4.23.0
+openpyxl==3.1.5
+PyYAML==6.0.2

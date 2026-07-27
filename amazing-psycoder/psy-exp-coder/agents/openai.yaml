@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experiment Coder"
+  short_description: "Generate and debug cross-platform experiment code"
+  default_prompt: "Use $psy-exp-coder to generate runnable experiment code from my confirmed config."

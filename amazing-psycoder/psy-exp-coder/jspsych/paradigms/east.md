@@ -22,7 +22,7 @@ Each trial within a block follows a nested timeline structure: a 500ms fixation 
 - `repetitions` and `randomize_order` at the block level control how many times each stimulus is repeated and whether the order is shuffled
 - Style switching between practice (white background via `set_html_style`) and test (black background, cursor hidden, larger font via `set_html_style_EAST`)
 - `force_correct_button_press: true` in practice blocks (participant must press the correct key to advance) vs. `false` in the test block
-- Randomized ITI in the test block via `feedback_duration` as a function returning `Math.random() * 1000 + 1000` (1-2 seconds)
+- Legacy source used an unseeded randomized ITI. Generated jsPsych 8.x code must instead use `jsPsych.randomization.randomInt(1000, 2000)` after `setSeed()` and save the resolved ITI.
 - Category label tags (`tag_LR1`, `tag_LR2`, `tag_LR3`) positioned absolute-left and absolute-right via inline style, dynamically showing the current key-to-category mapping
 - Real-time EAST score computation in `debrief2` using `jsPsych.data.get().filter()` to compute mean RTs per color-per-category combination, with the EAST effect = RT(green) minus RT(blue) for each target category
 
@@ -340,7 +340,9 @@ var EAST_test = {
             prompt: tag_LR3,
             correct_text: tag_LR3,
             incorrect_text: tag_LR3,
-            feedback_duration: function() { return Math.random() * 1000 + 1000 }, // ITI: 1~2s
+            // Legacy evidence only: generated v8 code must replace this with
+            // seeded jsPsych.randomization.randomInt(1000, 2000).
+            feedback_duration: function() { return Math.random() * 1000 + 1000 }, // legacy 6.1 source
             show_stim_with_feedback: false,
             force_correct_button_press: false,
             on_finish: function(data) { data.formal = true }

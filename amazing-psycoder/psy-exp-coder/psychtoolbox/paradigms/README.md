@@ -1,6 +1,6 @@
 # Psychtoolbox Paradigms
 
-> **Layer 3**: 范式参考文件 — 5 个完整实验范式，包含实验逻辑和可运行 MATLAB 代码。
+> **Layer 3 legacy source set**: 5 个教学范式/组件，保留设计意图与旧 MATLAB 示例；不是当前生成模板或运行证据。
 
 ## 范式索引
 
@@ -14,14 +14,14 @@
 
 ## 类型说明
 
-- **完整实验范式**（Stroop、Posner Cuing、Orientation Threshold）：包含 trial 循环、条件矩阵、数据记录、完整的实验逻辑
+- **历史完整示例**（Stroop、Posner Cuing、Orientation Threshold）：可提取 trial/条件/计分意图，但代码必须依据当前 config 与 spec 重写
 - **响应收集组件**（Likert Scale、Slider）：交互式 UI 组件，可作为子组件嵌入更大的实验中
 
 ## 文件结构
 
 > **重要：范式 ≠ API 参考。** 以下文件中嵌入的 MATLAB 代码示例来自 Peter Scarfe 的 PTB 教程，使用教学级 API（如 `KbCheck`）。**生成实验代码时，API 模式以 [spec/README.md](../spec/README.md) 的 Canonical Code Skeleton 为准**（`KbQueueCheck` 替代 `KbCheck`、`VBLTimestamp` 替代 `GetSecs`、`try/catch/sca` 替代裸 `sca`）。范式文件仅提供实验逻辑：窗口序列、条件结构、正确性规则。
 
-每个范式文件 `.md` 包含：
+每个范式文件 `.md` 可能包含：
 - 实验描述与设计逻辑
 - 窗口/屏幕序列
-- 完整可运行 MATLAB 代码
+- 历史教学 MATLAB 代码（不得直接复制、执行或据此声称当前可运行）

@@ -78,7 +78,7 @@ This paradigm demonstrates drag-and-drop interaction capabilities in PsychoJS/Ps
 ## Variants
 
 - **标准拖拽拼图 (Standard Drag-and-Drop Puzzle)**: 参与者从备选区拖拽图形块到网格中，完成目标图案的复现。多见于空间认知和问题解决研究。详见本文件主体描述。
-- **自由排序拖拽 (Free-Sorting Drag-and-Drop)**: 参与者将屏幕上散落的项目拖拽到任意分组区域中，无固定的正确位置。常用于分类任务和概念形成研究。可参考 [free-sorting.md](free-sorting.md)。
+- **自由排序拖拽 (Free-Sorting Drag-and-Drop)**: 参与者将屏幕上散落的项目拖拽到任意分组区域中，无固定的正确位置。常用于分类任务和概念形成研究。可参考 free-sorting.md。
 - **时间限制拖拽 (Timed Drag-and-Drop)**: 在标准拖拽拼图基础上增加了时间压力，参与者必须在限定时间内完成拖拽操作，超时则自动提交当前状态。适合研究决策速度和压力下的空间推理。
 
 ---

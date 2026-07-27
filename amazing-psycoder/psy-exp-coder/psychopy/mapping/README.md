@@ -2,25 +2,17 @@
 
 > **Layer 2**: Config YAML → PsychoPy 代码结构映射。基于 stroop、go-nogo、stop-signal、dot-probe、n-back 五个范式的代码分析 + psychopy.org 官方 API 文档。
 
-## 三版本 PsychoPy 代码模式对照
+## Runtime-First Contract
 
-Pavlovia demo 代码跨越 v3.1 → v2024.2，关键差异影响代码生成：
+Generation follows the exact PsychoPy/runtime contract in config; this mapping never selects a floating “latest” release. Historical Builder/Pavlovia exports are migration evidence only.
 
-| 维度 | Old (v3.1) | Modern (v2023.2) | Latest (v2024.2) |
-|------|-----------|-----------------|-----------------|
-| 条件变量注入 | `exec('{} = thisTrial[p]'.format(p))` | `globals()[p] = thisTrial[p]` | `globals()[p] = thisTrial[p]` |
-| 帧时间 | `t = trialClock.getTime()` | `tThisFlip = win.getFutureFlipTime(clock=routineTimer)` | 同 v2023.2 |
-| 全局时间 | 无 | `tThisFlipGlobal = win.getFutureFlipTime(clock=None)` | 同 v2023.2 |
-| 帧容差 | 无（硬编码 `t >= 0.5`） | `frameTolerance = 0.001` | 同 v2023.2 |
-| 计时器 | `core.Clock()` | `routineTimer = core.Clock()` | 同 v2023.2 |
-| TrialHandler | `data.TrialHandler(nReps=5, method='random')` | 同 | `data.TrialHandler2`（Pavlovia 兼容） |
-| 文本组件 | `visual.TextStim` | `visual.TextBox2`（推荐） | 同 v2023.2 |
-| 键盘后端 | `keyboard.Keyboard()` | `keyboard.Keyboard(backend='iohub')` | `keyboard.Keyboard(backend='ptb')` **首选** |
-| 音频后端 | 无明确指定（pygame 默认） | `sound.Sound()` | `sound.Sound()` — **PTB 首选**，`preBuffer=-1` |
-| 暂停/退出 | `core.quit()` | `pauseExperiment()` + `endExperiment()` | 同 v2023.2 |
-| 函数封装 | 全内联 | `showExpInfoDlg()`, `setupData()`, `setupWindow()`, `setupInputs()`, `run()` | 同 v2023.2 |
-
-**生成优先级**: Latest (v2024.2) 模式为首选 — `backend='ptb'` 键盘 + PTB 音频 + `TextBox2` + `globals()` 注入。
+| Concern | Generated-code contract | Rejected legacy shortcut |
+|---------|-------------------------|--------------------------|
+| Condition values | Explicit dictionary access such as `trial["ink_color"]`, with schema validation | `exec()` or `globals()` namespace injection |
+| Display timing | Record actual flip timestamps and schedule against the pinned runtime's documented APIs | Inferring timing quality from a version label |
+| Keyboard | Explicit backend selected for the declared environment; event timestamps and target-device behavior tested | Implicit fallback or “highest precision” claims |
+| Audio | Explicit backend/buffering plus measured onset/synchrony when claim-relevant | Backend name used as proof of latency |
+| Components | Choose text/image/audio components from the task contract and verified API | Treating one component as a universal modern default |
 
 ## Config → Code 映射表
 
@@ -28,7 +20,7 @@ Pavlovia demo 代码跨越 v3.1 → v2024.2，关键差异影响代码生成：
 |---------------|------------------------|
 | `name` | `expName = '{name}'` + script docstring |
 | `paradigm` | 加载范式知识，应用 SSD staircase / n-back match / go-nogo ratio 等逻辑 |
-| `stimulus_folder` | 全局路径前缀，拼接到 `image.setImage(stimulus_folder + '/' + {column})` |
+| `stimulus_folder` | 启动时枚举并预加载 config/条件表引用的资源到显式字典；timed loop 只按 key 选择已加载对象 |
 | `windows[]` | Trial 事件循环 — 每个 window 对应 component 状态机 |
 | `windows[].content: "{col}"` | `TextStim` / `TextBox2` / `ImageStim`，值从 condition 列取值 |
 | `windows[].duration: N` | `routineTimer.getTime() < N/1000` 循环守卫，component 在 `tThisFlipGlobal > tStartRefresh + N/1000 - frameTolerance` 时 FINISHED |
@@ -38,6 +30,7 @@ Pavlovia demo 代码跨越 v3.1 → v2024.2，关键差异影响代码生成：
 | `windows[].audio` | `sound.Sound(file, preBuffer=-1)` 预加载 + `win.callOnFlip(sound.play)` 或 `sound.play(when=nextFlip)` |
 | `blocks[]` | Block 循环 + `data.importConditions('{condition_file}')` |
 | `blocks[].condition_file` | `data.TrialHandler(nReps=N, method='random', trialList=data.importConditions('conditions.xlsx'), seed=seed)` |
+| `randomization` | `random.seed(seed)` + `TrialHandler(..., method=method, seed=seed)`；将 resolved seed 写入每个 trial |
 | `response_rules.correct` | `key_resp.keys == str(corr_ans) or key_resp.keys == corr_ans`；无反应时检查 `str(corr_ans).lower() == 'none'` |
 | `response_rules.mapping` | `keyList=[key1, key2]` 传入 `getKeys()`，corrAns 来自条件文件 |
 | `response_rules.deadline` | `core.CountdownTimer(DEADLINE / 1000)` 控制 `while timer.getTime() > 0` |
@@ -46,7 +39,7 @@ Pavlovia demo 代码跨越 v3.1 → v2024.2，关键差异影响代码生成：
 | `font` | `FONT_CONFIG` toggle + OS auto-detect |
 | `audio` | `sound.Sound()` + PTB backend + `preBuffer=-1` + `play(when=nextFlip)` |
 | `participant_info` | `gui.DlgFromDict(dictionary=expInfo, title=expName)` → `expInfo['participant']`, `expInfo['date']` |
-| `output` | `data.ExperimentHandler(dataFileName=filename)` + `exp.addLoop(trials)` + `trials.saveAsWideText()` + `exp.saveAsPickle()` |
+| `output` | 每 trial 写行并 `flush()`，正常结束时再导出 `ExperimentHandler`/CSV |
 
 ## Windows[] → Trial 事件循环（三种窗口模式）
 
@@ -224,7 +217,7 @@ if key_resp.status == STARTED and not waitOnFlip:
         continueRoutine = False
 ```
 
-### Latest 模式（v2024.2+ 推荐）
+### Config-Pinned Canonical Pattern
 
 ```python
 kb = keyboard.Keyboard(backend='ptb')  # 显式 PTB 后端
@@ -237,11 +230,11 @@ if resp.status == STARTED and not waitOnFlip:
     theseKeys = kb.getKeys(keyList=ALLOWED_KEYS, waitRelease=False, clear=False)
     if len(theseKeys):
         resp.keys = theseKeys[0].name
-        resp.rt = theseKeys[0].rt           # USB HID 异步时间戳，最高精度
+        resp.rt = theseKeys[0].rt           # selected backend event timestamp; verify on target
         continueRoutine = False
 ```
 
-**关键差异**: Latest 模式使用 `backend='ptb'` + `waitRelease=False` 获得最高 RT 精度。
+**关键要求**: `backend='ptb'` 仅在 config 和目标环境支持它时使用；`waitRelease=False` 表示计分事件是 key-down。后端名称本身不证明端到端精度。
 
 ### 双重 accuracy 判断
 
@@ -271,7 +264,7 @@ win.callOnFlip(kb.clock.reset)  # t=0 at stimulus onset
 win.callOnFlip(kb.clearEvents, eventType='keyboard')
 ```
 
-`.rt` 自动是从 `clock.reset` 到按键时刻的 USB HID 时间戳。
+`.rt` 以 flip 上的 clock reset 为软件原点，并使用所选后端提供的事件时间；实际显示、输入设备和系统误差仍需目标机验证。
 
 ### 跨窗口 RT（rt_onset: "fixation"）
 
@@ -296,21 +289,26 @@ for thisTrial in trials:
         exec('{} = thisTrial[paramName]'.format(paramName))
 ```
 
-### Modern 模式：globals() 注入（✅ 推荐）
+### Current Generated Pattern: Explicit Row Access
 
 ```python
+RANDOM_SEED = resolved_config["randomization"]["resolved_seed"]
 trials = data.TrialHandler(nReps=1.0, method='random',
     trialList=data.importConditions('conditions.xlsx'),
-    seed=42)
+    seed=RANDOM_SEED)
 
-if thisTrial != None:
-    for paramName in thisTrial:
-        globals()[paramName] = thisTrial[paramName]
+for trial in trials:
+    if trial is None:
+        continue
+    stimulus = trial["stimulus"]
+    correct_response = trial["correct_response"]
 ```
 
-**推荐**: `globals()` 注入 — 兼容 exec-free 环境（Pavlovia online）且更安全。
+显式访问使字段来源、缺失列和类型检查可追踪，也避免条件文件覆盖模块全局状态。PsychoJS/Pavlovia 是独立部署路径，不应通过 Python namespace injection 追求“兼容”。
 
-## 帧循环演进
+## Historical Frame-Loop Migration Notes
+
+The following table helps recognize legacy exports; it is not a version-selection rule. Implement only against the exact pinned runtime and its verified spec.
 
 | 特性 | Old (v3.1) | Modern (v2023.2+) |
 |------|-----------|-------------------|
@@ -345,7 +343,7 @@ if thisTrial != None:
 
 ## 12 步模板 PsychoPy 实现
 
-| 步骤 | 模板定义 | Latest PsychoPy 实现 |
+| 步骤 | 模板定义 | Config-pinned PsychoPy implementation |
 |------|---------|---------------------|
 | 1 | Imports | `from psychopy import visual, core, data, event, clock, gui, sound` + `from psychopy.hardware import keyboard` |
 | 2 | Experiment params | `expName = '{name}'` + FONT_CONFIG + `gui.DlgFromDict()` + `expInfo['date'] = data.getDateStr()` |
@@ -355,7 +353,7 @@ if thisTrial != None:
 | 6 | Helper functions | `showExpInfoDlg()`, `setupData()`, `setupWindow()`, `setupInputs()`, `pauseExperiment()`, `quitExperiment()` |
 | 7 | Instruction | `visual.TextBox2` + `keyboard.Keyboard(backend='ptb')` + `win.callOnFlip(kb.clock.reset)` |
 | 8 | Practice | 独立 `TrialHandler` + 反馈 Routine + `force_correct_button_press` 逻辑 |
-| 9a | Block setup | `exp.addLoop(trials)` + `for thisTrial in trials:` + `globals()[p] = thisTrial[p]` |
+| 9a | Block setup | `exp.addLoop(trials)` + `for trial in trials:` + explicit `trial["field"]` access |
 | 9b | Randomization | `TrialHandler(method='random', seed=N)` |
 | 9c | Per-trial | Component 状态机 (NOT_STARTED→STARTED→FINISHED) + `win.callOnFlip(kb.clock.reset)` + `kb.getKeys(waitRelease=False)` |
 | 9d | Block feedback | 独立 feedback Routine，读取 `key_resp.corr` 设置文本/颜色 |
@@ -363,7 +361,9 @@ if thisTrial != None:
 | 11 | Cleanup | `win.close()` + `core.quit()` (escape handler 中); `try/finally` 包裹主实验 |
 | 12 | Package | `.py` + README |
 
-## 范式差异速查
+## Quarantined Legacy Source Notes
+
+These rows describe source material only. Extract design semantics, then re-implement from config/spec; never copy the listed injection/timing patterns.
 
 | 范式 | 窗口模式 | 条件文件 | 特殊逻辑 |
 |------|---------|---------|---------|
@@ -380,9 +380,9 @@ if thisTrial != None:
 | 禁止的模式 | 原因 | 替代 |
 |-----------|------|------|
 | `imread` / `setImage` 在 trial 循环内 | 磁盘 I/O 导致帧丢失 — 条件文件的图片路径应预加载 | 循环前 `ImageStim(..., image='default.png')` 初始化, 循环内 `.setImage(filename)` |
-| `trialClock.getTime()` (老式帧循环) | 不帧精确 — 应使用 Latest 模式帧循环 | `win.getFutureFlipTime(clock=routineTimer)` |
-| `exec()` 条件注入 (v3.1 遗留) | Pavlovia 不兼容 — 条件变量应通过 `globals()` 注入 | `globals()[paramName] = thisTrial[paramName]` |
-| `keyboard.Keyboard()` 无 `backend='ptb'` | 50-70ms RT 误差 — 生成响应收集代码时必须指定 PTB 后端 | `keyboard.Keyboard(backend='ptb')` |
+| `trialClock.getTime()` used as the only display-timing evidence | Not tied to observed flips | Use pinned-runtime scheduling APIs, record actual flip timestamps, and inspect missed frames |
+| `exec()` / `globals()` 条件注入 | Namespace mutation, unsafe column collisions, weak provenance | Explicit validated `trial["field"]` access |
+| 时序关键任务使用隐式键盘后端 | 后端回退、版本和设备行为未记录，无法从代码证明精度 | 显式选择目标环境支持的后端，并记录环境与目标机验证结果 |
 | `kb.getKeys(waitRelease=True)` 用于 RT 任务 | 代码等释放才继续 — 响应窗口生成时应使用 `waitRelease=False` | `waitRelease=False` |
 | 数据仅在实验结束时保存 | 崩溃=全丢 — output 映射必须生成 `try/finally` + per-trial flush | 每 trial flush + `try/finally` |
 | `TextBox2` 用于需要 bounding box 的场景 | 无 `.boundingBox` — 需根据 stimulus 类型选择合适的组件 | 需要边界框时用 `TextStim` |

@@ -1,0 +1,87 @@
+{
+  "contractVersion": "1.4.0",
+  "scope": "psycoder_studio_deployment",
+  "capabilityModel": "platform_adapter",
+  "evidenceBoundary": "Repository-declared profiles and static contract validation only; live PsyCoder Studio deployment, end-to-end integration, and target-machine runtime require separate evidence.",
+  "standalonePolicy": "See STANDALONE.md; these deployment flags do not block standalone candidate generation",
+  "platforms": [
+    {
+      "platform": "psychopy",
+      "design": "verified",
+      "adapter": "generated_text_verified",
+      "validator": "generated_text_verified",
+      "artifactContract": "runtime/artifacts/psychopy.json"
+    },
+    {
+      "platform": "jspsych",
+      "design": "verified",
+      "adapter": "generated_text_verified",
+      "validator": "generated_text_verified",
+      "artifactContract": "runtime/artifacts/jspsych.json"
+    },
+    {
+      "platform": "psychtoolbox",
+      "design": "verified",
+      "adapter": "generated_text_verified",
+      "validator": "generated_text_static_verified",
+      "artifactContract": "runtime/artifacts/psychtoolbox.json"
+    }
+  ],
+  "verifiedGenerationProfiles": [
+    {
+      "id": "psychopy-color-word-stroop-v1",
+      "platform": "psychopy",
+      "generation": "verified",
+      "validator": "verified",
+      "selector": {
+        "paradigm": "stroop",
+        "paradigmFamily": "stroop",
+        "variant": "color_word"
+      },
+      "requiredPrimitives": [
+        "display_text",
+        "keyboard_response",
+        "static_feedback",
+        "generated_condition_table",
+        "sequence_loop",
+        "sequence_shuffle",
+        "incremental_trial_save"
+      ],
+      "artifactContract": "runtime/artifacts/psychopy.json",
+      "limitations": [
+        "This profile implements the classic color-word Stroop task only.",
+        "Semantic, emotional, numerical, bilingual, and other Stroop-family designs require their own confirmed semantics and must not inherit this profile."
+      ]
+    },
+    {
+      "id": "psychopy-generated-text-v1",
+      "platform": "psychopy",
+      "generation": "verified",
+      "validator": "verified",
+      "selector": {"capabilitySet": "generated_text_v1"},
+      "requiredPrimitives": ["display_text", "keyboard_response", "static_feedback", "generated_condition_table", "incremental_trial_save"],
+      "artifactContract": "runtime/artifacts/psychopy.json",
+      "limitations": ["Text and blank windows only", "One response window per trial", "RT onset must be self", "Generated factorial trial sources only", "Canonical keys: one lowercase alphanumeric, space, or enter", "Color fields: black, white, red, green, blue, yellow, gray, or grey", "Window and global scored-response rules must agree"]
+    },
+    {
+      "id": "jspsych-generated-text-v1",
+      "platform": "jspsych",
+      "generation": "verified",
+      "validator": "verified",
+      "selector": {"capabilitySet": "generated_text_v1"},
+      "requiredPrimitives": ["display_text", "keyboard_response", "static_feedback", "generated_condition_table", "incremental_trial_save"],
+      "artifactContract": "runtime/artifacts/jspsych.json",
+      "limitations": ["Text and blank windows only", "One response window per trial", "RT onset must be self", "Generated factorial trial sources only", "Canonical keys: one lowercase alphanumeric, space, or enter", "Color fields: black, white, red, green, blue, yellow, gray, or grey", "Window and global scored-response rules must agree"]
+    },
+    {
+      "id": "psychtoolbox-generated-text-v1",
+      "platform": "psychtoolbox",
+      "generation": "verified",
+      "validator": "static_verified_target_smoke_required",
+      "selector": {"capabilitySet": "generated_text_v1"},
+      "requiredPrimitives": ["display_text", "keyboard_response", "static_feedback", "generated_condition_table", "incremental_trial_save"],
+      "artifactContract": "runtime/artifacts/psychtoolbox.json",
+      "limitations": ["Text and blank windows only", "One response window per trial", "RT onset must be self", "Generated factorial trial sources only", "Canonical keys: one lowercase alphanumeric, space, or enter", "Color fields: black, white, red, green, blue, yellow, gray, or grey", "Window and global scored-response rules must agree", "MATLAB and Psychtoolbox target-machine smoke test remains mandatory"]
+    }
+  ]
+}

@@ -79,8 +79,8 @@ Kirby, K. N., Petry, N. M., & Bickel, W. K. (1999). Heroin addicts have higher d
 ## Variants
 
 - **固定选择集延迟折扣 (Fixed-Choice Delay Discounting)**：最常用的实现方式。所有即时金额、延迟金额和延迟时间的组合预先在条件文件中指定，以随机顺序呈现。每个试次为独立的二元选择，无适应性调整。数据分析通过拟合双曲线折扣模型 V = A / (1 + kD) 估计 k 值，或计算曲线下面积 (AUC) 作为无模型替代指标。本文件主要描述此变体。
-- **滴定/调整延迟折扣 (Titrating/Adjusting Delay Discounting)**：即时奖励金额根据参与者在同一延迟条件下的前序选择动态调整，以逼近无差异点。例如，若参与者选择延迟奖励，则下次提高即时金额；若选择即时奖励，则降低即时金额。参考 Mazur (1987) 的调整程序。此变体可减少试次总数，但需要更复杂的试次间逻辑。可交叉参考 [staircase.md](staircase.md)。
-- **跨商品延迟折扣 (Cross-Commodity Delay Discounting)**：同一参与者对不同奖励类型（如金钱、食物、香烟、酒精）分别完成延迟折扣任务。每种商品在独立的 block 中呈现，或将商品类型作为试次条件变量。用于考察折扣率的领域特异性（domain specificity）。可交叉参考 [concurrent-schedule.md](concurrent-schedule.md)。
+- **滴定/调整延迟折扣 (Titrating/Adjusting Delay Discounting)**：即时奖励金额根据参与者在同一延迟条件下的前序选择动态调整，以逼近无差异点。例如，若参与者选择延迟奖励，则下次提高即时金额；若选择即时奖励，则降低即时金额。参考 Mazur (1987) 的调整程序。此变体可减少试次总数，但需要更复杂的试次间逻辑。可交叉参考 staircase.md。
+- **跨商品延迟折扣 (Cross-Commodity Delay Discounting)**：同一参与者对不同奖励类型（如金钱、食物、香烟、酒精）分别完成延迟折扣任务。每种商品在独立的 block 中呈现，或将商品类型作为试次条件变量。用于考察折扣率的领域特异性（domain specificity）。可交叉参考 concurrent-schedule.md。
 
 ---
 

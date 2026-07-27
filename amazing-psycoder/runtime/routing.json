@@ -1,0 +1,35 @@
+{
+  "contractVersion": "1.4.0",
+  "scope": "psycoder_studio_experiment_pipeline",
+  "stages": {
+    "interpreter": [
+      "SKILL.md",
+      "psy-exp-designer/SKILL.md",
+      "psy-exp-designer/references/config-schema.md"
+    ],
+    "code_generator": [
+      "SKILL.md",
+      "psy-exp-coder/SKILL.md",
+      "psy-exp-coder/{platform}/spec/README.md",
+      "psy-exp-coder/{platform}/mapping/README.md",
+      "psy-exp-coder/references/quality-gate.md"
+    ],
+    "reviewer": [
+      "SKILL.md",
+      "psy-exp-reviewer/SKILL.md",
+      "psy-exp-coder/{platform}/spec/README.md",
+      "psy-exp-coder/references/quality-gate.md"
+    ]
+  },
+  "optionalParadigmReferences": {
+    "interpreter": [
+      "psy-exp-designer/paradigms/{designerParadigm}.md"
+    ],
+    "code_generator": [
+      "psy-exp-coder/{platform}/paradigms/{coderParadigm}.md"
+    ],
+    "reviewer": [
+      "psy-exp-coder/{platform}/paradigms/{coderParadigm}.md"
+    ]
+  }
+}

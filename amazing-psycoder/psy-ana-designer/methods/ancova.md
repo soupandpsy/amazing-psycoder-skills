@@ -82,8 +82,8 @@ ggplot(df, aes(x = age, y = stroop, color = group)) +
 
 ## 备选方法
 
-- 无协变量或协变量不满足假设 → [单因素方差分析 (One-way ANOVA)](anova.md)
-- 多个DV → [多元协方差分析 (MANCOVA)](mancova.md)
-- 协变量与DV非线性 → [分层回归 (Hierarchical Regression)](hierarchical-regression.md)
-- 组间初始差异大且无法用协变量校正 → [倾向得分匹配 (Propensity Score Matching)](propensity-score-matching.md)
-- 重复测量设计 → [重复测量ANCOVA](repeated-measures-ancova.md)
+- 无协变量或协变量不满足假设 → 单因素方差分析 (One-way ANOVA)
+- 多个DV → 多元协方差分析 (MANCOVA)
+- 协变量与DV非线性 → 分层回归 (Hierarchical Regression)
+- 组间初始差异大且无法用协变量校正 → 倾向得分匹配 (Propensity Score Matching)
+- 重复测量设计 → 重复测量ANCOVA

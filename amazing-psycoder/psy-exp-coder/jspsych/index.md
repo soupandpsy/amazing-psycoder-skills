@@ -1,14 +1,14 @@
 # jsPsych — Platform Index
 
-> **状态**: Reference-complete, manual generation | **范式**: 25 | **Demo**: 23 `.js`
+> **状态**: Reference-complete, config-driven generation | **范式**: 26 | **Demo**: 23 `.js`
 
 ## Quick links
 
 | Layer | Path | Content |
 |-------|------|---------|
-| L1 Spec | [spec/README.md](spec/README.md) | jsPsych 7.x Canonical Skeleton + anti-patterns |
-| L2 Mapping | [mapping/README.md](mapping/README.md) | Config→timeline mapping + 7.x/6.1.0/PsychoJS + migration table |
-| L3 Paradigms | [paradigms/](paradigms/) | 25 paradigm reference files |
+| L1 Spec | [spec/README.md](spec/README.md) | pinned jsPsych 8.x Canonical Skeleton + anti-patterns |
+| L2 Mapping | [mapping/README.md](mapping/README.md) | Config→timeline mapping + legacy/PsychoJS migration notes |
+| L3 Paradigms | [paradigms/](paradigms/) | 26 logic-only legacy references; code is quarantined |
 | L4 Demos | [demo/_raw/](demo/_raw/) | 23 Pavlovia-exported `.js` files |
 
 ## Mandatory API quick reference
@@ -20,7 +20,7 @@
 | No keys | `"NO_KEYS"` (string) | `jsPsych.NO_KEYS` |
 | RT source | `data.rt` (automatic) | `Date.now()` manual timing |
 | Timing | `trial_duration: N` (ms) | `setTimeout`/`setInterval` |
-| Data save | `on_finish` + `.localSave('csv', fn)` | trial-internal save |
+| Data save | `on_data_update` durable checkpoint + final `.localSave('csv', fn)` | end-only/in-memory save |
 | Correctness | `jsPsych.pluginAPI.compareKeys()` | `==` manual compare |
 
 ## Paradigm quick list

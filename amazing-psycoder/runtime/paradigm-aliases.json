@@ -1,0 +1,11 @@
+{
+  "stroop": "stroop",
+  "color-word": "stroop",
+  "color_word": "stroop",
+  "斯特鲁普": "stroop",
+  "颜色词": "stroop",
+  "go/no-go": "go-nogo",
+  "go_nogo": "go-nogo",
+  "flanker": "eriksen-flanker",
+  "nback": "n-back"
+}

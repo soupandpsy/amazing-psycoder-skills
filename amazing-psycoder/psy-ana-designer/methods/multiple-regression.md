@@ -109,10 +109,10 @@ par(mfrow = c(1, 1))
 
 | 方法 | 适用场景 |
 |------|----------|
-| [逐步回归 (Stepwise Regression)](./stepwise-regression.md) | 预测变量较多，需自动筛选时；注意过拟合风险 |
-| [岭回归 (Ridge Regression)](./ridge-regression.md) | 严重多重共线性 (VIF > 10) 时替代 OLS |
-| [LASSO 回归](./lasso-regression.md) | 同时进行变量选择与正则化，适合高维数据 |
-| [逻辑回归 (Logistic Regression)](./logistic-regression.md) | DV 为二分变量时替代多元回归 |
-| [分层线性模型 (HLM)](./hlm.md) | 数据存在嵌套结构（如学生嵌套于班级）时替代多元回归 |
+| 逐步回归 (Stepwise Regression) | 预测变量较多，需自动筛选时；注意过拟合风险 |
+| 岭回归 (Ridge Regression) | 严重多重共线性 (VIF > 10) 时替代 OLS |
+| LASSO 回归 | 同时进行变量选择与正则化，适合高维数据 |
+| 逻辑回归 (Logistic Regression) | DV 为二分变量时替代多元回归 |
+| 分层线性模型 (HLM) | 数据存在嵌套结构（如学生嵌套于班级）时替代多元回归 |
 | [调节效应分析 (Moderation)](./moderation.md) | 检验变量间的交互效应 |
 | [中介分析 (Mediation)](./mediation.md) | 检验自变量通过中介变量影响因变量的间接路径 |

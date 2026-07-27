@@ -1,0 +1,60 @@
+name: Reliable Stroop Fixture
+paradigm: stroop
+platform: psychopy
+runtime:
+  framework_version: "2024.2.4"
+  dependency_strategy: pinned
+  target_environment: "test fixture"
+
+windows:
+  - name: Fixation
+    content: "+"
+    duration: 500
+    response: none
+  - name: Stroop
+    content: "{word}"
+    duration: 1500
+    response: [f, j, k]
+    response_event: key_down
+    rt_onset: self
+    rt_rationale: "RT starts at the verified display onset of the scored color word"
+    rt_contract_status: confirmed
+    data: [rt, key, acc]
+  - name: ITI
+    content: ""
+    duration: [500, 800]
+    response: none
+
+blocks:
+  - name: Formal
+    condition_file: conditions/formal.csv
+    type: formal
+    feedback: false
+    trials: 6
+
+response_rules:
+  correct: "{correct_response}"
+  deadline: 1500
+  anticipatory_threshold: 100
+  mapping:
+    f: red
+    j: green
+    k: blue
+
+paradigm_config:
+  target_dimension: ink_color
+  distractor_dimension: word
+  congruency_ratio: 0.5
+
+randomization:
+  method: pseudorandom
+  seed_scope: per_subject
+  seed: "{subject_id}"
+  record_resolved_seed: true
+  max_consecutive_same_condition: 3
+
+output:
+  directory: data/
+  filename_pattern: "sub-{subject_id}_stroop_{run_id}.csv"
+  incremental_save: true
+  trial_summary: true

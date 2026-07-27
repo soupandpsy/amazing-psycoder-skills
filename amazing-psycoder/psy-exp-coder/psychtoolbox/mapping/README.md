@@ -5,13 +5,13 @@
 
 ## Version Note
 
-PTB 3.0.20+ (Dec 2024): Apple Silicon 原生支持（beta）、macOS/Windows 付费许可证要求。代码生成默认兼容 3.0.19+，不依赖付费版本特性。
+Version/OS/license behavior is runtime-specific. Use the exact versions in config and verify current official requirements; this mapping does not promise cross-version compatibility.
 
 ## 12 步模板 PTB 实现
 
 | 步骤 | 模板定义 | Stroop 实现 | Posner Cuing 实现 | 通用 PTB 模式 |
 |------|---------|------------|-------------------|-------------|
-| 1 | Imports / dependencies | `close all; clear; sca; PsychDefaultSetup(2)` | 同 Stroop | `PsychDefaultSetup(2); KbName('UnifyKeyNames'); rng('shuffle')` |
+| 1 | Imports / dependencies | `close all; clear; sca; PsychDefaultSetup(2)` | 同 Stroop | `PsychDefaultSetup(2); KbName('UnifyKeyNames'); rng(seed, 'twister')` |
 | 2 | Experiment params | `isiTimeSecs`, `trialsPerCondition` | `fixTimeSecs`, `cueTimeSecs`, `targetTimeSecs`, `isiTimeSecs` | 时间参数用秒定义 → `round(secs / ifi)` 转帧数 |
 | 3 | Display setup | `PsychImaging('OpenWindow', ..., grey, [], 32, 2)` | `PsychImaging('OpenWindow', ..., grey, [])` | `PsychImaging` + `ifi` + `RectCenter` + `BlendFunction` + `MaxPriority` |
 | 4 | Stimulus preloading | 无图片，文字/颜色内联 | `CreateProceduralGabor` 预创建 | 纹理/位置/参数在 trial 循环前计算好 |
@@ -20,7 +20,7 @@ PTB 3.0.20+ (Dec 2024): Apple Silicon 原生支持（beta）、macOS/Windows 付
 | 7 | Instruction | `if trial==1` + `DrawFormattedText` + `KbStrokeWait` | 同上 | `DrawFormattedText(window, text, 'center', 'center', color)` |
 | 8 | Practice | 同上（指令屏 + 练习 trial 循环，不保存数据） | 同上 | `isPractice = true` flag + 相同 trial 循环结构；练习反馈 `DrawFormattedText` + `KbStrokeWait`；正式实验前重置数据计数器 |
 | 9a | Block | 单 block | 单 block | `for trial = 1:numTrials` |
-| 9b | Randomization | `Shuffle(1:numTrials)` | `Shuffle(cueTargetMat, 2)` | `Shuffle()` 按列/行随机化 |
+| 9b | Randomization | `rng(seed,'twister'); Shuffle(1:numTrials)` | 同 | seed 来自 config，resolved seed 写入每 trial |
 | 9c | Per-trial | Fixation(1帧) → ISI(多帧) → Stimulus+Response(KbCheck while) | Fixation(N帧) → Cue(N帧) → Gap(N帧) → Target(N帧) → Response(KbCheck while) → ITI(N帧) | `for f=1:nFrames` + `vbl = Screen('Flip', w, vbl+(wf-0.5)*ifi)` |
 | 9d | Block feedback | 单 block — 无跨 block 反馈 | 同上 | `blockEnd; meanRT = mean(blockRTs); meanAcc = mean(blockCorrect); feedbackText = sprintf('平均反应时: %.0f ms\\n正确率: %.1f%%', meanRT, meanAcc*100); DrawFormattedText(window, feedbackText, 'center', 'center', textColor); Screen('Flip', window); KbStrokeWait;` |
 | 10 | Data saving | `respMat(:, trial) = [wordNum, colorNum, response, rt, isiDuration]` | `dataMat(trial,:) = [rt, correctness]` + 每 trial 调用 `writematrix` | `fopen`/`fprintf`/`fclose` 增量写入 |
@@ -38,6 +38,10 @@ PTB 3.0.20+ (Dec 2024): Apple Silicon 原生支持（beta）、macOS/Windows 付
 | `windows[].duration: [min, max]` (随机) | `randDur = randi([min, max]); randFrames = round(randDur/1000 / ifi)` |
 | `windows[].response: [keys]` | `KbQueueFlush(); stimOnset=Screen('Flip',w); while ~gotResp && GetSecs<deadline; [pressed,firstPress]=KbQueueCheck(); ... end` |
 | `windows[].rt_onset: "self"` | RT 起点 = `VBLTimestamp` (Flip 返回值) |
+
+### `randomization` → 可复现顺序
+
+Use `rng(seed, 'twister')` before the first `Shuffle`, construct the exact required condition multiset before shuffling, and write `seed` into every saved row. Never use `rng('shuffle')` for a collection build.
 
 ### `windows[]` 完整序列生成逻辑
 

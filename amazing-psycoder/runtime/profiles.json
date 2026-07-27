@@ -1,0 +1,22 @@
+{
+  "contractVersion": "1.4.0",
+  "defaultProfile": "standalone",
+  "profiles": {
+    "standalone": {
+      "activation": "No PsyCoder Studio generation envelope is present",
+      "serialization": "yaml",
+      "artifactStore": "user_workspace",
+      "capabilityPolicy": "reference_evidence",
+      "serviceDependencies": [],
+      "instructions": "STANDALONE.md"
+    },
+    "studio": {
+      "activation": "A validated Studio generation envelope is present",
+      "serialization": "json",
+      "artifactStore": "private_service_storage",
+      "capabilityPolicy": "runtime/capabilities.json",
+      "serviceDependencies": ["supabase", "redis", "generation_worker"],
+      "instructions": "PSYCODER_STUDIO.md"
+    }
+  }
+}

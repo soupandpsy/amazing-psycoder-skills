@@ -2,9 +2,10 @@
 
 # 🧠 Amazing PsyCoder 💻
 
-> Making the coding barrier in psychology research disappear completely.
+> Helping psychology researchers focus more on research questions, not code.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-v1.4.0-2563eb.svg)](../amazing-psycoder/SKILL.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
@@ -27,27 +28,27 @@
 
 ## 📖 Why
 
-<h3 align="center">🔍 Current Pain Points in Psychology Research</h3>
+<h3 align="center">🔍 Common Challenges from Study Design to Data Analysis</h3>
 
-🔬 An idea won't become a data-collection-ready experiment until you learn Python, JavaScript, or MATLAB first.<br>
-📦 The lab's legacy code crashes on a different machine — nobody can explain the dependencies, nobody dares touch the logic.<br>
-📊 Statistical methods chosen by habit — "everyone uses ANOVA" — until a reviewer's question sends you back to square one.<br>
-🔁 Results only reproducible on your machine; change the environment or random seed and the conclusions might flip.<br>
-✂️ Experiment builders and data analysts are often different people — you collect data only to realize the design never accounted for how it'd be analyzed.
+🔬 Turning a research idea into an experiment that can collect data often requires Python, JavaScript, or MATLAB.<br>
+📦 Existing laboratory code may stop working when the environment changes, while its dependencies and core logic can be difficult to maintain.<br>
+📊 When statistical methods are chosen mainly by convention, it can be difficult to explain how they match the research question, outcome type, and data structure.<br>
+🔁 Without recorded software versions and dependencies, an analysis may be difficult to reproduce on another computer.<br>
+✂️ When experiment design and analysis planning are disconnected, researchers may discover after data collection that the design cannot support the intended analysis.
 
-<h3 align="center">🧱 Two Major Barriers to Getting Experiments Done</h3>
+<h3 align="center">🧱 Two Main Challenges in Conducting Research</h3>
 
-**First: experiment programming.** To test a hypothesis, you first have to code the experiment. PsychoPy's Builder isn't flexible enough; Coder means learning Python. jsPsych means learning JavaScript and timeline logic. Psychtoolbox means learning MATLAB and frame synchronization. Just figuring out "which screen does RT start from," "how do I not map the keys backwards," and "how do I save data so a crash doesn't wipe everything" can take weeks. The distance between an idea in your head and a working experiment often takes longer than designing the experiment itself.
+**First: experiment programming.** Testing a hypothesis requires translating the design into a program. PsychoPy Builder may not be flexible enough for some complex designs; Coder requires Python, jsPsych requires JavaScript and timeline logic, and Psychtoolbox requires MATLAB and knowledge of display synchronization. RT onset, key mapping, and data recovery after interruption all need explicit decisions and careful checks.
 
-**Second: data analysis.** Data's collected — now what statistical method? Within-subject design: paired t-test or mixed model? Accuracy near ceiling — is ANOVA still valid? When a reviewer asks "why this method," what do you say? If someone runs your code on a different machine, will they get the same result?
+**Second: data analysis.** Analysis planning should ideally begin before data collection and be implemented against the observed data structure afterwards. Should a within-subject design use a paired t-test or a mixed model? How should near-ceiling accuracy be modeled? Why is a particular method appropriate? Can the result be reproduced on another computer? These questions depend on the research aim, data hierarchy, and software environment.
 
-These aren't skill problems. They're tool problems. Writing code and running analyses should make research smoother, not be the thing that stalls you.
+These challenges involve not only programming, but also study design, statistical inference, data management, and reproducibility.
 
-<h3 align="center">✨ Amazing PsyCoder's Solution</h3>
+<h3 align="center">✨ How Amazing PsyCoder Helps</h3>
 
-You don't need to know Python. You don't need to know statistics. You just need to bring your ideas and your data — it walks you through confirming the design step by step, generates the code, and audits the result. What you get runs right out of the box, and the analysis holds up to reviewer scrutiny.
+You can begin with an experiment idea, an existing design, or current data. Amazing PsyCoder then helps you confirm research rules, generate code, and check for problems step by step. When needed, you still provide configurations, data descriptions, exclusion sources, and execution records. AI output alone is never treated as “ready for data collection” or “ready for publication”: experiments require a target-machine test run, and analyses must actually run with their outputs reviewed.
 
-Amazing PsyCoder encodes hard-won experience in experiment programming and data analysis into 7 skills — 1 orchestrator plus 6 sub-skills, following the agentskills.io open standard, supporting Claude Code / Codex / Hermes / OpenClaw.
+Amazing PsyCoder contains 7 skills—1 entry skill and 6 specialist skills—and follows the [agentskills.io](https://agentskills.io) open standard. It can be installed in four AI agents: Claude Code, Codex, Hermes, and OpenClaw.
 
 So you can give the time back to the research itself.
 
@@ -57,7 +58,7 @@ So you can give the time back to the research itself.
 
 - 🎓 Psychology undergrads and grad students writing (or about to write) experiment code
 - 🧠 Researchers running cognitive, behavioral, or social psychology experiments
-- 😵‍💫 Anyone who's tripped over RT timing, randomization, and condition tables one too many times — and wants systematic quality assurance
+- 😵‍💫 Researchers who repeatedly encounter RT, randomization, or condition-table problems and want systematic checks for common risks
 - 📊 Anyone who's collected data and isn't sure which statistical method to use — and wants a structured analysis plan
 - 🐍 PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB users
 
@@ -65,47 +66,58 @@ So you can give the time back to the research itself.
 
 ## ⚡ Install
 
-Type the command for your platform directly in your AI chat:
-
-**Claude Code**
-
-```
-Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
-```
-
-**Codex**
-
-```
-$skill-installer
-```
-
-Enter repo URL: `https://github.com/soupandpsy/amazing-psycoder-skills`
-
-**Hermes**
-
-```
-hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
-```
-
-**OpenClaw**
-
-```
-npm i -g clawhub && clawhub install amazing-psycoder
-```
-
-Then type `/amazing-psycoder` to launch.
-
-<details>
-<summary><b>Terminal install (all platforms)</b></summary>
-
-<br>
+Use the repository installer. It checks all 7 skills before changing the destination and restores the previous files if an installation fails.
 
 ```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills
 cd amazing-psycoder-skills/amazing-psycoder
-./install.sh           # auto-detects platform and installs
-# or specify: ./install.sh claude | codex | hermes | openclaw
 ```
+
+**Claude Code**
+
+```bash
+./install.sh claude
+```
+
+Use `/amazing-psycoder` after installation. Default destination: `${CLAUDE_CONFIG_DIR:-~/.claude}/skills`.
+
+**Codex**
+
+```bash
+./install.sh codex
+```
+
+Use `$amazing-psycoder` after installation. Default destination: `~/.agents/skills`.
+
+**Hermes**
+
+```bash
+./install.sh hermes
+```
+
+Use `/amazing-psycoder` after installation. Default destination: `~/.hermes/skills`.
+
+**OpenClaw**
+
+```bash
+./install.sh openclaw
+```
+
+Describe your task after installation and let the OpenClaw agent match the skill. Default destination: `~/.openclaw/skills`.
+
+<details>
+<summary><b>Project install, custom directories, and installation checks</b></summary>
+
+<br>
+
+```bash
+./install.sh --scope project --project-dir /path/to/repo claude
+./install.sh --scope project --project-dir /path/to/repo codex
+./install.sh --scope project --project-dir /path/to/workspace openclaw
+./install.sh --check codex
+```
+
+Hermes currently has no stable project-level skill directory, so its installer supports user scope only. See [`PLATFORMS.md`](../amazing-psycoder/PLATFORMS.md).
 
 </details>
 
@@ -113,39 +125,43 @@ cd amazing-psycoder-skills/amazing-psycoder
 
 ## 🚀 Quick Start
 
-After installation, type `/amazing-psycoder` and describe what you want to do:
+After installation, invoke Amazing PsyCoder in the relevant AI agent and describe what you want to do:
 
 > "I want a Stroop task, red/green/blue, key-press response" → auto-enters experiment design
 
 > "Analyze my Stroop data — is there an RT difference between congruent and incongruent?" → auto-enters analysis design
 
-No need to specify which skill to use — the orchestrator automatically determines it based on your needs. From there, the skill guides you step by step: confirm the design, choose methods, generate code, audit checks. You just answer its questions.
+> "Review this experiment code, especially RT onset and data saving" → auto-enters code review
+
+You normally do not need to choose a specialist skill. The entry skill selects design, code generation, or review from the request. If it cannot determine whether you want to build an experiment or analyze data, it asks for clarification.
 
 ---
 
 ## 🧪 Experiment Programming
 
-From idea to data-collection-ready experiment code: three steps — design, generate, audit.
+From idea to experiment code that is ready for a test run: three steps — design, generate, review.
 
 ### Skills
 
 | # | Skill | What It Does | Key Details |
 |---|------|--------|---------|
 | ① | **Design Orchestration** `psy-exp-designer` | Turns experiment ideas into complete design specifications | 5-phase progressive confirmation. Phase 2 generates trial-window timeline diagrams — per-screen duration, keys, RT onset at a glance. 5 hard gates. 38 paradigm references |
-| ② | **Code Generation** `psy-exp-coder` | Generates runnable code from design specs | 4-layer priority architecture. 9-item quality gate auto-blocks: `time.sleep()`, `KbCheck` for RT rejected on sight. 12-step code template, parameters at the top |
-| ③ | **Code Audit** `psy-exp-reviewer` | The last checkpoint before data collection | 5 review modes. Smoke test protocol. Paradigm failure-mode checks. Failures get a fix path. Readiness label: `ready_for_collection` |
+| ② | **Code Generation** `psy-exp-coder` | Generates runnable code from design specs | 4-layer priority architecture. A 10-item quality gate checks timing, response handling, saving, cleanup, dependencies, and other blocking risks before delivery |
+| ③ | **Code Review** `psy-exp-reviewer` | Checks code against the confirmed design | Without recorded test runs on the real collection machine, it will not claim the experiment is ready for data collection |
 
 ### Platforms
 
 | Platform | Strengths |
 |------|------|
-| 🐍 **[PsychoPy](https://psychopy.org/)** | Python ecosystem, USB HID hardware timestamps, millisecond RT precision. Go-to for local-lab experiments |
-| 🌐 **[jsPsych](https://www.jspsych.org/v7/)** | JavaScript ecosystem, runs in the browser, zero install. Go-to for online experiments |
-| 🧮 **[Psychtoolbox](http://psychtoolbox.org/)** | MATLAB ecosystem, GPU-level frame-precise control. Go-to when timing precision is everything |
+| 🐍 **[PsychoPy](https://psychopy.org/)** | Python experiments on lab computers; timing still needs validation on the target machine |
+| 🌐 **[jsPsych](https://www.jspsych.org/)** | Browser and online experiments; test on the actual browser and participant devices |
+| 🧮 **[Psychtoolbox](https://psychtoolbox.org/)** | MATLAB/Octave experiments with detailed display and device control; synchronization and hardware calibration remain necessary |
 
-### Paradigm Coverage
+### Experiment Design References
 
-**38 paradigms**, each organized with unified meta-logic: When to use → Core logic → Must confirm → Don't assume → Trial window timeline → Condition table → Data analysis → Variants & references.
+**38 experiment-design references**, each organized with unified meta-logic: When to use → Core logic → Must confirm → Don't assume → Trial window timeline → Condition table → Data analysis → Variants & references.
+
+These references help define an experiment. They do **not** mean 38 × 3 generators have already been verified on real machines across all three platforms.
 
 | Category | Paradigms |
 |------|------|
@@ -161,26 +177,26 @@ From idea to data-collection-ready experiment code: three steps — design, gene
 
 ## 📊 Data Analysis
 
-Once data is collected: three steps — design the analysis plan, generate the code, audit for reproducibility.
+Analysis can be planned before data collection and implemented further once data are available: design the analysis plan, generate the code, and review the executed results.
 
 ### Skills
 
 | # | Skill | What It Does | Key Details |
 |---|------|--------|---------|
-| ④ | **Analysis Design** `psy-ana-designer` | Starts from your scientific question, designs a complete analysis plan | 5-phase progressive confirmation. Phase 2 confirms data file organization (multi-file/single-file, naming, CSV/Excel/TSV). Phase 3 uses 12-dimension comparison to pick the best method. Config YAML as single source of truth |
+| ④ | **Analysis Design** `psy-ana-designer` | Starts from your scientific question, designs a complete analysis plan | 5-phase progressive confirmation. Phase 2 confirms file organization and the participant/stimulus/session hierarchy. Phase 3 compares viable alternatives on the dimensions that matter for this decision; the full 12-dimension matrix is reserved for genuinely competitive or high-impact choices |
 | ⑤ | **Analysis Coding** `psy-ana-coder` | Generates reproducible scripts from the analysis plan | Phase 0 validates config → confirms R/Python → 12-step script generation. 10-item quality gate. R: tidyverse/lme4/ggplot2. Python: pandas/statsmodels/seaborn. Fully config-driven |
-| ⑥ | **Analysis Audit** `psy-ana-reviewer` | The last checkpoint before publication | 4 review modes. Intake protocol auto-detection. Statistical correctness + reproducibility + assumption checks. R/Python dual-platform anti-pattern detection. Failures get a fix path. Readiness label: `ready_for_publication` |
+| ⑥ | **Analysis Audit** `psy-ana-reviewer` | Separates static code review from executed-result review | Static review can reach `ready_for_execution` only. `ready_for_publication` additionally requires a successful clean run plus reviewed logs, tables, figures, dependency record, and environment |
 
-### Platforms
+### Analysis Languages and Environments
 
-| Platform | Strengths |
+| Language and environment | Strengths |
 |------|------|
-| 📊 **[R](https://www.r-project.org/)** | The statistical computing standard. tidyverse + lme4 + ggplot2 + RMarkdown. Academic publishing's first choice |
-| 🐍 **[Python](https://www.python.org/)** | General-purpose scientific computing. pandas + statsmodels + seaborn + Jupyter. Reproducible analysis |
+| 📊 **[R](https://www.r-project.org/)** | Statistical modeling and academic reporting, with tools such as lme4, ggplot2, Quarto, and R Markdown |
+| 🐍 **[Python](https://www.python.org/)** | General data processing, statistical analysis, visualization, and Jupyter workflows |
 
 ### Analysis Methods
 
-**60 analysis methods, 48 chart types**. Every method choice goes through 12-dimension comparison: statistical power · false positive control · data utilization · outlier sensitivity · assumption robustness · interpretability · domain acceptance · effect size comparability · reproducibility · extensibility · sample size constraints · computational feasibility.
+**60 method references and 48 chart references** help identify candidates; they are not automatic prescriptions. Compare viable choices on the factors that can change the decision. Use the full 12-dimension comparison only when alternatives are genuinely close or the choice has major consequences.
 
 | Category | Method Examples |
 |------|------|
@@ -261,8 +277,16 @@ Amazing PsyCoder ❯ ✅ stroop_task.py + README.md generated
                    Params at top · CJK font configured · Incremental save
                    → Auto-routing to audit
 
-Amazing PsyCoder ❯ 🔍 Audit passed · Readiness: ready_for_collection
-                   Safe to start data collection.
+Amazing PsyCoder ❯ 🔍 Static code review found no blocking issue.
+                   The experiment is ready for a test run, not yet for data collection.
+                   Run startup/exit, short-session, data-integrity, and interruption-
+                   recovery checks on the real collection machine.
+
+User             ❯ Those checks passed on the collection machine. Here are the logs and data files.
+
+Amazing PsyCoder ❯ 🔍 Runtime evidence and saved data reviewed.
+                   Readiness: ready_for_collection
+                   Data collection can begin.
 ```
 
 ### 📊 Analysis · R Stroop
@@ -281,79 +305,98 @@ Amazing PsyCoder ❯ 🟢 Phase 2/5 · Understand data structure
                    How is your data stored? One file per subject or combined?
 
 User             ❯ One CSV per subject, named sub-001_stroop.csv
-                   Columns: subject_id, condition, rt, acc, trial
+                   Columns: subject_id, stimulus, condition, rt, acc, trial
 
-Amazing PsyCoder ❯ Confirmed: 30 subjects × 1 file each. Gate 2 ✅
+Amazing PsyCoder ❯ Are the stimuli unique to each subject, or does the same set
+                   appear for multiple subjects?
 
-Amazing PsyCoder ❯ 🟢 Phase 3/5 · Data characteristics + match methods (core phase)
-                   Is RT right-skewed? Accuracy near ceiling?
+User             ❯ All subjects see the same 60 color-word combinations, with
+                   repeated trials within each subject.
 
-User             ❯ RT somewhat right-skewed, accuracy around 95%
+Amazing PsyCoder ❯ Confirmed: observations repeat within both subject and stimulus.
+                   Gate 2 ✅
 
-Amazing PsyCoder ❯ Accuracy near ceiling → glmer(binomial) for acc analysis
-                   For RT, 12-dimension comparison A vs B:
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · Define the estimand, then choose the method
+                   Primary estimand: the population-average RT contrast,
+                   incongruent minus congruent.
 
-                   ┌────────────┬─────────────────┬─────────────────┐
-                   │ Dimension  │ A: Paired t-test │ B: Linear Mixed  │
-                   ├────────────┼─────────────────┼─────────────────┤
-                   │ Power      │ 30 pts (subj avg)│ 1800 pts (all)  │
-                   │ Data use   │ 1 pt per subject │ All trials used │
-                   │ Extensible │ Covariate = redo │ Add + to formula│
-                   │ Intuitive  │ d=0.5 universal  │ Random effects  │
-                   └────────────┴─────────────────┴─────────────────┘
+                   Proposed RT model:
+                   rt ~ condition + (1 + condition | subject_id) + (1 | stimulus)
 
-                   Prioritize power + extensibility → choose B. Simplicity → choose A.
+                   Accuracy can be a supplementary binomial mixed model.
+                   A paired t-test is a simpler alternative, but it answers the
+                   question at an aggregated subject-mean level.
+                   If the random-effects structure cannot be estimated reliably,
+                   follow a predeclared simplification order and report diagnostics.
 
-User             ❯ Choose B
+User             ❯ Confirm the estimand, formula, and subject/stimulus hierarchy.
+                   Use the mixed model for RT and accuracy as supplementary.
 
-Amazing PsyCoder ❯ Gate 3 ✅ Method selected (with 12-dimension rationale)
+Amazing PsyCoder ❯ Gate 3 ✅ Estimand, formula, hierarchy, and alternatives confirmed
 
-Amazing PsyCoder ❯ 🟢 Phase 4/5 · Analysis details
-                   Cleaning: RT 150-2000ms · correct trials only · exclude subj acc<60%
-                   · ±2.5 SD trial exclusion · Plots: raincloud + individual lines ⚠️
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · Cleaning rules, runtime, and outputs
+                   Please provide RT, missing-data, and participant-exclusion rules
+                   from the task protocol or preregistration. No fixed threshold or
+                   SD rule will be inserted without a source and confirmation.
 
-User             ❯ Confirm
+User             ❯ The preregistration says: the primary RT analysis uses correct
+                   trials with non-missing RT only; no fixed RT bounds, SD trimming,
+                   or automatic participant exclusion. Add a log-RT sensitivity
+                   analysis. The lab uses R 4.4.1, renv.lock, and R Markdown.
 
 Amazing PsyCoder ❯ 🟢 Phase 5/5 · Final Review
                    ┌──────────────────────────────────────────────┐
                    │ Analysis Decision Registry                   │
                    │ Question: congruent vs incongruent RT ← user │
-                   │ Method: lmer (user chose B)         ← user   │
-                   │ RT 150-2000ms · subj acc<60%        ← default⚠️│
-                   │ Plots: raincloud + indiv lines      ← default⚠️│
+                   │ Formula: subject slope + stimulus intercept   │
+                   │ Cleaning: preregistered rules + audit log     │
+                   │ Runtime: R 4.4.1 + renv.lock          ← user  │
+                   │ Outputs: contrast, interval, diagnostics, plots│
                    └──────────────────────────────────────────────┘
                    Gate 5 ✅ Save analysis_config.yaml → Route to code gen
 
 User             ❯ Generate.
 
-Amazing PsyCoder ❯ ✅ analysis.R + report.Rmd generated
-                   Config-driven · 10 quality gates · 12-step script structure
-                   → Auto-routing to audit
+Amazing PsyCoder ❯ ✅ analysis.R + report.Rmd + renv.lock generated
+                   Dependency versions recorded · static review completed
 
-Amazing PsyCoder ❯ 🔍 Audit passed · Readiness: ready_for_publication
+Amazing PsyCoder ❯ 🔍 Readiness: ready_for_execution
+                   The code is ready to run, but the results are not yet ready to report.
+
+User             ❯ It ran in a clean environment. Here are the log, tables, plots, and versions.
+
+Amazing PsyCoder ❯ 🔍 Execution outputs reviewed.
+                   Readiness: ready_for_publication
 ```
 
 ---
 
 ## 📂 File Structure
 
-```
+```text
 amazing-psycoder-skills/
-├── amazing-psycoder/                  ← Orchestrator (system entry point, v1.3)
-│   ├── SKILL.md · PLATFORMS.md · install.sh
+├── amazing-psycoder/                  ← Main entry point (v1.4.0)
+│   ├── SKILL.md                       ← Routing and global rules
+│   ├── PLATFORMS.md · install.sh      ← Platform notes and installer
+│   ├── STANDALONE.md                  ← Direct use inside an agent
+│   ├── PSYCODER_STUDIO.md             ← Website integration
+│   ├── runtime/                       ← Website contracts and capability scope
+│   ├── scripts/ · tests/              ← Automated checks
+│   ├── requirements-dev.txt           ← Pinned validation dependencies
 │   │
 │   │   # 🧪 Experiment Programming
-│   ├── psy-exp-designer/              ← ① Experiment design (5 phases + 38 paradigms + 9 reference files)
+│   ├── psy-exp-designer/              ← ① Experiment design (5 phases + 38 design references)
 │   ├── psy-exp-coder/                 ← ② Experiment code generation (PsychoPy/jsPsych/Psychtoolbox)
-│   └── psy-exp-reviewer/              ← ③ Experiment audit (5 modes + smoke test + recovery loop)
+│   └── psy-exp-reviewer/              ← ③ Experiment code review
 │   │
 │   │   # 📊 Data Analysis
-│   ├── psy-ana-designer/              ← ④ Analysis design (5 phases + 60 methods + 48 charts)
-│   ├── psy-ana-coder/                 ← ⑤ Analysis code generation (R/Python dual-platform)
-│   └── psy-ana-reviewer/              ← ⑥ Analysis audit (4 modes + intake protocol + recovery loop)
+│   ├── psy-ana-designer/              ← ④ Analysis design (60 method + 48 chart references)
+│   ├── psy-ana-coder/                 ← ⑤ Analysis code generation (R/Python)
+│   └── psy-ana-reviewer/              ← ⑥ Analysis code and output review
 │
-├── docs/                              ← Multi-language READMEs (CN/TW/EN/JP/DE/FR)
-└── README.md
+├── docs/                              ← Translated READMEs (TW/EN/JP/DE/FR)
+├── .github/                           ← Automated checks
+└── README.md                          ← Simplified Chinese project page
 ```
 
 ---

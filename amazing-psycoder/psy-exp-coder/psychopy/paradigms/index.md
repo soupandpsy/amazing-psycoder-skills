@@ -1,6 +1,6 @@
 # PsychoPy Paradigm Index
 
-> 27 paradigm reference files (Layer 3). API patterns from spec, not from these files.
+> 28 paradigm reference files (Layer 3). API patterns from spec, not from these files.
 
 ## Core paradigms (14)
 

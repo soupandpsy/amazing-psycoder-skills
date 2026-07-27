@@ -86,7 +86,7 @@ Developed based on discussions with Paulina Pietrak at ESCOP 2025. Images by Rud
 
 ## Variants
 
-- **线索有效性告知版（Informed Validity）**：实验开始前明确告知参与者只有一半提示是正确的，与不告知版本对比，考察外显信念对提示信任度的影响。参考 [trust-game.md](trust-game.md)。
+- **线索有效性告知版（Informed Validity）**：实验开始前明确告知参与者只有一半提示是正确的，与不告知版本对比，考察外显信念对提示信任度的影响。参考 trust-game.md。
 - **多来源求助版（Multi-Source Hints）**：将单一"朋友"扩展为多个信息来源（如专家、AI助手、同伴），参与者可选择向不同来源求助。用于考察信息来源可信度对求助行为的差异化影响。
 - **确定性反馈版（Deterministic Feedback）**：每次提交答案后立即显示正确答案并给出准确与否的反馈，使参与者能追踪提示有效性的累积证据。考察反馈对线索信任更新的促进作用。
 

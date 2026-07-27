@@ -1,6 +1,6 @@
 # jsPsych Paradigms
 
-> **L3**: 范式参考文件 — 22 个 PsychoJS + 1 个 lab.js + 2 个 jsPsych 6.1.0 原生范式，包含完整可运行代码。
+> **L3 legacy source set**: 22 个 PsychoJS + 1 个 lab.js + 2 个 jsPsych 6.1.0。代码块是隔离的历史来源，不得复制、执行或标为当前 jsPsych 可运行代码。
 
 ## 范式索引
 
@@ -34,11 +34,10 @@
 
 ## 类型说明
 
-- **PsychoJS**: Pavlovia 平台上的 jsPsych 实现，使用 PsychoJS 插件
+- **PsychoJS**: PsychoPy Builder 的独立 JavaScript runtime，常部署于 Pavlovia；不是 jsPsych 实现或插件集
 - **lab.js**: 独立的 JavaScript 实验框架（非 jsPsych/PsychoJS），使用 HTML 模板 + messageHandlers
 - **jsPsych 6.1.0 原生**: 标准 jsPsych 6.1.0 库的原生实现（来源：psychbruce/jspsych）
 
-> **重要：范式 ≠ API 参考。** 以下文件中的代码示例使用 jsPsych 6.1.0 或 PsychoJS API（如 `jsPsych.init()`、字符串类型 `'html-keyboard-response'`、`jsPsych.NO_KEYS`）。**生成实验代码时，API 模式以 [spec/README.md](../spec/README.md) 的 Canonical Code Skeleton 为准**（`initJsPsych()`+`jsPsych.run()`、class 引用类型、`"NO_KEYS"` 字符串）。范式文件仅提供实验逻辑：窗口序列、条件结构、准确度规则。
+> **重要：范式 ≠ API 参考。** 只读取设计意图、窗口序列、条件字段和评分语义，再用 [spec](../spec/README.md) 与 [mapping](../mapping/README.md) 重新实现。任何 legacy 代码片段都必须被当前 validator 拒绝或重写。
 
-每个文件包含**实验逻辑**（设计模式、窗口序列、准确度规则）和**代码示例**（可直接运行的完整代码）。
-
+每个文件可能混有实验逻辑和历史导出代码；后者不构成可运行性或正确性证据。

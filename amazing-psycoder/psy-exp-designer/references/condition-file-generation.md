@@ -58,11 +58,17 @@ For reproducible condition generation, produce this script alongside the experim
 #!/usr/bin/env python3
 """Condition file generator for <experiment_name>.
 
-Usage: python generate_conditions.py
-Output: conditions/*.xlsx
+Usage: python generate_conditions.py --seed <confirmed-condition-seed>
+Output: conditions/*.xlsx + conditions/generation-manifest.json
 
 Edit the PARAMETERS section to adjust trial counts, ratios, etc.
 """
+
+import argparse
+import hashlib
+import json
+import os
+import random
 
 # ============================================================
 # PARAMETERS — edit these to change the experimental design
@@ -76,25 +82,42 @@ MAX_CONSECUTIVE_NOGO = 2
 STIMULI_GO = ['X']
 STIMULI_NOGO = ['O']
 GO_KEY = 'space'
-RANDOM_SEED = 42
+MAX_SHUFFLE_ATTEMPTS = 10000
 # ============================================================
 
-import random
-import os
 from openpyxl import Workbook
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--seed", type=int, required=True)
+args = parser.parse_args()
+RANDOM_SEED = args.seed
 random.seed(RANDOM_SEED)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+def _write_xlsx(trials, output_path, columns):
+    """Write one row per trial and fail before saving on schema mismatch."""
+    missing = sorted({column for trial in trials for column in columns if column not in trial})
+    if missing:
+        raise ValueError(f"Missing required trial fields: {missing}")
+    wb = Workbook()
+    ws = wb.active
+    ws.append(columns)
+    for trial in trials:
+        ws.append([trial[column] for column in columns])
+    wb.save(output_path)
+
 def generate_go_nogo_trials(n_trials, go_ratio, max_consecutive_nogo):
     """Generate trial list with constraint: no more than max_consecutive_nogo nogo in a row."""
-    n_go = int(n_trials * go_ratio)
+    if n_trials <= 0 or not 0 <= go_ratio <= 1:
+        raise ValueError("n_trials must be positive and go_ratio must be in [0, 1]")
+    # Resolve an unattainable ratio to one explicit integer count; validator checks floor/ceil compatibility.
+    n_go = int(n_trials * go_ratio + 0.5)
     n_nogo = n_trials - n_go
-    
+
     trial_types = ['go'] * n_go + ['nogo'] * n_nogo
-    
-    # Shuffle with constraint
-    while True:
+
+    # Shuffle with a bounded constraint search; never hang on an impossible design.
+    for _ in range(MAX_SHUFFLE_ATTEMPTS):
         random.shuffle(trial_types)
         # Check consecutive nogo constraint
         max_run = 0
@@ -107,7 +130,11 @@ def generate_go_nogo_trials(n_trials, go_ratio, max_consecutive_nogo):
                 current_run = 0
         if max_run <= max_consecutive_nogo:
             break
-    
+    else:
+        raise ValueError(
+            "Unable to satisfy max_consecutive_nogo; adjust the ratio, trial count, or constraint"
+        )
+
     trials = []
     for i, ttype in enumerate(trial_types):
         stimulus = random.choice(STIMULI_GO) if ttype == 'go' else random.choice(STIMULI_NOGO)
@@ -122,14 +149,34 @@ def generate_go_nogo_trials(n_trials, go_ratio, max_consecutive_nogo):
 
 # Generate practice
 practice_trials = generate_go_nogo_trials(N_PRACTICE, GO_RATIO, MAX_CONSECUTIVE_NOGO)
-_write_xlsx(practice_trials, f"{OUTPUT_DIR}/practice.xlsx",
+generated_paths = [f"{OUTPUT_DIR}/practice.xlsx"]
+_write_xlsx(practice_trials, generated_paths[0],
             ['trial', 'stimulus', 'condition', 'correct_response'])
 
 # Generate formal blocks
 for block_num in range(1, N_BLOCKS + 1):
     formal_trials = generate_go_nogo_trials(N_FORMAL_PER_BLOCK, GO_RATIO, MAX_CONSECUTIVE_NOGO)
-    _write_xlsx(formal_trials, f"{OUTPUT_DIR}/block_{block_num}.xlsx",
+    output_path = f"{OUTPUT_DIR}/block_{block_num}.xlsx"
+    _write_xlsx(formal_trials, output_path,
                 ['trial', 'stimulus', 'condition', 'correct_response'])
+    generated_paths.append(output_path)
+
+file_hashes = {}
+for path in generated_paths:
+    with open(path, "rb") as handle:
+        file_hashes[path] = hashlib.sha256(handle.read()).hexdigest()
+
+with open(f"{OUTPUT_DIR}/generation-manifest.json", "w", encoding="utf-8") as handle:
+    json.dump({
+        "resolved_seed": RANDOM_SEED,
+        "seed_scope": "condition-file generation",
+        "n_practice": N_PRACTICE,
+        "n_formal_per_block": N_FORMAL_PER_BLOCK,
+        "n_blocks": N_BLOCKS,
+        "go_ratio": GO_RATIO,
+        "max_consecutive_nogo": MAX_CONSECUTIVE_NOGO,
+        "files_sha256": file_hashes,
+    }, handle, indent=2)
 
 print(f"Done. Generated {1 + N_BLOCKS} condition files in {OUTPUT_DIR}/")
 ```
@@ -173,5 +220,5 @@ print(f"Done. Generated {1 + N_BLOCKS} condition files in {OUTPUT_DIR}/")
 After writing the xlsx file, verify:
 1. `print(df['condition'].value_counts())` — condition distribution matches design
 2. `print(df.columns.tolist())` — all required columns present
-3. `print(df.isnull().sum())` — no missing values in required columns
+3. Check missingness by semantic role — no-go `correct_response` may intentionally be empty, while stimulus/condition/order fields may not
 4. Constraint violations (e.g., `df['condition'].eq('nogo').rolling(3).sum().max() <= 2`)

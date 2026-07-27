@@ -17,7 +17,7 @@ paradigm: stroop
 platform: [MISSING]
 ```
 
-Detected from input: 3 words (红/绿/蓝), 3 ink colors, f/j keys (only 2 keys for 3 colors → conflict flagged), practice 20 trials, 2 formal blocks × 60.
+Detected from input: 3 words (红/绿/蓝), 3 ink colors, f/j keys (only 2 keys for 3 colors → conflict flagged), practice 20 trials, 2 formal loop sequences × 60.
 
 **Questions:**
 1. "使用什么平台？PsychoPy？"
@@ -32,34 +32,38 @@ Detected from input: 3 words (红/绿/蓝), 3 ink colors, f/j keys (only 2 keys 
 Build the trial window timeline, then immediately finalize key mapping and accuracy rules:
 
 ```text
-   Window 1: Fixation            Window 2: Stroop              Window 3: Feedback   
-┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────────┐
-│                      │      │                      │      │                      │
-│          +           │  →   │       色词文字       │  →   │      正确/错误      │
-│                      │      │                      │      │                      │
-└──────────────────────┘      └──────────────────────┘      └──────────────────────┘
-     Duration: [MISSING]           Duration: until key          Duration: 500 ms     
-      Response: none                Response: f / j / k          Response: none      
-        File: none                Condition: {word}, {ink}      Condition: {correct_resp}
-                                 Data: rt, key, acc                                 
+序列: 练习
+  execution: loop (每个试次一次，重复 20 次)
 
-   Window 4: ITI     
-┌──────────────────────┐
-│                      │
-│                      │
-│                      │
-└──────────────────────┘
-     Duration: [MISSING]
-      Response: none   
-     Condition: none   
+  ┌─ 注视点 ────┐  ┌─ 刺激 ──────┐  ┌─ 反应 ────────┐  ┌─ 反馈 ─────────┐  ┌─ ITI ──────┐
+  │ "+"        │  │ "色词文字"   │  │ "色词文字"    │  │ "正确/错误"    │  │ ""         │
+  │ [MISSING]  │→ │ until_key   │→ │ until_key     │→ │ 500ms           │→ │ [MISSING]  │
+  │ 无响应     │  │ 无响应      │  │ [f, j, k]     │  │ 无响应          │  │ 无响应     │
+  └────────────┘  └─────────────┘  └───────────────┘  └─────────────────┘  └────────────┘
+                                            RT: self
+                                            数据: rt, key, acc
+
+序列: 正式实验
+  execution: loop (每个试次一次，重复 60 次)
+
+  ┌─ 注视点 ────┐  ┌─ 刺激 ──────┐  ┌─ 反应 ────────┐  ┌─ ITI ──────┐
+  │ "+"        │  │ "色词文字"   │  │ "色词文字"    │  │ ""         │
+  │ [MISSING]  │→ │ until_key   │→ │ until_key     │→ │ [MISSING]  │
+  │ 无响应     │  │ 无响应      │  │ [f, j, k]     │  │ 无响应     │
+  └────────────┘  └─────────────┘  └───────────────┘  └────────────┘
+                                           RT: self
+                                           数据: rt, key, acc
+
+序列: 指导语    → execution: once   → [MISSING]
+序列: 结束      → execution: once   → [MISSING]
 ```
 
-| Window | Content | Duration | Response | File | Condition | Data |
-|--------|---------|----------|----------|------|-----------|------|
-| Fixation | + | [MISSING] | none | none | none | none |
-| Stroop | 色词文字 | until key | f/j/k | none | {word}, {ink_color} | rt, key, acc |
-| Feedback | 正确/错误 | 500 ms | none | none | {correct_response} | none |
-| ITI | (blank) | [MISSING] | none | none | none | none |
+| 窗口 | 内容 | Duration | 响应 | 条件绑定 | 数据 |
+|--------|---------|----------|----------|-----------|------|
+| 注视点 | + | [MISSING] | 无 | 无 | onset |
+| 刺激 | 色词文字 | until_key | [f, j, k] | {word}, {ink_color} | onset, rt, key, acc |
+| 反馈 | 正确/错误 | 500ms | 无 | {correct_response} | 无 |
+| ITI | (blank) | [MISSING] | 无 | 无 | onset |
 
 **Questions:**
 1. "注视点呈现多久？ITI多久？（通常注视点500ms，ITI随机600-900ms）"
@@ -80,13 +84,16 @@ windows:
     content: "{word}"
     duration: until_key
     response: [f, j, k]
+    response_event: key_down
     rt_onset: self
+    rt_rationale: "RT starts at the verified display onset of the scored color word"
+    rt_contract_status: confirmed
     data: [rt, key, acc]
   - name: Feedback
     content: correct_incorrect
     duration: 500
     response: none
-    show_in: [practice]       # still unknown — asked in Phase 4
+    show_in: [practice]
   - name: ITI
     content: ""
     duration: [600, 900]
@@ -108,7 +115,7 @@ paradigm_config:
 
 output:
   directory: "data/"
-  filename_pattern: "sub-{subject_id}_stroop_{date}.csv"
+  filename_pattern: "sub-{subject_id}_stroop_{run_id}.csv"
 ```
 
 ---
@@ -129,41 +136,59 @@ Conditions structured. Stimulus: text-based, no image folder needed.
 
 ---
 
-## Phase 4: Set Block Structure
+## Phase 4: Set Sequence Structure
 
-Now that the trial is defined (4 windows) and conditions are known (9 types, 50:50), determine block grouping and looping:
+Now that the trial is defined (4 windows) and conditions are known (9 types, 50:50), determine sequence ordering and execution. Known from user's initial description: Practice loop × 20, 2 formal loops × 60.
 
-Known from user's initial description: Practice 20 trials, 2 formal blocks × 60 trials.
+Each sequence runs top-to-bottom. Window order within each sequence is left-to-right.
 
 **Questions:**
 1. "反馈只在练习阶段显示，还是正式实验也有？"
+2. "序列顺序固定还是被试间平衡？"
 
-### User: "反馈只在练习"
+### User: "反馈只在练习。顺序固定。"
 
-Blocks complete:
+Sequences complete:
 
 ```yaml
-blocks:
-  - name: Practice
-    condition_file: "conditions/practice.xlsx"
-    type: practice
-    trials: 20
-    feedback: true
-    repeatable: true
-  - name: Block_1
-    condition_file: "conditions/block_1.xlsx"
-    type: formal
-    trials: 60
-    feedback: false
-  - name: Block_2
-    condition_file: "conditions/block_2.xlsx"
-    type: formal
-    trials: 60
-    feedback: false
+sequences:
+  - name: 指导语
+    order: 1
+    window_ids: [Welcome]
+    execution:
+      mode: once
+
+  - name: 练习
+    order: 2
+    window_ids: [Fixation, Stroop, Feedback, ITI]
+    execution:
+      mode: loop
+      repetitions: 20
+    show_in: [practice]
+
+  - name: 正式实验_1
+    order: 3
+    window_ids: [Fixation, Stroop, ITI]
+    execution:
+      mode: loop
+      repetitions: 60
+
+  - name: 正式实验_2
+    order: 4
+    window_ids: [Fixation, Stroop, ITI]
+    execution:
+      mode: loop
+      repetitions: 60
+
+  - name: 结束
+    order: 5
+    window_ids: [ThankYou]
+    execution:
+      mode: once
 ```
 
 ---
 
 ## Phase 5: Validate & Route
 
-All `[MISSING]` resolved. 9 validation checks pass. Route to psy-exp-coder for code generation.
+All `[MISSING]` resolved. 13 validation checks pass. Route to psy-exp-coder for code generation.

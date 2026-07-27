@@ -24,6 +24,10 @@ Desktop.ini
 *.log
 data/
 
+# Reliability fixtures are source artifacts, not participant output
+!amazing-psycoder/tests/fixtures/**/*.csv
+!amazing-psycoder/tests/fixtures/**/*.xlsx
+
 # OS generated
 *.bak
 *.tmp

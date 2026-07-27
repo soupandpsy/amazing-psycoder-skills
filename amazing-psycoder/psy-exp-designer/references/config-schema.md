@@ -1,18 +1,30 @@
-# Experiment Config Schema
+# Standalone Experiment Config Schema
 
 Declarative YAML format for defining an experiment. When all config fields are filled and condition files are provided, the experiment code can be generated without further questions.
 
-> **Related**: [condition-file.md](condition-file.md) · [spec-template.md](spec-template.md)
+> This YAML document is the editable handoff for standalone Claude Code/Codex
+> use. PsyCoder Studio does not submit this YAML to its Worker: the website
+> stores `PsyCoderExperimentSpecV2@2.4` JSON, then deterministically compiles an
+> `ExecutionPlan@2.0`. Keep the semantics equivalent, but never serialize this
+> standalone shape as a Studio `canvas_state` or legacy `ExperimentSpec`.
 
-> ⚠️ **LANGUAGE NOTE**: Example values in this schema (e.g., `"休息一下"`, `"正确"`, `"错误"`, `"非常正性"`, `玫瑰`, `牡丹`) are Chinese-language placeholders showing the CONCEPT. When generating code, use the equivalent text in the user's language as determined by the design workflow. See [Language Consistency (Red Line)](../../psy-exp-coder/SKILL.md#language-consistency-red-line).
+> **Related**: [condition-file.md](condition-file.md) · [spec-template.md](spec-template.md) · deterministic validator: `../../scripts/validate_experiment.py`
+
+> ⚠️ **LANGUAGE NOTE**: Instruction/feedback examples are placeholders and must be adapted to the confirmed participant language. Scientific stimuli (words, images, audio), response keys, condition codes, and data fields are not auto-translated; they follow the confirmed design exactly. See [Language Consistency (Red Line)](../../psy-exp-coder/SKILL.md#language-consistency-red-line).
 
 ## Schema
 
 ```yaml
 # === Required: Meta ===
 name: "Experiment Name"           # human-readable
-paradigm: go-nogo                 # from supported paradigm list
+paradigm: go-nogo                 # exact design/variant identifier; custom values allowed
+paradigm_family: inhibition       # optional research lineage; metadata only
+variant: letter-go-nogo           # optional exact variant; metadata only
 platform: psychopy                # psychopy | psychtoolbox | jspsych
+runtime:
+  framework_version: "2024.2.4"  # exact confirmed target; never silently use "latest"
+  dependency_strategy: pinned     # pinned | lockfile
+  target_environment: "lab workstation profile A"
 
 # === Optional: Stimulus Folder (global) ===
 stimulus_folder: "stimuli/"     # prepended to all {column} image references. One global path for all windows
@@ -35,21 +47,52 @@ windows:
     content: "{stimulus}"
     duration: 2000                # response deadline
     response: [f, j]              # allowed keys
+    response_event: key_down      # key_down | key_release | click | submit | touch | voice | gaze_event | custom
     rt_onset: self                # "self" = RT from this window; or name of another window (e.g., "Target")
+    rt_rationale: "RT starts when this scored stimulus is actually displayed"
+    rt_contract_status: confirmed # proposed | confirmed; generation requires confirmed
     data: [rt, key, acc]          # columns recorded at this window
 
   - name: Feedback
     content: "correct_incorrect"  # built-in: correct_incorrect | timeout | none
     duration: 500
     response: none
-    show_in: [practice]           # only show in these block types
+    show_in: [practice]           # only show in these contexts (practice/formal/rest/debrief)
 
   - name: ITI
     content: ""                   # empty = blank screen
     duration: [500, 800]          # random uniform between min and max
     response: none
 
-# === Required: Block Structure ===
+# === Required: Sequence Structure (Primary Format) ===
+# Each sequence = one horizontal row of windows on the canvas.
+# Sequences execute top-to-bottom; windows within a sequence run left-to-right.
+sequences:
+  - name: Trial
+    order: 1
+    window_ids: [Fixation, Stimulus, Response, Feedback, ITI]
+    execution:
+      mode: loop                    # once | loop
+      repetitions: 80               # required when mode=loop
+      shuffle: true                 # optional; randomize window order within the sequence
+
+  - name: Feedback                  # only shown when feedback is active
+    order: 2
+    window_ids: [Feedback, ITI]
+    execution:
+      mode: once
+    show_in: [practice]             # optional; restrict to specific contexts
+
+  - name: Rest
+    order: 3
+    window_ids: [Rest]
+    execution:
+      mode: once
+    duration: 30000                 # ms, or "self-paced"
+
+# === Block Structure (Legacy — use Sequences above for new designs) ===
+# When both `sequences` and `blocks` are present, `sequences` takes precedence.
+# Block→Sequence mapping: practice=loop+feedback, formal=loop, rest=once, debrief=once.
 blocks:
   - name: Practice
     condition_file: "conditions/practice.xlsx"
@@ -57,11 +100,13 @@ blocks:
     feedback: true
     repeatable: true              # participant can repeat this block
     instruction_text: "按空格键对X反应，看到O不反应"
+    trials: 20                    # must equal the condition-file row count
 
   - name: Block_1
     condition_file: "conditions/block_1.xlsx"
     type: formal
     feedback: false
+    trials: 80
 
   - name: Rest
     type: rest
@@ -72,19 +117,30 @@ blocks:
     condition_file: "conditions/block_2.xlsx"
     type: formal
     feedback: false
+    trials: 80
+
+# === Required: Randomization Contract ===
+randomization:
+  method: pseudorandom            # random | pseudorandom | blocked | counterbalanced | fixed
+  seed_scope: per_subject         # per_session | per_subject | fixed
+  seed: "{subject_id}"            # integer/string/template; resolve before randomization
+  record_resolved_seed: true      # save the resolved seed or complete realized order
+  max_consecutive_same_condition: 3
 
 # === Required if response collected: Response Rules ===
 response_rules:
   correct: "{correct_response}"   # column in condition file, or literal key name
   deadline: 2000                  # global response deadline (ms) — MUST be confirmed with user
-  anticipatory_threshold: 100     # RT below this is flagged
+  anticipatory_threshold: 100     # illustrative only; must be task/device/protocol-derived and confirmed
   mapping:                        # key → response mapping (REQUIRED for multi-key responses)
     f: red
     j: green
     k: blue
 
-# === Optional: Paradigm-specific Settings ===
+# === Optional: Explicit Custom/Variant Logic ===
 paradigm_config:
+  # These fields are executable only because they are explicitly confirmed in
+  # this config. They are never inherited from paradigm or paradigm_family.
   # Go/No-go
   go_ratio: 0.8
   max_consecutive_nogo: 2
@@ -200,18 +256,20 @@ display:
   background: [-0.5, -0.5, -0.5]  # PsychoPy normalized units
   units: deg                      # deg | pix | norm
 
-# === Conditionally Required: Font Settings (REQUIRED if experiment uses text stimuli, esp. CJK) ===
+# === Conditionally Required: Font Settings (required for CJK/font-sensitive stimuli) ===
 font:
   auto_detect: true               # true = auto-detect by OS; false = use path below
   path: "/System/Library/Fonts/PingFang.ttc"  # CJK font (used when auto_detect=false)
   height: 40
   language_style: "LTR"
 
-# === Optional: Data Output ===
+# === Required: Data Output ===
 output:
   directory: "data/"
-  filename_pattern: "sub-{subject_id}_{task_name}_{date}.csv"
+  filename_pattern: "sub-{subject_id}_{task_name}_{run_id}.csv"  # collision-resistant per launch
   incremental_save: true
+  trial_summary: true              # one analyzable summary row per trial
+  event_file: null                 # optional linked table for repeated within-trial events
 ```
 
 ## Content Value Types
@@ -251,13 +309,22 @@ In addition to `content`, `duration`, and `response`, each window can have these
 | Field | Type | Example | Description |
 |-------|------|---------|-------------|
 | `name` | str | `"Fixation"` | Unique window name (required) |
-| `rt_onset` | str | `"self"` or `"Target"` | **Required on response windows**. `"self"` = RT measured from this window's flip. A window name = RT measured from that window's flip. For split patterns (separate stimulus + response windows), both are valid depending on task: Go/No-go typically uses `self` on the response window; Dot-probe/Priming typically uses the stimulus window name. If absent on a response window, ask before code generation |
+| `rt_onset` | str | `"self"` or `"Target"` | **Required on response windows**. `"self"` = RT measured from this window's verified presentation timestamp. A window name = RT measured from that named window's verified presentation timestamp. Never choose it solely from a paradigm label |
+| `rt_rationale` | str | `"RT starts at target display"` | Scientific meaning of the response-event/anchor pairing |
+| `rt_contract_status` | str | `confirmed` | `proposed` or `confirmed`; code generation requires explicit confirmation |
 | `data` | [str] | `[rt, key, acc]` | Columns recorded at this window. Only meaningful on response windows |
-| `show_in` | [str] | `[practice]` | Restrict this window to specific block types. If absent, window appears in all blocks. Valid values: `practice`, `formal`, `rest`, `debrief` |
+| `show_in` | [str] | `[practice]` | Restrict this window to specific contexts. If absent, window appears in all sequences. Valid values: `practice`, `formal`, `rest`, `debrief` |
 
-## Supported Paradigms
+## Paradigm References
 
-The `paradigm` field maps to the paradigm filename (without `.md`) in [paradigms/](../paradigms/). **Core paradigms** have full `## Must Confirm` and `## Condition File Columns` for guided design:
+When an exact match exists, the `paradigm` field may map to a reference filename
+(without `.md`) in [paradigms/](../paradigms/). These files improve guided
+design; they are not a whitelist, templates, or executable contracts. Custom
+identifiers are valid when the config explicitly defines complete windows,
+conditions, correctness, randomization, and output semantics. A family label
+never imports another variant's rules.
+
+**Core references** have full `## Must Confirm` and `## Condition File Columns` for guided design:
 
 ```
 go-nogo, navon, priming, stroop, eriksen-flanker, simon,
@@ -286,21 +353,24 @@ The shortest valid config for a Go/No-go task:
 name: "Letter Go/No-go"
 paradigm: go-nogo
 platform: psychopy
+runtime:
+  framework_version: "2024.2.4"
+  dependency_strategy: pinned
+  target_environment: "lab workstation profile A"
 
 windows:
   - name: Fixation
     content: "+"
     duration: 500
     response: none
-  - name: Stimulus
-    content: "{stimulus}"
-    duration: 500
-    response: none
-  - name: Response
+  - name: StimulusResponse
     content: "{stimulus}"
     duration: "{deadline}"
     response: [space]
+    response_event: key_down
     rt_onset: self
+    rt_rationale: "RT starts at the verified display onset of the scored stimulus"
+    rt_contract_status: confirmed
     data: [rt, key, acc]
   - name: ITI
     content: ""
@@ -312,26 +382,64 @@ blocks:
     condition_file: "conditions/practice.xlsx"
     type: practice
     feedback: true
+    trials: 20
   - name: Formal
     condition_file: "conditions/formal.xlsx"
     type: formal
     feedback: false
+    trials: 80
+
+# === OR use the primary Sequences format (recommended for new designs) ===
+sequences:
+  - name: Practice
+    order: 1
+    window_ids: [Fixation, StimulusResponse, Feedback, ITI]
+    execution:
+      mode: loop
+      repetitions: 20
+    show_in: [practice]
+
+  - name: Formal
+    order: 2
+    window_ids: [Fixation, StimulusResponse, ITI]
+    execution:
+      mode: loop
+      repetitions: 80
 
 response_rules:
   correct: "{correct_response}"
   deadline: 2000
+
+randomization:
+  method: pseudorandom
+  seed_scope: per_subject
+  seed: "{subject_id}"
+  record_resolved_seed: true
+
+output:
+  directory: "data/"
+  filename_pattern: "sub-{subject_id}_go-nogo_{run_id}.csv"
+  incremental_save: true
+  trial_summary: true
 ```
 
 ## Validation Rules
 
-Checks 1-6 must pass before code generation. Checks 7-9 are design-level validations.
+All checks must pass before code generation. Checks 1-8 are deterministic artifact checks; checks 9-11 verify design semantics.
 
-1. Every `{column_name}` in `content`, `duration`, `response`, `correct` exists in ALL referenced condition files
+1. `runtime` records an exact framework version, pinned/lockfile dependency strategy, and target environment; every `{column_name}` in `content`, `duration`, `response`, `correct` exists in ALL referenced condition files
 2. `stimulus_folder` path exists and contains all stimulus files referenced via `{column}` in condition files
 3. All `condition_file` paths exist and are valid xlsx/csv
-4. Number of rows in each condition file equals `block.trials` (unless `block.trials` is omitted or trials are auto-generated)
+4. (blocks) Every practice/formal block has a positive integer `block.trials`, and its condition-file row count matches exactly
+4b. (sequences) Every loop-mode sequence has `execution.repetitions` ≥ 1 and ≤ 10,000; every `window_ids` entry references an existing window in `windows[]`; `window_ids` is non-empty; `execution.mode` is `once` or `loop`
 5. At least one window accepts input (response is not `none`)
-6. Block types are valid: `practice`, `formal`, `rest`, `debrief`
-7. `paradigm` matches one of the known paradigm names
-8. Every trial type has a resolvable correct response — including no-go (correct=no response), stop (correct=withhold), catch trials, and timeout. No trial type may have ambiguous accuracy coding
-9. Every response-collecting window has `rt_onset` defined (either `"self"` or a valid window name)
+6. (blocks) Block types are valid: `practice`, `formal`, `rest`, `debrief`
+6b. (sequences) Sequence `show_in` values (if present) are valid: `practice`, `formal`, `rest`, `debrief`. If `show_in: [practice]`, at least one sequence or block of type `practice` must exist. If `show_in: [formal]`, at least one sequence or block of type `formal` must exist
+7. `randomization` defines a valid method; every stochastic method declares `seed_scope`, a resolvable seed, and `record_resolved_seed: true`. A fixed seed across sessions needs a stated justification
+8. `output` defines directory; a collision-resistant filename containing `{subject_id}` plus `{session_id}`, `{run_id}`, or `{timestamp}`; `incremental_save: true`; and one trial-summary row per trial. A date alone is not unique enough. Designs with repeated within-trial observations also define a linked event-level output rather than collapsing events into one cell
+9. `paradigm` is a stable exact design identifier. If an exact reference exists it may be consulted; otherwise validation continues as a custom design. `paradigm_family` and `variant` are metadata and never fill missing semantics
+10. Every trial type has a resolvable correct response — including no-go (correct=no response), stop (correct=withhold), catch trials, and timeout. No trial type may have ambiguous accuracy coding
+11. Every response-collecting window declares the scored `response_event`, a resolvable `rt_onset` (`"self"` or a valid window name), an `rt_rationale`, and `rt_contract_status: confirmed`. A structurally valid anchor is not evidence that the scientific operational definition is correct
+12. (sequences) Condition variation: at least two distinct condition values must exist across all condition rows. A design where every row is identical passes structure checks but represents a degenerate experiment
+13. (sequences) ITI precedence: if `itiMs` is set as a timing override AND an ITI window exists in the trial sequence, the ITI window takes precedence (the timing override is ignored). Only one ITI mechanism should be active
+14. (sequences) Key-platform compatibility: response key names must match the target platform convention. PsychoPy/jsPsych: lowercase characters (`f`, `j`, `space`). PTB: `KbName()` values (`LeftArrow`, `RightArrow`). Key names that don't exist on the target platform are rejected before code generation

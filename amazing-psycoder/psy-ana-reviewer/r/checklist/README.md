@@ -1,54 +1,29 @@
-# Reviewer — R 平台独立审计清单
+# Reviewer — R 审计清单
 
-## Quality Gate（审计入口）
+先读取已确认的 `analysis_config.yaml`。本清单不以 grep 命中替代统计判断，也不机械要求所有脚本包含 seed、Shapiro、Levene、敏感性分析或多重比较。
 
-本清单是 reviewer 审计 R 分析脚本的**独立入口**。无需依赖 coder。
+## 证据门
 
-| # | 检查项 | grep 命令 | 失败级别 |
-|---|--------|----------|---------|
-| 1 | seed 已设 | `grep -q "set\.seed" script.R` | Critical |
-| 2 | 排除日志存在 | `grep -q "Exclusion\|排除" script.R` | Critical |
-| 3 | 正态性检验 | `grep -q "shapiro\.test\|qqnorm\|geom_qq" script.R` | Major |
-| 4 | 方差齐性检验 | `grep -q "leveneTest\|bartlett\.test" script.R` | Major |
-| 5 | 效应量 | `grep -q "cohens_d\|eta_squared\|r2(\|effectsize" script.R` | Critical |
-| 6 | 多重比较校正 | `grep -q "p\.adjust\|emmeans.*adjust\|bonferroni\|fdr" script.R` | Critical |
-| 7 | sessionInfo | `grep -q "sessionInfo()" script.R` | Major |
-| 8 | 无绝对路径 | `! grep -q "/Users/\|/home/\|C:\\\\" script.R` | Major |
-| 9 | 列名校验 | `grep -q "setdiff.*names\|stopifnot.*%in%" script.R` | Critical |
-| 10 | 图表保存 | `grep -q "ggsave" script.R` | Minor |
-| 11 | 包版本输出 | `grep -q "packageVersion\|sessionInfo" script.R` | Major |
-| 12 | 敏感性分析 | `grep -q "Sensitivity\|敏感\|Method A.*Method B" script.R` | Minor |
+| 检查 | 通过标准 |
+|------|----------|
+| Config/schema | 脚本读取 config；输入列、类型、ID、层级与单位被验证 |
+| 数据流转 | 每项排除/缺失/变换有来源、理由和前后计数；原始数据不被覆盖 |
+| Estimand/model | 公式、似然/链接与目标 estimand、观测层级、重复测量/项目结构一致 |
+| 随机步骤 | 仅当 config 声明 stochastic 时，检查 `set.seed()` 及采样/并行设置 |
+| 诊断 | 使用适合所选模型的残差、收敛、奇异性、过度离散或影响诊断 |
+| 推断 | 每个主要结论保存目标估计、不确定性和必要的 multiplicity 处理 |
+| 输出/环境 | 结果表图写入声明路径；保存 config、执行日志、`sessionInfo()` 和包版本 |
 
-## 统计反模式 Grep 模式
+## 高风险模式（结合上下文判定）
 
-| # | 反模式 | grep（命中=FAIL） | 严重性 |
-|---|--------|------------------|--------|
-| 1 | `attach()` | `grep -q "attach(" script.R` | Critical |
-| 2 | `setwd()` | `grep -q "setwd(" script.R` | Major |
-| 3 | `save.image()` | `grep -q "save\.image" script.R` | Major |
-| 4 | `rm(list=ls())` | `grep -q "rm(list.*ls" script.R` | Major |
-| 5 | `aov()` 被试内 | `grep -q "aov(" script.R` + design=within | Critical |
-| 6 | 错误的 R² | `grep -q "summary.*lmer.*r\.sq" script.R` | Critical |
-| 7 | `stringsAsFactors=T` | `grep -q "stringsAsFactors\s*=\s*TRUE" script.R` | Minor |
-| 8 | `t.test()` 未配对 | `grep -q "t\.test" script.R` 但 design=within 且无 `paired=TRUE` | Critical |
-| 9 | 硬编码数字阈值 | 清洗阈值不在 config/params 中声明 | Major |
+- `setwd()`、用户专属绝对路径、交互式手工步骤导致不可迁移。
+- 在重复/聚类数据中使用独立观测模型而未聚合、建模相关性或提供稳健协方差依据。
+- 二元/计数/序数结局使用不相容的高斯模型。
+- 先查看焦点结局再选择 confirmatory 清洗阈值、协变量或模型。
+- 把 `performance::r2()` 当作目标效应估计，或只报告 p 值。
+- 事后对比存在多个推断却没有预先声明的校正/层级策略。
+- `save.image()` 或工作区隐式状态替代显式输入输出。
 
-## 模型适配检查
+## 结果审查附加项
 
-| 设计类型 | 预期模型 | grep 验证 |
-|---------|---------|----------|
-| 被试内 2 组 | `t.test(..., paired=TRUE)` 或 `lmer(...\|subject)` | `grep -q "paired.*TRUE\|lmer.*\|" script.R` |
-| 被试间 2 组 | `t.test(...)` 或 `wilcox.test` | `grep -q "t\.test\|wilcox" script.R` |
-| 被试内 3+ 组 | `lmer` 或 `aov_ez` | `grep -q "lmer\|aov_ez" script.R` |
-| 混合设计 | `lmer` + 交叉随机效应 | `grep -q "lmer.*\|.*\|" script.R` |
-| 二分类 DV | `glmer(..., family=binomial)` | `grep -q "glmer.*binomial\|family.*binomial" script.R` |
-
-## 效应量类型检查
-
-| 检验方法 | 预期效应量函数 | grep |
-|---------|-------------|------|
-| t 检验 | `cohens_d()` | `grep -q "cohens_d" script.R` |
-| ANOVA | `eta_squared()` | `grep -q "eta_squared" script.R` |
-| 混合模型 | `r2()` | `grep -q "performance::r2\|r2(" script.R` |
-| 逻辑模型 | `exp(fixef())` → OR | `grep -q "exp.*fixef\|exp.*coef" script.R` |
-| 非参数检验 | rank-biserial 或 Cliff's delta | `grep -q "rank_biserial\|cliff" script.R` |
+`result-audit` 还需核对 clean run、警告/收敛、样本流转、表图数值与单位、主要估计方向，以及报告文本是否超出结果支持范围。没有这些证据，最高只能是 `ready_for_execution`。
