@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analysis Coder"
+  short_description: "Generate reproducible R and Python analysis scripts"
+  default_prompt: "Use $psy-ana-coder to generate a reproducible script from my analysis config."

@@ -1,0 +1,44 @@
+name: Reliability checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12.4"
+      - name: Install validator dependencies
+        run: python -m pip install --disable-pip-version-check -r amazing-psycoder/requirements-dev.txt
+      - name: Validate skill package
+        run: python amazing-psycoder/scripts/validate_skills.py
+      - name: Run reliability regression suite
+        run: python -m unittest discover -s amazing-psycoder/tests -v
+      - name: Exercise representative experiment fixture
+        run: python amazing-psycoder/scripts/validate_experiment.py amazing-psycoder/tests/fixtures/valid-stroop/config.yaml --json
+      - name: Exercise representative analysis fixture
+        run: python amazing-psycoder/scripts/validate_analysis.py amazing-psycoder/tests/fixtures/valid-analysis/config.yaml --code amazing-psycoder/tests/fixtures/valid-analysis/analysis.py --language python --json
+      - name: Exercise staged installer and drift check
+        shell: bash
+        run: |
+          bash -n amazing-psycoder/install.sh
+          target="$(mktemp -d)"
+          trap 'rm -rf "$target"' EXIT
+          ./amazing-psycoder/install.sh "$target"
+          ./amazing-psycoder/install.sh --check "$target"
+      - name: Compile maintained Python sources
+        run: python -m compileall -q amazing-psycoder/scripts amazing-psycoder/tests
+      - name: Check maintained JavaScript examples
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find amazing-psycoder/psy-exp-coder/jspsych -type f -name '*.js' \
+            -not -path '*/demo/_raw/*' -print0)

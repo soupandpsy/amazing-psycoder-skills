@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experiment Reviewer"
+  short_description: "Audit experiment code and data-collection readiness"
+  default_prompt: "Use $psy-exp-reviewer to audit this experiment artifact for data-collection readiness."

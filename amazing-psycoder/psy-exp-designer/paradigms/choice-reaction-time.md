@@ -52,7 +52,7 @@ Participants respond to visual targets that appear at one of several possible sc
 
 ## Data Analysis
 
-Primary measure is mean RT as a function of number of response alternatives (Hick's Law: RT = a + b * log2(N), where N is the number of choices). Compare RT across different stimulus shapes. Analyze accuracy, which should be high (>90%) for healthy adults. Choice RT is slower than simple RT by approximately 100-150 ms (the time cost of stimulus discrimination and response selection). For the dual-modality version, compare keyboard vs. mouse response RTs to assess modality effects on response selection. Check temporal uncertainty effects by analyzing RT as a function of onset variability. Individual differences in CRT correlate with general cognitive ability and processing speed.
+Primary analyses should follow the confirmed estimand. A common choice is RT as a function of the number of response alternatives, motivated by Hick's Law (`RT = a + b * log2(N)`), with accuracy analyzed separately or jointly as specified in the analysis plan. Shape, response modality, temporal uncertainty, and individual-difference effects are optional hypotheses rather than assumed findings. Do not impose universal accuracy or RT-difference thresholds: define exclusion and quality rules from the protocol, task parameters, measurement evidence, and cited literature before seeing condition effects.
 
 ## References
 
@@ -78,7 +78,7 @@ Hick, W. E. (1952). On the rate of gain of information. *Quarterly Journal of Ex
 
 ## Variants
 
-- **简单反应时 (Simple RT)**：仅一个刺激类型、一个反应键，测量纯粹的感觉检测速度。与 CRT 的关键区别在于无需刺激辨别和反应选择，RT 显著更快（约快 100-150 ms）。参见 [simple-reaction-time.md](simple-reaction-time.md)
+- **简单反应时 (Simple RT)**：仅一个刺激类型、一个反应键，主要减少刺激辨别和反应选择要求。两类任务的 RT 差异取决于刺激、设备、样本和程序，不预设固定毫秒差。参见 simple-reaction-time.md
 - **Go/No-go CRT（包含抑制的 CRT）**：在标准 CRT 基础上加入 No-go 试次，要求对特定刺激或特定位置的目标抑制反应。同时测量反应速度和抑制控制能力。参见 [go-nogo.md](go-nogo.md)
 - **多维 CRT（Multi-dimensional CRT）**：刺激在多个维度上变化（如形状 + 颜色 + 位置），被试需根据其中一个维度（任务相关维度）做出选择反应，同时忽略其他维度（任务无关维度）。可用于研究选择性注意、冲突加工（如 Stroop 或 Flanker 类似的跨维度干扰）
 

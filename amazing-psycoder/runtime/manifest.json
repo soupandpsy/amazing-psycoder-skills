@@ -1,0 +1,32 @@
+{
+  "name": "amazing-psycoder",
+  "skillVersion": "1.4.0",
+  "contractVersion": "1.4.0",
+  "pipeline": ["designer", "coder", "reviewer"],
+  "profilesPath": "runtime/profiles.json",
+  "serialization": {
+    "studio": "json",
+    "standalone": "yaml",
+    "generationEnvelope": "2.0",
+    "semanticModel": "PsyCoderExperimentSpecV2@2.4",
+    "executionModel": "ExecutionPlan@2.0"
+  },
+  "capabilitiesPath": "runtime/capabilities.json",
+  "primitivesPath": "runtime/primitives.json",
+  "routingPath": "runtime/routing.json",
+  "artifactDirectory": "runtime/artifacts",
+  "schemaDirectory": "runtime/schemas",
+  "migrationGuide": "runtime/MIGRATION_V1.4.md",
+  "contracts": {
+    "designAssistantOutput": "runtime/schemas/designer-output.schema.json",
+    "generationInput": "runtime/schemas/generation-input.schema.json",
+    "immutableInterpretation": "runtime/schemas/interpreter-output.schema.json",
+    "executionPlan": "runtime/schemas/execution-plan.schema.json",
+    "modelArtifactOutput": "runtime/schemas/artifact-output.schema.json",
+    "readOnlyReview": "runtime/schemas/review-output.schema.json",
+    "coderRepairAttempt": "runtime/schemas/repair-attempt.schema.json",
+    "runtimeEvidence": "runtime/schemas/runtime-evidence.schema.json",
+    "derivedReadiness": "runtime/schemas/readiness-snapshot.schema.json"
+  },
+  "collectionReadinessRequiresManualSmokeTest": true
+}

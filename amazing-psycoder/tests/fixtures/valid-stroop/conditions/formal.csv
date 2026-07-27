@@ -1,0 +1,7 @@
+trial,word,ink_color,congruency,condition,correct_response
+1,RED,red,congruent,congruent,f
+2,GREEN,green,congruent,congruent,j
+3,BLUE,blue,congruent,congruent,k
+4,RED,green,incongruent,incongruent,j
+5,GREEN,blue,incongruent,incongruent,k
+6,BLUE,red,incongruent,incongruent,f

@@ -1,42 +1,29 @@
-# Reviewer — Python 平台独立审计清单
+# Reviewer — Python 审计清单
 
-## Quality Gate（审计入口）
+先读取已确认的 `analysis_config.yaml`。静态关键词只能辅助定位，不能替代对 estimand、层级和模型语义的审查。
 
-| # | 检查项 | grep 命令 | 失败级别 |
-|---|--------|----------|---------|
-| 1 | seed 已设 | `grep -q "random\.seed\|np\.random\.seed" script.py` | Critical |
-| 2 | 排除日志存在 | `grep -q "Exclusion\|排除" script.py` | Critical |
-| 3 | 正态性检验 | `grep -q "shapiro\|normaltest\|probplot" script.py` | Major |
-| 4 | 方差齐性检验 | `grep -q "levene\|bartlett" script.py` | Major |
-| 5 | 效应量 | `grep -q "cohens_d\|compute_effsize\|eta_squared\|pg\.anova" script.py` | Critical |
-| 6 | 多重比较校正 | `grep -q "multipletests\|pairwise_tukeyhsd\|adjust" script.py` | Critical |
-| 7 | 环境信息 | `grep -q "sys\.version\|pip freeze\|__version__" script.py` | Major |
-| 8 | 无绝对路径 | `! grep -q "/Users/\|/home/\|C:\\\\" script.py` | Major |
-| 9 | 列名校验 | `grep -q "issubset\|columns.*assert\|set.*columns" script.py` | Critical |
-| 10 | 图表保存 | `grep -q "savefig" script.py` | Minor |
-| 11 | 包版本 | `grep -q "__version__\|pip freeze\|pkg_resources" script.py` | Major |
-| 12 | 敏感性分析 | `grep -q "Sensitivity\|敏感\|Method A.*Method B" script.py` | Minor |
+## 证据门
 
-## 统计反模式 Grep 模式
+| 检查 | 通过标准 |
+|------|----------|
+| Config/schema | 脚本读取 config；验证输入列、类型、ID、层级和单位 |
+| 数据流转 | 排除/缺失/变换有来源、理由、前后计数和可保存日志 |
+| Estimand/model | 公式、family/link 与结局类型、目标 estimand、聚类结构一致 |
+| 随机步骤 | 仅 stochastic 步骤要求显式 RNG/seed，并记录采样/并行设置 |
+| 诊断 | 检查实际模型需要的收敛、残差、过度离散、影响点或后验诊断 |
+| 推断 | 主要结论保存目标估计和不确定性；multiplicity 与 config 一致 |
+| 输出/环境 | 表图、样本流转、执行日志和包/解释器版本被保存 |
 
-| # | 反模式 | grep（命中=FAIL） | 严重性 |
-|---|--------|------------------|--------|
-| 1 | `import *` | `grep -q "import \*" script.py` | Critical |
-| 2 | 绝对路径 | `grep -qE "/Users/|C:\\\\\|\~/data" script.py` | Major |
-| 3 | `iterrows()` | `grep -q "iterrows()" script.py` | Major |
-| 4 | 无 `random_state` | `grep -q "scipy\.stats\." script.py && ! grep -q "random_state" script.py` | Critical |
-| 5 | 无 `savefig` | `! grep -q "savefig" script.py` | Minor |
-| 6 | `chained_assignment` | `grep -q "chained_assignment" script.py` | Major |
-| 7 | 逻辑混合模型用 statsmodels | `grep -q "smf\.logit" script.py` + design=within | Critical |
-| 8 | `print(df)` 无 head | `grep -q "print(data\|print(df)" script.py && ! grep -q "\.head\|\.info" script.py` | Minor |
-| 9 | `df.apply()` 逐行 | `grep -q "\.apply(lambda" script.py` | Major |
+## 高风险模式（结合上下文判定）
 
-## 模型适配检查
+- 用户专属绝对路径、隐式 notebook 状态或未记录的手工数据编辑。
+- 重复二元数据使用普通 `statsmodels.Logit/GLM` 却声称实现随机效应；应选支持目标层级的 GLMM、GEE、贝叶斯层级模型或有依据的聚合分析。
+- 把独立观测 `ttest_ind`/OLS 用于配对、重复或聚类数据。
+- 对所有模型机械做 Shapiro/Levene，或忽略更相关的模型诊断。
+- 只报告 p 值/R²，缺少 config 指定的目标估计与区间。
+- stochastic 函数没有 RNG 控制；反之，确定性 `scipy.stats` 检验不需要 `random_state`。
+- `iterrows()`/`apply()` 仅在其确实造成性能或语义错误时分级，不作为自动失败。
 
-| 设计类型 | 预期模式 | grep 验证 |
-|---------|---------|----------|
-| 被试内 2 组 | `ttest_rel` 或 `MixedLM` | `grep -q "ttest_rel\|MixedLM\|mixedlm" script.py` |
-| 被试间 2 组 | `ttest_ind` | `grep -q "ttest_ind\|f_oneway" script.py` |
-| 被试内 3+ 组 | `MixedLM` 或 `rm_anova` | `grep -q "MixedLM\|rm_anova" script.py` |
-| 混合设计 | `MixedLM` + 交叉效应 | `grep -q "MixedLM.*groups" script.py` |
-| 二分类 DV | `Logit` 或 `glmer` (pymer4) | `grep -q "Logit\|pymer4\|bambi" script.py` |
+## 结果审查附加项
+
+`result-audit` 必须看到 clean execution log、生成的表图、环境信息和警告/收敛状态，并核对样本流转、估计方向、单位和报告结论。否则最高标签为 `ready_for_execution`。

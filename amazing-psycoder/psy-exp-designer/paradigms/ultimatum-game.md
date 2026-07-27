@@ -77,8 +77,8 @@ Camerer, C. F. (2003). *Behavioral game theory: Experiments in strategic interac
 ## Variants
 
 - **经典最后通牒博弈 (Classic Ultimatum Game)**：单次匿名博弈，参与者固定为Responder角色，对一系列预先设定的分配方案做出接受或拒绝决策。分配方案通常包含公平（5:5）、不公平（7:3、8:2）和非常不公平（9:1、10:0）等梯度水平。这是最常用的实现方式，本文档主要描述此变体。
-- **独裁者博弈 (Dictator Game)**：Proposer单方面决定分配方案，Responder无权拒绝，只能被动接受。用于测量纯粹的利他偏好和公平动机，排除策略性考虑和惩罚动机。可交叉参考 [dictator-game.md](dictator-game.md)（如该文件存在）。
-- **多轮重复最后通牒博弈 (Repeated Ultimatum Game)**：同一对参与者进行多轮博弈，角色固定或交替轮换。用于考察声誉建立、互惠策略和学习效应。每次试次后可能需要显示累积收益。可交叉参考 [trust-game.md](trust-game.md)（如该文件存在）。
+- **独裁者博弈 (Dictator Game)**：Proposer单方面决定分配方案，Responder无权拒绝，只能被动接受。用于测量纯粹的利他偏好和公平动机，排除策略性考虑和惩罚动机。可交叉参考 dictator-game.md（如该文件存在）。
+- **多轮重复最后通牒博弈 (Repeated Ultimatum Game)**：同一对参与者进行多轮博弈，角色固定或交替轮换。用于考察声誉建立、互惠策略和学习效应。每次试次后可能需要显示累积收益。可交叉参考 trust-game.md（如该文件存在）。
 
 ---
 

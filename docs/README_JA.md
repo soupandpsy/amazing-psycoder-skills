@@ -2,9 +2,10 @@
 
 # 🧠 Amazing PsyCoder 💻
 
-> 心理学研究におけるコーディングの壁を完全になくす。
+> 心理学研究者がコードではなく、研究上の問いにより集中できるように。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-v1.4.0-2563eb.svg)](../amazing-psycoder/SKILL.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Codex](https://img.shields.io/badge/Codex-Skill-green)](https://github.com/openai/codex)
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/NousResearch/hermes-agent)
@@ -24,29 +25,27 @@
 
 ## 📖 なぜこのプロジェクトなのか
 
-<h3 align="center">🔍 現在の心理学研究が直面する課題</h3>
+<h3 align="center">🔍 研究設計からデータ分析までに生じる一般的な課題</h3>
 
-🔬 アイデアを実験プログラムにするには、まず Python や JavaScript、MATLAB を学ばなければならない。<br>
-📦 研究室の先輩から引き継いだコードが別の PC で動かない——依存関係も誰も把握しておらず、ロジックにも手を付けられない。<br>
-📊 統計手法は習慣で選んでいる——「みんな ANOVA を使っているから」。査読者に問われれば、また最初からやり直し。<br>
-🔁 分析結果は自分の環境でしか再現できない。環境や乱数シードが変われば、結論も変わりうる。<br>
-✂️ 実験を作る人と分析する人が別——データを集め終わってから「設計段階で分析まで考えていなかった」と気づく。
+🔬 研究アイデアをデータ収集可能な実験プログラムにするには、Python、JavaScript、または MATLAB が必要になることがあります。<br>
+📦 研究室にある既存コードは、実行環境が変わると動かなくなる場合があり、依存関係や中核ロジックの保守も容易ではありません。<br>
+📊 統計手法を慣例だけで選ぶと、研究上の問い、変数の型、データ構造との対応を説明しにくくなります。<br>
+🔁 ソフトウェアのバージョンや依存環境を記録しなければ、別の PC で分析を再現できないことがあります。<br>
+✂️ 実験設計と分析計画が切り離されていると、データ収集後に予定した分析を実行できないと判明する場合があります。
 
-<h3 align="center">🧱 実験を進める上での二つの大きな壁</h3>
+<h3 align="center">🧱 研究を進める上での二つの主要課題</h3>
 
-心理学の研究者がアイデアを持ってから、実際にデータを取り、結果を出すまで——その道のりで最も時間を取られるのは、たいてい次の二つです。
+**一つ目：実験プログラミング。** 仮説を検証するには、実験設計をプログラムに変換する必要があります。PsychoPy Builder は一部の複雑な設計では柔軟性が足りない場合があり、Coder には Python、jsPsych には JavaScript とタイムラインの知識、Psychtoolbox には MATLAB と表示同期の知識が必要です。RT の計測起点、キーマッピング、中断後のデータ保存は、明示的に設計して個別に確認する必要があります。
 
-**一つ目：実験プログラミング。** 仮説を検証するには、まず実験をプログラムしなければなりません。PsychoPy の Builder では柔軟性が足りず、Coder を使うには Python が必要。jsPsych なら JavaScript とタイムラインロジック、Psychtoolbox なら MATLAB とフレーム同期——「RT の計測起点はどの画面か」「キーマッピングが逆転していないか」「クラッシュしてもデータが残る保存方法は」——こうした問題を一つひとつ潰すだけで何週間も溶けていきます。アイデアが頭の中から動くコードになるまでに、実験そのものを考えるより多くの時間がかかることも珍しくありません。
+**二つ目：データ分析。** 分析計画はデータ収集前から検討し、取得後に実際のデータ構造に合わせて実装することが望まれます。被験者内計画には対応のある t 検定と混合モデルのどちらが適切か。正答率が上限に近い場合はどうモデル化するか。手法の選択理由をどう説明するか。別の PC で同じ結果を再現できるか。これらは研究目的、データ階層、ソフトウェア環境に基づいて判断します。
 
-**二つ目：データ分析。** データは集めた。では、どの統計手法を使うべきか？被験者内計画に paired t か混合モデルか？正答率が天井に近いとき ANOVA は妥当か？査読者に「なぜこの手法を選んだのか」と問われたとき、どう説明するか？別の PC でも同じ結果が出るという確信はあるか？
+これらの課題は、プログラミングだけでなく、研究設計、統計的推論、データ管理、再現可能性にも関係します。
 
-これは能力の問題ではありません。適切な道具がなかっただけです。コードを書くことも分析することも、研究を前に進めるためのものであって、立ち止まる理由になるべきではない。
+<h3 align="center">✨ Amazing PsyCoder が支援すること</h3>
 
-<h3 align="center">✨ Amazing PsyCoder の解決策</h3>
+実験のアイデア、既存の設計、または手元のデータから始められます。Amazing PsyCoder は、研究上の規則の確認、コード生成、問題の確認を段階的に支援します。必要に応じて、設定、データ説明、除外基準の根拠、実行記録は利用者が提供します。AI の出力だけを「データ収集可能」「発表可能」とは判定しません。実験は収集用 PC で試行し、分析は実際に実行して出力を確認する必要があります。
 
-Python を書けなくても、統計に詳しくなくても大丈夫。あなたは実験のアイデアとデータを持ち込むだけでいい——そこから先は、設計の確認、コードの生成、監査までを段階的にサポートします。最終的に届くコードはそのまま実行でき、分析結果は査読者にも通用するものになります。
-
-Amazing PsyCoder は、実験プログラミングとデータ分析の知見を 7 つのスキルにエンコードしました——1 つのオーケストレーターと 6 つのサブスキル。agentskills.io のオープン標準に準拠し、Claude Code / Codex / Hermes / OpenClaw に対応しています。
+Amazing PsyCoder は 7 つの Skill、すなわち 1 つの入口 Skill と 6 つの専門 Skill で構成され、[agentskills.io](https://agentskills.io) のオープン標準に準拠しています。Claude Code、Codex、Hermes、OpenClaw という 4 つの AI エージェントにインストールできます。
 
 研究そのものに、時間を返しましょう。
 
@@ -56,7 +55,7 @@ Amazing PsyCoder は、実験プログラミングとデータ分析の知見を
 
 - 🎓 これから実験コードを書く（あるいは今まさに書いている）心理学の学部生・大学院生
 - 🧠 認知・行動・社会心理学の実験を行っている研究者
-- 😵‍💫 RT、ランダム化、条件表で何度もつまずいてきた——実験コードの品質保証がほしい
+- 😵‍💫 RT、ランダム化、条件表の問題を繰り返し経験し、一般的なリスクを体系的に確認したい研究者
 - 📊 データを集めたあと、どの統計手法を使えばいいか確信が持てず、体系的な分析計画を求めている
 - 🐍 PsychoPy · 🌐 jsPsych · 🧮 Psychtoolbox / MATLAB ユーザー
 
@@ -64,47 +63,58 @@ Amazing PsyCoder は、実験プログラミングとデータ分析の知見を
 
 ## ⚡ インストール
 
-AI チャットに直接、お使いのプラットフォームのコマンドを入力してください：
-
-**Claude Code**
-
-```
-Install Amazing PsyCoder for me: https://github.com/soupandpsy/amazing-psycoder-skills
-```
-
-**Codex**
-
-```
-$skill-installer
-```
-
-リポジトリ URL を入力：`https://github.com/soupandpsy/amazing-psycoder-skills`
-
-**Hermes**
-
-```
-hermes skills install https://github.com/soupandpsy/amazing-psycoder-skills
-```
-
-**OpenClaw**
-
-```
-npm i -g clawhub && clawhub install amazing-psycoder
-```
-
-インストール後、`/amazing-psycoder` で起動します。
-
-<details>
-<summary><b>ターミナルからのインストール（全プラットフォーム共通）</b></summary>
-
-<br>
+リポジトリ付属のインストーラーを推奨します。7 つの Skill を事前に確認し、途中で失敗した場合は以前のファイルを復元します。
 
 ```bash
 git clone https://github.com/soupandpsy/amazing-psycoder-skills
 cd amazing-psycoder-skills/amazing-psycoder
-./install.sh           # プラットフォームを自動検出してインストール
-# または手動指定: ./install.sh claude | codex | hermes | openclaw
 ```
+
+**Claude Code**
+
+```bash
+./install.sh claude
+```
+
+インストール後は `/amazing-psycoder` を使用します。既定の保存先：`${CLAUDE_CONFIG_DIR:-~/.claude}/skills`。
+
+**Codex**
+
+```bash
+./install.sh codex
+```
+
+インストール後は `$amazing-psycoder` を使用します。既定の保存先：`~/.agents/skills`。
+
+**Hermes**
+
+```bash
+./install.sh hermes
+```
+
+インストール後は `/amazing-psycoder` を使用します。既定の保存先：`~/.hermes/skills`。
+
+**OpenClaw**
+
+```bash
+./install.sh openclaw
+```
+
+インストール後はタスクをそのまま説明し、OpenClaw エージェントに Skill を選択させます。既定の保存先：`~/.openclaw/skills`。
+
+<details>
+<summary><b>プロジェクト単位のインストールと確認</b></summary>
+
+<br>
+
+```bash
+./install.sh --scope project --project-dir /path/to/repo claude
+./install.sh --scope project --project-dir /path/to/repo codex
+./install.sh --scope project --project-dir /path/to/workspace openclaw
+./install.sh --check codex
+```
+
+Hermes には現在、安定したプロジェクト単位の Skill ディレクトリがないため、ユーザー単位のみ対応します。詳細は [`PLATFORMS.md`](../amazing-psycoder/PLATFORMS.md) を参照してください。
 
 </details>
 
@@ -112,39 +122,43 @@ cd amazing-psycoder-skills/amazing-psycoder
 
 ## 🚀 クイックスタート
 
-インストール後、`/amazing-psycoder` と入力し、やりたいことをそのまま説明してください：
+インストール後、利用する AI エージェントで Amazing PsyCoder を呼び出し、やりたいことを説明してください：
 
 > 「Stroop 課題を作りたい。赤・緑・青、キー押し反応」→ 自動的に実験設計へ
 
 > 「Stroop データを分析して、一致と不一致の RT に差があるか見て」→ 自動的に分析設計へ
 
-どのスキルを使うか指定する必要はありません——オーケストレーターがあなたのニーズに応じて自動判定します。その後、スキルが段階的にガイドします：設計の確認、手法の選択、コードの生成、監査チェック。あなたは質問に答えるだけです。
+> 「この実験コードを確認し、特に RT 起点とデータ保存を見て」→ 自動的にコード確認へ
+
+通常は専門 Skill を指定する必要はありません。入口 Skill が依頼内容から設計、コード生成、または確認を選びます。実験を作りたいのかデータを分析したいのか判断できない場合は、先に確認します。
 
 ---
 
 ## 🧪 実験プログラミング
 
-アイデアからデータ収集可能な実験コードまで、三つのステップ——設計、生成、監査。
+アイデアから試行を始められる実験コードまで、三つのステップ——設計、生成、確認。
 
 ### スキル
 
 | # | スキル | 役割 | ポイント |
 |---|------|------|---------|
 | ① | **設計** `psy-exp-designer` | 実験アイデアを完全な設計仕様にまとめる | 5 段階の段階的確認。Phase 2 で試行ウィンドウのタイムライン図を生成。各画面の持続時間・キー・RT 起点が一目でわかる。5 つの Gate チェックポイント。38 パラダイム参照 |
-| ② | **コード生成** `psy-exp-coder` | 設計仕様から実行可能なコードを生成 | 4 層優先度アーキテクチャ。9 項目の品質ゲートが自動チェック——`time.sleep()` や `KbCheck` で RT 計測しているコードは即時拒否。12 ステップのコードテンプレート、パラメータはファイル先頭に集約 |
-| ③ | **コード監査** `psy-exp-reviewer` | 本番収集前の最終チェック | 5 種の監査モード。スモークテストプロトコル。パラダイム別の失敗モードチェック。不合格時は修正パスを提示。合格ラベル：`ready_for_collection` |
+| ② | **コード生成** `psy-exp-coder` | 設計仕様から実行可能なコードを生成 | 4 層優先度アーキテクチャ。納品前に 10 項目の品質ゲートで、計時、反応、保存、終了処理、依存関係などの重大なリスクを確認 |
+| ③ | **コード確認** `psy-exp-reviewer` | 確認済みの設計とコードが一致するか確認 | 収集用 PC での試行記録がなければ「データ収集可能」とは判定しない |
 
 ### プラットフォーム
 
 | プラットフォーム | 特徴 |
 |------|------|
-| 🐍 **[PsychoPy](https://psychopy.org/)** | Python エコシステム。USB HID ハードウェアタイムスタンプ、ミリ秒精度の RT 計測。ローカル実験の第一選択 |
-| 🌐 **[jsPsych](https://www.jspsych.org/v7/)** | JavaScript エコシステム。ブラウザさえあれば動作、インストール不要。オンライン実験の第一選択 |
-| 🧮 **[Psychtoolbox](http://psychtoolbox.org/)** | MATLAB エコシステム。GPU レベルのフレーム精密制御。厳密なタイミング精度が求められる場合の第一選択 |
+| 🐍 **[PsychoPy](https://psychopy.org/)** | 実験室 PC 上の Python 実験。タイミングは対象機で検証が必要 |
+| 🌐 **[jsPsych](https://www.jspsych.org/)** | ブラウザ／オンライン実験。実際のブラウザと参加者端末でテストが必要 |
+| 🧮 **[Psychtoolbox](https://psychtoolbox.org/)** | MATLAB/Octave 実験。表示や機器を細かく制御できるが、同期とハードウェア校正は必要 |
 
-### パラダイムカバレッジ
+### 実験設計リファレンス
 
-**38 パラダイム**。各パラダイムは統一されたメタロジックで整理されています：使用する場面 → コアロジック → 確認必須項目 → 仮定してはいけないこと → 試行ウィンドウタイムライン → 条件表 → データ分析 → バリエーションと参考文献。
+**38 の実験設計リファレンス**。各項目は統一した流れで整理されています：使用する場面 → コアロジック → 確認必須項目 → 仮定してはいけないこと → 試行ウィンドウタイムライン → 条件表 → データ分析 → バリエーションと参考文献。
+
+これは設計を明確にするための資料であり、**38 × 3 のジェネレーターが三つのプラットフォームすべてで実機検証済みという意味ではありません**。
 
 | カテゴリ | パラダイム |
 |------|------|
@@ -160,26 +174,26 @@ cd amazing-psycoder-skills/amazing-psycoder
 
 ## 📊 データ分析
 
-データを集めた後も、同じく三つのステップ——分析計画の設計、コード生成、再現性の監査。
+分析計画はデータ収集前に設計でき、データ取得後にさらに具体化できます。流れは、分析計画の設計、コード生成、実行結果の確認という三つのステップです。
 
 ### スキル
 
 | # | スキル | 役割 | ポイント |
 |---|------|------|---------|
-| ④ | **分析設計** `psy-ana-designer` | 科学的问题から出発し、完全な分析計画を設計 | 5 段階の段階的確認。Phase 2 でデータファイルの構成を確認（ファイル分割／統合、命名規則、CSV/Excel/TSV）。Phase 3 では 12 次元の比較により最適な手法を選択。Config YAML が唯一のファクトソース |
+| ④ | **分析設計** `psy-ana-designer` | 科学的な問いから出発し、完全な分析計画を設計 | 5 段階で、ファイル構成と被験者・刺激・セッションの階層を確認。Phase 3 では今回の判断を変え得る点だけを比較し、候補が本当に拮抗する場合や影響の大きい選択に限って完全な 12 次元比較を使う |
 | ⑤ | **分析コード** `psy-ana-coder` | 分析計画から再現可能なスクリプトを生成 | Phase 0 で config を検証 → R/Python を確認 → 12 ステップで生成。10 項目の品質ゲート。R：tidyverse/lme4/ggplot2。Python：pandas/statsmodels/seaborn。すべて config 駆動 |
-| ⑥ | **分析監査** `psy-ana-reviewer` | 発表前の最終チェック | 4 種の監査モード。データ取り込みプロトコルの自動検出。統計的正しさ＋再現性＋仮説検定の審査。R/Python 両プラットフォームのアンチパターンチェック。不合格時は修正パスを提示。合格ラベル：`ready_for_publication` |
+| ⑥ | **分析監査** `psy-ana-reviewer` | 静的なコード確認と、実行後の結果確認を分ける | コードだけの確認は最大でも `ready_for_execution`。`ready_for_publication` には、クリーンな環境での成功実行とログ、表、図、依存関係、環境情報の確認が必要 |
 
-### プラットフォーム
+### 分析言語と実行環境
 
-| プラットフォーム | 特徴 |
+| 言語と実行環境 | 特徴 |
 |------|------|
-| 📊 **[R](https://www.r-project.org/)** | 統計計算の標準。tidyverse + lme4 + ggplot2 + RMarkdown。学術出版の第一選択 |
-| 🐍 **[Python](https://www.python.org/)** | 汎用科学計算。pandas + statsmodels + seaborn + Jupyter。再現可能な分析 |
+| 📊 **[R](https://www.r-project.org/)** | 統計モデリングと学術レポート。必要に応じて lme4、ggplot2、Quarto、R Markdown などを利用 |
+| 🐍 **[Python](https://www.python.org/)** | 一般的なデータ処理、統計分析、可視化、Jupyter ワークフロー |
 
 ### 分析手法
 
-**60 の分析手法、48 のチャートタイプ**。各手法の選択は 12 次元の比較に基づきます：統計的検出力 · 偽陽性制御 · データ利用率 · 外れ値感度 · 仮定の頑健性 · 解釈可能性 · 分野での受容度 · 効果量の比較可能性 · 再現性 · 拡張性 · サンプルサイズ制約 · 計算実現可能性。
+**60 の手法リファレンスと 48 のグラフ・リファレンス**は候補を探すための資料で、自動処方ではありません。今回の判断に影響する点を比較し、候補が本当に拮抗する場合や影響の大きい選択に限って完全な 12 次元比較を使います。
 
 | カテゴリ | 手法例 |
 |------|------|
@@ -257,8 +271,14 @@ Amazing PsyCoder ❯ 🟢 Phase 5/5 · 最終審査
 Amazing PsyCoder ❯ ✅ stroop_task.py + README.md 生成完了
                    パラメータ先頭 · CJK フォント設定済 · 増分保存 → 監査へ自動ルーティング
 
-Amazing PsyCoder ❯ 🔍 監査合格 · 準備状態：ready_for_collection
-                   データ収集を開始できます。
+Amazing PsyCoder ❯ 🔍 静的コード確認では重大な問題は見つかりませんでした。
+                   収集用 PC で試行できますが、まだデータ収集は開始できません。
+
+ユーザー         ❯ 起動・終了、短い全体実行、データ完全性、中断復旧を実機で確認しました。
+
+Amazing PsyCoder ❯ 🔍 実行記録と保存データを確認しました。
+                   準備状態：ready_for_collection
+                   本番のデータ収集を開始できます。
 ```
 
 ### 📊 分析 · R Stroop
@@ -277,78 +297,94 @@ Amazing PsyCoder ❯ 🟢 Phase 2/5 · データ構造の理解
                    データはどう保存されていますか？被験者ごと？まとめて？
 
 ユーザー         ❯ 被験者ごと 1 CSV、命名: sub-001_stroop.csv
-                   列: subject_id, condition, rt, acc, trial
+                   列: subject_id, stimulus, condition, rt, acc, trial
 
-Amazing PsyCoder ❯ 確認済：30 被験者 × 各 1 ファイル。Gate 2 ✅
+Amazing PsyCoder ❯ stimulus は被験者ごとに異なりますか。それとも同じ刺激セットを
+                   複数の被験者が見ますか？
 
-Amazing PsyCoder ❯ 🟢 Phase 3/5 · データ特性＋手法マッチング（中核段階）
-                   RT に右裾の偏りは？正答率は天井付近？
+ユーザー         ❯ 全員が同じ 60 個の色単語の組み合わせを見ます。
+                   各被験者には反復試行があります。
 
-ユーザー         ❯ RT はやや右裾、正答率は 95% くらい
+Amazing PsyCoder ❯ 被験者内と刺激内の両方に反復があることを確認。Gate 2 ✅
 
-Amazing PsyCoder ❯ 正答率が天井付近 → glmer(binomial) で acc 分析
-                   RT について、12 次元で A と B を比較：
+Amazing PsyCoder ❯ 🟢 Phase 3/5 · まず推定対象を決め、その後に手法を選択
+                   主な推定対象：母集団における「不一致 − 一致」の平均 RT 差。
 
-                   ┌────────────┬───────────────────┬───────────────────┐
-                   │ 次元       │ A: 対応のある t   │ B: 線形混合モデル  │
-                   ├────────────┼───────────────────┼───────────────────┤
-                   │ 統計的検出力│ 30 点（被験者平均）│ 1800 点（全試行）  │
-                   │ データ利用率│ 被験者ごと 1 点に圧縮│ 全試行が参加    │
-                   │ 拡張性     │ 共変量追加は再計算  │ 式に + するだけ   │
-                   │ 解釈性     │ d=0.5 誰でもわかる │ 変量効果の説明必要 │
-                   └────────────┴───────────────────┴───────────────────┘
+                   RT の主モデル：
+                   rt ~ condition + (1 + condition | subject_id) + (1 | stimulus)
 
-                   検出力と拡張性を重視 → B。シンプルさ重視 → A。
+                   正答率は二項混合モデルによる補助分析にできます。
+                   対応のある t 検定は簡単ですが、被験者平均に集約した問いになります。
+                   変量効果を安定して推定できない場合は、事前に決めた順で簡略化し、
+                   診断結果を報告します。
 
-ユーザー         ❯ B で
+ユーザー         ❯ 推定対象、式、被験者／刺激の階層を確認します。
+                   RT は混合モデル、正答率は補助分析にしてください。
 
-Amazing PsyCoder ❯ Gate 3 ✅ 手法選択済（12 次元比較の理由付き）
+Amazing PsyCoder ❯ Gate 3 ✅ 推定対象、式、階層、代替案を確認
 
-Amazing PsyCoder ❯ 🟢 Phase 4/5 · 分析詳細
-                   クリーニング: RT 150-2000ms · 正答試行 · 被験者 acc<60% 除外
-                   · ±2.5 SD 試行除外 · チャート: 雨雲プロット＋個人線 ⚠️
+Amazing PsyCoder ❯ 🟢 Phase 4/5 · クリーニング、実行環境、出力
+                   課題仕様または事前登録にある RT、欠測、除外ルールを確認します。
+                   根拠なしに固定閾値や SD ルールを自動挿入しません。
 
-ユーザー         ❯ 確認
+ユーザー         ❯ 事前登録では、RT 主分析は正答かつ RT が欠測でない試行のみ。
+                   固定 RT 範囲、SD 除外、被験者の自動除外は行いません。
+                   log-RT 感度分析も行います。研究室環境は R 4.4.1、
+                   renv.lock、R Markdown です。
 
 Amazing PsyCoder ❯ 🟢 Phase 5/5 · 最終審査
                    ┌──────────────────────────────────────────────┐
                    │ 分析決定レジストリ                            │
                    │ 科学的问题: 一致 vs 不一致 RT      ← ユーザー │
-                   │ 手法: lmer（ユーザーが B 選択）    ← ユーザー │
-                   │ RT 150-2000ms · 被験者 acc<60%     ← デフォルト ⚠️│
-                   │ チャート: 雨雲＋個人線             ← デフォルト ⚠️│
+                   │ 式：被験者ランダム傾き＋刺激ランダム切片        │
+                   │ クリーニング：事前登録ルールと各段階の件数記録  │
+                   │ 環境：R 4.4.1 + renv.lock          ← ユーザー │
+                   │ 出力：差、区間、診断、図              ← ユーザー │
                    └──────────────────────────────────────────────┘
                    Gate 5 ✅ analysis_config.yaml 保存 → コード生成へ
 
 ユーザー         ❯ 生成して。
 
-Amazing PsyCoder ❯ ✅ analysis.R + report.Rmd 生成完了
-                   Config 駆動 · 10 項目品質ゲート · 12 ステップ構成 → 監査へ自動ルーティング
+Amazing PsyCoder ❯ ✅ analysis.R + report.Rmd + renv.lock 生成完了
+                   依存バージョンを記録し、静的コード確認を完了
 
-Amazing PsyCoder ❯ 🔍 監査合格 · 準備状態：ready_for_publication
+Amazing PsyCoder ❯ 🔍 準備状態：ready_for_execution
+                   コードは実行できますが、結果を論文に使える段階ではありません。
+
+ユーザー         ❯ クリーン環境で実行し、ログ、表、図、バージョン情報を用意しました。
+
+Amazing PsyCoder ❯ 🔍 実行結果を確認しました。
+                   準備状態：ready_for_publication
 ```
 
 ---
 
 ## 📂 ファイル構造
 
-```
+```text
 amazing-psycoder-skills/
-├── amazing-psycoder/                  ← オーケストレーター（システムエントリポイント、v1.3）
-│   ├── SKILL.md · PLATFORMS.md · install.sh
+├── amazing-psycoder/                  ← メイン入口（v1.4.0）
+│   ├── SKILL.md                       ← ルーティングと全体ルール
+│   ├── PLATFORMS.md · install.sh      ← プラットフォーム説明とインストーラー
+│   ├── STANDALONE.md                  ← Agent 内で直接利用
+│   ├── PSYCODER_STUDIO.md             ← Web サイト統合
+│   ├── runtime/                       ← Web 用ルールと機能範囲
+│   ├── scripts/ · tests/              ← 自動チェック
+│   ├── requirements-dev.txt           ← 検証用依存バージョン
 │   │
 │   │   # 🧪 実験プログラミング
-│   ├── psy-exp-designer/              ← ① 実験設計（5 段階 + 38 パラダイム + 9 参照ファイル）
+│   ├── psy-exp-designer/              ← ① 実験設計（5 段階 + 38 の設計資料）
 │   ├── psy-exp-coder/                 ← ② 実験コード生成（PsychoPy/jsPsych/Psychtoolbox）
-│   └── psy-exp-reviewer/              ← ③ 実験監査（5 モード + スモークテスト + リカバリーループ）
+│   └── psy-exp-reviewer/              ← ③ 実験コード確認
 │   │
 │   │   # 📊 データ分析
-│   ├── psy-ana-designer/              ← ④ 分析設計（5 段階 + 60 手法 + 48 チャート）
-│   ├── psy-ana-coder/                 ← ⑤ 分析コード生成（R/Python 両対応）
-│   └── psy-ana-reviewer/              ← ⑥ 分析監査（4 モード + 取り込みプロトコル + リカバリーループ）
+│   ├── psy-ana-designer/              ← ④ 分析設計（60 手法 + 48 図表の資料）
+│   ├── psy-ana-coder/                 ← ⑤ 分析コード生成（R/Python）
+│   └── psy-ana-reviewer/              ← ⑥ 分析コードと出力の確認
 │
-├── docs/                              ← 多言語 README（簡/繁/英/日/独/仏）
-└── README.md
+├── docs/                              ← 翻訳 README（繁/英/日/独/仏）
+├── .github/                           ← 自動テスト
+└── README.md                          ← 簡体字中国語のトップページ
 ```
 
 ---

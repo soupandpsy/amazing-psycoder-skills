@@ -67,7 +67,7 @@ Columns in the xlsx/csv file that define each balloon's hidden parameters:
 ## Variants
 
 - **标准BART (Standard BART)**: 原始Lejuez et al. (2002)版本，每个气球有固定的爆炸概率（如1/128），每次充气后根据该概率决定是否爆炸。爆炸点为隐藏变量，参与者无法直接观察到。
-- **多颜色BART (Multi-color BART)**: 不同颜色的气球对应不同的爆炸概率分布。例如红色气球平均爆炸点较低（高风险），蓝色气球平均爆炸点较高（低风险）。用于考察参与者对风险概率的敏感性和学习效应。可交叉参考 [risk-task.md](risk-task.md)。
+- **多颜色BART (Multi-color BART)**: 不同颜色的气球对应不同的爆炸概率分布。例如红色气球平均爆炸点较低（高风险），蓝色气球平均爆炸点较高（低风险）。用于考察参与者对风险概率的敏感性和学习效应。可交叉参考 risk-task.md。
 - **自动充气BART (Automatic-pump BART)**: 气球以固定间隔自动充气，参与者只需决定何时停止并兑现。去除了按键频率这一混淆变量，更纯粹地测量风险决策的时间动态。可交叉参考 [stop-signal.md](stop-signal.md)。
 
 ## References

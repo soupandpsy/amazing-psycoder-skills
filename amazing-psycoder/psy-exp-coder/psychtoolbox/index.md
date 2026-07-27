@@ -9,7 +9,7 @@
 | L1 Spec | [spec/README.md](spec/README.md) | Canonical Code Skeleton + 18 anti-patterns + API reference |
 | L2 Mapping | [mapping/README.md](mapping/README.md) | 12-step template + 3 frame-loop patterns + config→MATLAB |
 | L3 Paradigms | [paradigms/](paradigms/) | 5 paradigm reference files |
-| L4 Demos | [demo/_raw/](demo/_raw/) | 92 `.md` by category (getting-started, drawing, animated, textures, text, 3D-VR, other) |
+| L4 Demos | [demo/_raw/](demo/_raw/) | 100 `.md` by category (getting-started, drawing, animated, textures, text, 3D-VR, other) |
 
 ## Mandatory API quick reference
 

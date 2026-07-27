@@ -12,10 +12,10 @@ LCA/LPA是基于模型的聚类方法,通过拟合指标确定最优类别数,�
 |------|------|
 | 研究设计类型 | 以人为中心(person-centered)；基于被试间变量将被试分为互斥亚群 |
 | 因变量类型 | LCA: 二分类或多分类指标；LPA: 连续指标（通常标准化） |
-| 最低样本量 | ≥300；类别数或指标数较多时需≥500–1000 |
-| 指标数量 | ≥3个观测指标，通常4–10个 |
-| 关键假设 | 局部独立性（给定类别后指标互不相关）；多变量正态性（LPA）；无系统缺失模式 |
-| 类别确定 | 综合BIC/aBIC、Entropy(>.80)、LMR-LRT/BLRT(p<.05)与理论可解释性 |
+| 样本信息 | 由类别分离度、最小类别比例、指标数/质量、缺失和模型复杂度决定；用设计模拟/恢复率评估，不设通用 N 门槛 |
+| 指标数量 | 必须足以识别并解释目标类别；数量、尺度和局部依赖由测量模型决定，不机械套用固定范围 |
+| 关键假设 | 给定类别后的局部独立/条件分布、模型可识别性、缺失机制和类别稳定性；LPA 的分布/方差约束需逐模型声明 |
+| 类别确定 | 联合比较信息准则、似然比/后验预测证据、分类不确定性、稳定性、最小类别可解释性与理论；不以单一阈值决定 |
 | 常见陷阱 | 仅凭拟合指标选类别而忽视理论意义；样本量不足导致假类别；忽视局部独立性违背 |
 
 ## LCA vs LPA
@@ -31,9 +31,9 @@ LCA/LPA是基于模型的聚类方法,通过拟合指标确定最优类别数,�
 |------|------|
 | BIC | 越低越好 |
 | aBIC | 越低越好 |
-| Entropy | >0.8好 |
-| LMR-LRT | p<.05→k类比k-1类好 |
-| BLRT | 同上,更准确但计算慢 |
+| Entropy | 描述分类不确定性；结合用途和误分类后果解释，不设通用“好”阈值 |
+| LMR-LRT | 在其实现和常规条件适用时比较相邻类别模型；p 值不是唯一选择规则 |
+| BLRT | 比较相邻模型的证据之一；核验随机起点、重复性和实现条件，不预设其必然更准确 |
 
 ## R代码
 
@@ -59,7 +59,7 @@ data %>% select(anxiety, depression, stress) %>%
 
 > Table 1 presents the fit indices for the one- through six-profile models. The three-profile solution demonstrated the best balance of fit and parsimony: BIC = 4521.34, aBIC = 4480.12, entropy = 0.86, and a significant LMR-LRT (p = .002) indicating that the three-profile model fit significantly better than the two-profile model. Although the four-profile model yielded a slightly lower BIC (4491.20), the LMR-LRT was nonsignificant (p = .21) and one additional profile contained only 5% of the sample, suggesting over-extraction.
 >
-> Profile 1 ("Low Distress," n = 132, 44.0%) was characterized by low scores across all three subscales (M_anxiety = 3.21, SD = 2.10; M_depression = 2.89, SD = 1.95; M_stress = 4.12, SD = 2.30). Profile 2 ("Moderate Anxiety," n = 96, 32.0%) showed elevated anxiety (M = 12.45, SD = 3.21) with relatively lower depression (M = 5.67, SD = 2.80) and stress (M = 8.90, SD = 3.10). Profile 3 ("High Comorbid," n = 72, 24.0%) exhibited high scores on all three dimensions (M_anxiety = 18.23, SD = 4.10; M_depression = 16.78, SD = 3.85; M_stress = 19.45, SD = 4.20). A one-way ANOVA confirmed significant differences across profiles on all indicator variables (all ps < .001, η² = .62–.78). Figure 1 displays the profile plot with standardized means.
+> Profile 1 ("Low Distress," n = 132, 44.0%) was characterized by low scores across all three subscales (M_anxiety = 3.21, SD = 2.10; M_depression = 2.89, SD = 1.95; M_stress = 4.12, SD = 2.30). Profile 2 ("Moderate Anxiety," n = 96, 32.0%) showed elevated anxiety (M = 12.45, SD = 3.21) with relatively lower depression (M = 5.67, SD = 2.80) and stress (M = 8.90, SD = 3.10). Profile 3 ("High Comorbid," n = 72, 24.0%) exhibited high scores on all three dimensions (M_anxiety = 18.23, SD = 4.10; M_depression = 16.78, SD = 3.85; M_stress = 19.45, SD = 4.20). These indicator summaries describe the fitted profiles; tests on the same indicators are not independent confirmation because those variables defined the profiles. Figure 1 displays standardized profile means together with classification uncertainty.
 
 **表格建议 (Suggested Table)**
 

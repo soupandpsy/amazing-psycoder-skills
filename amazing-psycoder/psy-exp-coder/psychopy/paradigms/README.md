@@ -44,6 +44,6 @@
 
 > **重要：范式 ≠ API 参考。** 以下文件中的代码示例来自 Pavlovia demo（多为 PsychoPy v3.1），使用旧版 API（如 `event.getKeys(maxWait=)`、`exec()` 条件注入、`trialClock.getTime()`）。**生成实验代码时，API 模式以 [spec/README.md](../spec/README.md) 的 Canonical Code Skeleton 为准**（PTB keyboard、`key.rt`、`getFutureFlipTime`、`try/finally`）。范式文件仅提供实验逻辑：窗口序列、条件结构、正确性规则。
 
-每个文件的**实验逻辑**章节定义设计模式、窗口序列、正确性规则。**代码示例**在末尾给出完整的可直接运行的代码。
+每个文件的**实验逻辑**章节可用于设计模式、窗口序列和评分语义。历史代码块属于隔离来源，不能直接运行或复制；必须用 config 固定版本的 L1-L2 API 重写并验证。
 
 另有 13 个范式仅有 jsPsych/PsychoJS 代码（无 Python 实现），参见 [jspsych/paradigms/README.md](../../jspsych/paradigms/README.md)。

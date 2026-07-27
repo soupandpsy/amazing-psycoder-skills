@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psycoder.studio/schemas/readiness-snapshot.schema.json",
+  "title": "PsyCoder Backend-Derived Readiness Snapshot",
+  "type": "object",
+  "required": [
+    "artifact_set_hash",
+    "review_id",
+    "static_review_passed",
+    "smoke_test_status",
+    "ready_for_packaging",
+    "ready_for_collection",
+    "blockers",
+    "derived_at"
+  ],
+  "properties": {
+    "artifact_set_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "review_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "static_review_passed": { "type": "boolean" },
+    "smoke_test_status": { "enum": ["passed", "failed", "missing", "blocked"] },
+    "ready_for_packaging": { "type": "boolean" },
+    "ready_for_collection": { "type": "boolean" },
+    "blockers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 2000 }
+    },
+    "derived_at": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "static_review_passed": { "const": false } }, "required": ["static_review_passed"] },
+      "then": {
+        "properties": {
+          "ready_for_packaging": { "const": false },
+          "ready_for_collection": { "const": false },
+          "blockers": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "ready_for_collection": { "const": true } }, "required": ["ready_for_collection"] },
+      "then": {
+        "properties": {
+          "static_review_passed": { "const": true },
+          "smoke_test_status": { "const": "passed" },
+          "ready_for_packaging": { "const": true },
+          "blockers": { "maxItems": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "static_review_passed": { "const": true },
+          "smoke_test_status": { "const": "passed" },
+          "ready_for_packaging": { "const": true }
+        },
+        "required": ["static_review_passed", "smoke_test_status", "ready_for_packaging"]
+      },
+      "then": {
+        "properties": {
+          "ready_for_packaging": { "const": true },
+          "ready_for_collection": { "const": true },
+          "blockers": { "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

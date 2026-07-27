@@ -30,7 +30,6 @@ After completing the detection block, a "next_instr" routine introduces the seco
 Complete runnable PsychoPy code for Change Detection task:
 
 ```python
-```
 # Source: change_detection (demos/change_detection)
 # Project URL: https://gitlab.pavlovia.org/demos/change_detection
 # Original file: change_detection_lastrun.py

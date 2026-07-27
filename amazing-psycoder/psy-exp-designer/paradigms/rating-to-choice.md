@@ -88,7 +88,7 @@ No specific publication — this is a methodology demo illustrating dynamic stim
 ## Variants
 
 - **标准双阶段评分转选择（Standard Two-Phase Rating-to-Choice）**：参与者先完成所有刺激的评分，然后根据评分结果进行配对选择。评分阶段与选择阶段在时间上完全分离。这是本文件描述的核心范式。
-- **试次级评分转选择（Trial-by-Trial Rating-to-Choice）**：在每个试次中，参与者先对一个新刺激评分，随即在当前已评分的刺激中进行选择，评分与选择交替进行。适用于研究即时偏好一致性与学习效应。可参考 [adaptive-choice](adaptive-choice.md) 范式。
+- **试次级评分转选择（Trial-by-Trial Rating-to-Choice）**：在每个试次中，参与者先对一个新刺激评分，随即在当前已评分的刺激中进行选择，评分与选择交替进行。适用于研究即时偏好一致性与学习效应。可参考 adaptive-choice 范式。
 - **多轮评分转选择（Multi-Round Rating-to-Choice）**：参与者进行多轮"评分-选择"循环，每轮的选择结果反馈到下一轮的刺激集或评分参考中。适用于研究偏好动态演化和选择诱导的偏好改变（choice-induced preference change）。
 
 ---

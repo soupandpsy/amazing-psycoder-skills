@@ -1,6 +1,6 @@
 # psy-exp-designer — 实验设计编排层
 
-> **版本**: v1.3 | **角色**: 你将实验想法告诉它，它逐步确认每个设计细节，产出完整的设计决策注册表和 config YAML。amazing-psycoder 子技能。
+> **版本**: v1.4.0 | **角色**: 你将实验想法告诉它，它逐步确认每个设计细节，产出完整的设计决策注册表和 config YAML。amazing-psycoder 子技能。
 
 ## 一句话说明
 
@@ -63,7 +63,7 @@ Phase 5: Validate    → 验证 + 全量设计审查 → 路由至代码生成
 系统:
   Phase 1 → 识别范式(dot-probe)，确认平台(PsychoPy)，确认OS(macOS)，加载范式Must-Confirm
   Phase 2 → 构建窗口: Fixation(500ms) → FacePair(500ms) → Probe(until key, f/j)
-             按键映射: f=左, j=右  |  rt_onset: Probe (split模式)
+             按键映射: f=左, j=右  |  明确确认 RT=Probe 实际呈现→key_down
              准确性: key==correct_response
              → 展示Phase 2决策清单，user确认
   Phase 3 → 条件表: 情绪(愤怒/中性)×探针位置(左/右)×一致性(一致/不一致)

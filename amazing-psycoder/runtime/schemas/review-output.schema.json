@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psycoder.studio/schemas/review-output.schema.json",
+  "title": "PsyCoder Read-Only Review Report",
+  "type": "object",
+  "required": [
+    "review_id",
+    "artifact_set_hash",
+    "execution_plan_hash",
+    "mode",
+    "scope",
+    "issues",
+    "reviewed_files",
+    "summary",
+    "reviewed_at"
+  ],
+  "properties": {
+    "review_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "artifact_set_hash": { "$ref": "#/$defs/sha256" },
+    "execution_plan_hash": { "$ref": "#/$defs/sha256" },
+    "mode": {
+      "enum": ["code-audit", "config-audit", "implementation-plan-review", "triage-only", "blocked"]
+    },
+    "scope": {
+      "type": "object",
+      "required": ["reviewed", "not_reviewed"],
+      "properties": {
+        "reviewed": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        },
+        "not_reviewed": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "issues": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/issue" }
+    },
+    "reviewed_files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/fileDigest" }
+    },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 12000 },
+    "reviewed_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "safePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000,
+      "pattern": "^(?!/)(?!\\.\\.?(/|$))(?!.*(?:/)\\.\\.?(?:/|$))(?!.*\\\\)[A-Za-z0-9._ -]+(?:/[A-Za-z0-9._ -]+)*$"
+    },
+    "issue": {
+      "type": "object",
+      "required": ["id", "severity", "category", "message", "suggestion", "file"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "severity": { "enum": ["critical", "major", "minor"] },
+        "category": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "suggestion": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "file": { "$ref": "#/$defs/safePath" },
+        "line": { "type": ["integer", "null"], "minimum": 1 },
+        "evidence": {
+          "type": "array",
+          "maxItems": 50,
+          "items": { "type": "string", "minLength": 1, "maxLength": 2000 }
+        }
+      },
+      "additionalProperties": false
+    },
+    "fileDigest": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/safePath" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

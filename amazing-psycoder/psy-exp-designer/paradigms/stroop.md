@@ -1,13 +1,19 @@
-# Stroop Paradigm
+# Classic Color-Word Stroop Reference
 
 > **Parent**: [psy-exp-designer](../SKILL.md)
 > **Config reference**: [config-schema](../references/config-schema.md)
 
 ## When to Use
 
-User mentions: Stroop, color-word, Stroop interference, 斯特鲁普, 颜色词冲突. A classic cognitive control paradigm measuring the cost of conflicting semantic and perceptual information on response selection. The participant names the ink color of a word while ignoring its semantic meaning.
+Use this file only after the user confirms a classic color-word Stroop task in
+which the participant classifies the ink color of a color word. If the user says
+only “Stroop”, first ask for the exact variant and its task rule.
 
-**This file covers the classic color-word Stroop and its direct variants (emotional Stroop, blocked/bilingual Stroop, numerical Stroop). For the Eriksen Flanker paradigm (center-surround arrow interference), see [eriksen-flanker.md](eriksen-flanker.md). For the Simon paradigm (spatial compatibility), see [simon.md](simon.md).**
+**This file does not cover semantic, emotional, blocked/bilingual, numerical, or
+other Stroop-family designs. Shared historical lineage does not imply shared
+stimuli, conditions, correctness, timing, randomization, or outcome logic.** For
+the Eriksen Flanker paradigm, see [eriksen-flanker.md](eriksen-flanker.md). For
+the Simon paradigm, see [simon.md](simon.md).
 
 ## Core Logic
 
@@ -23,18 +29,19 @@ The Stroop interference effect is the difference in RT/accuracy between incongru
 
 ## Must Confirm
 
-1. **Color set**: How many ink colors? Which specific colors? (typically 3: red, green, blue)
-2. **Stimulus set**: Which color words? Do they match the ink colors exactly?
-3. **Response mapping**: Which key corresponds to each ink color?
-4. **Congruency ratio**: 50:50 (congruent:incongruent), or include neutral trials? If neutral, what proportion?
-5. **Stimulus modality**: Text-based (TextStim) or image-based (colored word images)?
-6. **Trial count**: How many trials per condition? Total trials?
-7. **Language**: Single language (classic), blocked bilingual, or emotional words?
-8. **OS & font**: 在什么操作系统运行？如使用中文，确认字体路径（macOS: PingFang, Windows: msyh, Linux: Noto CJK）
-9. **Display**: 全屏还是窗口？屏幕分辨率和背景颜色？
-10. **Stimulus size**: 刺激文字大小（高度）和屏幕位置？
-11. **ITI duration**: 试次间隔时间和变化范围？
-12. **Instruction text**: 指导语内容？练习和正式阶段的过渡提示？
+1. **Exact variant**: Confirm this is classic color-word Stroop. Otherwise stop using this reference and specify the custom design independently.
+2. **Color set**: How many ink colors? Which specific colors? (typically 3: red, green, blue)
+3. **Stimulus set**: Which color words? Do they match the ink colors exactly?
+4. **Response mapping**: Which key corresponds to each ink color?
+5. **Congruency ratio**: 50:50 (congruent:incongruent), or include neutral trials? If neutral, what proportion?
+6. **Stimulus modality**: Text-based (TextStim) or image-based (colored word images)?
+7. **Trial count**: How many trials per condition? Total trials?
+8. **Language**: Which language contains the classic color words?
+9. **OS & font**: 在什么操作系统运行？如使用中文，确认字体路径（macOS: PingFang, Windows: msyh, Linux: Noto CJK）
+10. **Display**: 全屏还是窗口？屏幕分辨率和背景颜色？
+11. **Stimulus size**: 刺激文字大小（高度）和屏幕位置？
+12. **ITI duration**: 试次间隔时间和变化范围？
+13. **Instruction text**: 指导语内容？练习和正式阶段的过渡提示？
 
 ## Do Not Assume
 
@@ -85,6 +92,10 @@ Compare mean RT for congruent vs. incongruent conditions. Use paired t-test or r
 
 ## Variants
 
+The items below are neighboring designs, not options on the classic template.
+Do not reuse the classic condition table, correctness rules, instructions, or
+analysis contract unless the user explicitly confirms each matching field.
+
 ### Bilingual Stroop
 
 Blocks stimuli by language (e.g., English block then Maori block). Tests whether Stroop interference differs by language fluency — the more fluent language typically shows larger interference because word reading is more automatic. See [bilingual-stroop.md](bilingual-stroop.md) for full spec.
@@ -95,11 +106,14 @@ Replaces color words with digits of varying physical sizes. Two dimensions: nume
 
 ### Emotional Stroop
 
-Uses emotionally valenced words (e.g., "DEATH", "HAPPY") instead of color words. Slower color-naming for threat-related words in anxious populations indexes attentional bias. The paradigm structure is identical to classic Stroop; only the word set differs.
+Uses emotionally valenced words and typically tests attentional interference by
+emotion category rather than color-word congruency. Its condition labels,
+sampling constraints, hypotheses, exclusions, and analysis contract differ from
+classic color-word Stroop even when the motor response remains ink-color naming.
 
 ### lab.js Variant
 
-An implementation using the [lab.js](https://lab.js.org/) framework (not PsychoPy/PsychoJS). Available at the [Pavlovia labjs_stroop demo](https://gitlab.pavlovia.org/demos/labjs_stroop). Uses HTML-based templating (`lab.html.Screen`) with dynamic parameters. Trial structure: fixation (500ms) → Stroop stimulus (1500ms max, response-terminated) → feedback. Response keys: 'r', 'g', 'b', 'o' for red, green, blue, orange. 16 color-word combinations via `templateParameters`. The paradigm-level design is identical to standard Stroop; only the implementation framework differs.
+An implementation using the [lab.js](https://lab.js.org/) framework (not PsychoPy/PsychoJS). Available at the [Pavlovia labjs_stroop demo](https://gitlab.pavlovia.org/demos/labjs_stroop). Uses HTML-based templating (`lab.html.Screen`) with dynamic parameters. Trial structure: fixation (500ms) → Stroop stimulus (1500ms max, response-terminated) → feedback. Response keys: 'r', 'g', 'b', 'o' for red, green, blue, orange. 16 color-word combinations via `templateParameters`. Treat these values as historical implementation evidence only; they do not define the current design.
 
 ## References
 

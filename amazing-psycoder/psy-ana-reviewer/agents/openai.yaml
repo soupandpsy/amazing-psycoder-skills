@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analysis Reviewer"
+  short_description: "Audit statistical validity and reproducibility"
+  default_prompt: "Use $psy-ana-reviewer to audit this analysis plan or script for reproducibility."

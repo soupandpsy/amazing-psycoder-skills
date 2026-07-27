@@ -33,7 +33,7 @@ config.yaml
 7. 数据保存：config.output → fopen/fprintf/fclose 增量写入
     │
     ▼
-8. 运行 Quality Gate（9 项）→ 修复 → 交付
+8. 运行 Quality Gate（10 项）→ 修复 → 交付
 ```
 
 关键：每个步骤对应的 config 字段映射见 [mapping/README.md](mapping/README.md)。
@@ -68,7 +68,7 @@ psychtoolbox/
 | L1 `spec/` | Canonical Skeleton + API 规范（KbQueue lifecycle, Screen Flip half-IFI rule, PsychPortAudio, try/catch/sca）+ 18 反模式 |
 | L2 `mapping/` | 12步模板 PTB 实现 + 3 种帧循环模式 + Config→Code 完整映射 + 音频映射 |
 | L3 `paradigms/` | 5 个范式（Stroop, Posner Cuing, Orientation Threshold, Likert Scale, Slider）。**API 模式以 spec 为准，不沿用范式代码中的 KbCheck** |
-| L4 `demo/_raw/` | 92 个原始示例（`_raw/` = 仅参考实验逻辑，API 以 L1 spec 为准） — 按功能分类，代码生成时按需查阅 |
+| L4 `demo/_raw/` | 100 个原始示例（`_raw/` = 仅参考实验逻辑，API 以 L1 spec 为准） — 按功能分类，代码生成时按需查阅 |
 
 ## 强制 API 规则
 
@@ -79,12 +79,12 @@ psychtoolbox/
 | 键盘输入 | `KbQueueCreate` + `KbQueueStart` + `KbQueueCheck` | `KbCheck` / `KbWait`（用于 RT） |
 | RT 起点 | `VBLTimestamp`（`Screen('Flip')` 返回值） | `GetSecs` |
 | RT 计算 | `(min(firstPress) - stimOnset) * 1000` | `secs - tStimFlip` |
-| 帧 Timing | `vbl + (waitframes - 0.5) * ifi` | `WaitSecs()`（实验计时） |
+| 帧 Timing | `vbl + (waitframes - 0.5) * ifi` | 在仍需 flip/input/trigger/abort 的阶段用 `WaitSecs()` 阻塞 |
 | 每 trial 清队列 | `KbQueueFlush([], 2)` | 不清队列导致前 trial 按键残留 |
 | 错误处理 | `try/catch/sca/Priority(0)/ShowCursor` | 裸 `sca` |
 | 刺激预加载 | `Screen('MakeTexture')` 在循环前 | `imread` 在 trial 内 |
-| 注视点 | `Screen('DrawLines')` 十字 | `Screen('DrawText', '+')` |
-| 数据保存 | `fopen/fprintf/fclose` 增量写入 | workspace 内矩阵（崩溃=全丢） |
+| 注视点 | 按 config 选择并在目标显示器验证；`Screen('DrawLines')` 可避免字体依赖 | 未验证尺寸、位置、颜色或字体渲染 |
+| 数据保存 | 每 trial 可恢复的 append/flush/close、`writetable`/`matfile` 或等价原子策略 | 仅保留 workspace 内矩阵（崩溃=全丢） |
 | 同步测试 | `SkipSyncTests, 0` | 跳过 SyncTests |
 
 ## PTB vs PsychoPy（概念对应）
@@ -100,7 +100,7 @@ psychtoolbox/
 | RT 获取 | `firstPress - VBLTimestamp` | `key.rt` |
 | 文本渲染 | `DrawFormattedText` / `Screen('DrawText')` | `TextBox2` / `TextStim` |
 | 图片 | `imread` + `Screen('MakeTexture')` | `visual.ImageStim()` |
-| 音频 | `PsychPortAudio`（亚毫秒延迟） | `sound.Sound`（PTB backend） |
+| 音频 | `PsychPortAudio`（支持低延迟调度/时间戳；目标硬件实测） | PsychoPy sound backend（同样需要实测） |
 | 数据保存 | `fopen`/`fprintf`/`fclose` | `csv.DictWriter` + `flush` |
 | 错误处理 | `try/catch/sca` | `try/finally/win.close()` |
 | Gabor | `CreateProceduralGabor`（GPU shader） | `visual.GratingStim` |

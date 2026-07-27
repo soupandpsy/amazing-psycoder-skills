@@ -150,9 +150,7 @@ library(simr)
 
 ## 备选方法
 
-- [等价性检验 (Equivalence Testing)](./equivalence-testing.md) — 当研究目标是证明"无效应"或"效应可忽略"，而非检测差异
-- [贝叶斯因子 (Bayes Factor)](./bayes-factor.md) — 当需要持续收集数据直到证据充分(而非预先固定样本量)
-- [效应量估计 (Effect Size Estimation)](./effect-size.md) — 当已有时数据,需要估计效应量及其置信区间
-- [样本量规划 (Sample Size Planning)](./sample-size-planning.md) — 当约束来自预算/时间而非统计效力
-
-
+- 等价性检验 (Equivalence Testing) — 当研究目标是评估效应是否落在预先定义的可忽略区间，而非把“未显著”当作无效应
+- 贝叶斯因子 (Bayes Factor) — 当需要持续收集数据直到证据充分(而非预先固定样本量)
+- 效应量估计 (Effect Size Estimation) — 当已有时数据,需要估计效应量及其置信区间
+- 样本量规划 (Sample Size Planning) — 当约束来自预算/时间而非统计效力

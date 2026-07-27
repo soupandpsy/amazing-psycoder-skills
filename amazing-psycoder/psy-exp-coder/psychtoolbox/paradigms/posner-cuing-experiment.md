@@ -34,13 +34,13 @@ sca;
 % Setup PTB with some default values
 PsychDefaultSetup(2);
 
-% Skip sync tests ** This is for demo purposes only ** It should not be
-% done in a real experiment.
-Screen('Preference', 'SkipSyncTests', 2);
+% Collection builds must pass Psychtoolbox synchronization tests.
+Screen('Preference', 'SkipSyncTests', 0);
 
-% Set the random number generator so we get random numbers, not the same
-% sequency if we restart Matlab
-rng('shuffle');
+% Resolve from the confirmed seed scope and save the resolved value on every row.
+randomSeed = config.randomization.resolvedSeed;
+assert(isscalar(randomSeed) && isfinite(randomSeed), 'A resolved random seed is required');
+rng(randomSeed, 'twister');
 
 % Set the screen number to the external secondary monitor if there is one
 % connected

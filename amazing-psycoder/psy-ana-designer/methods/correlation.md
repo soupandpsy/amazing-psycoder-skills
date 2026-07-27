@@ -117,10 +117,9 @@ print(round(cor_matrix, 3))
 
 ## 备选方法
 
-- [简单线性回归](regression.md) — 需要明确区分预测变量和结果变量时
+- 简单线性回归 — 需要明确区分预测变量和结果变量时
 - [rmcorr（重复测量相关）](rmcorr.md) — 被试内重复测量设计的相关分析
-- [偏相关](partial-correlation.md) — 需要控制第三个变量时
-- [多项式相关/曲线回归](curve-regression.md) — 关系为非线性时
+- 偏相关 — 需要控制第三个变量时
+- 多项式相关/曲线回归 — 关系为非线性时
 - [Bland-Altman 分析](bland-altman.md) — 评估两种测量方法的一致性而非关联强度
 - [信度分析（Cronbach's α / ICC）](reliability.md) — 评估测量工具内部一致性或评分者一致性
-

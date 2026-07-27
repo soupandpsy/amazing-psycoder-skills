@@ -81,7 +81,7 @@ No canonical reference yet -- this is a custom paradigm. Adapt analyses from dua
 ## Variants
 
 - **文本干扰书写（Text-based distraction）**: 干扰物为屏幕上闪现的无关文字或词汇（而非图片），考察语义干扰对书写连续性的影响。刺激生成逻辑参见 [stroop.md](stroop.md) 的词汇干扰部分。
-- **听觉干扰书写（Auditory distraction writing）**: 干扰刺激为听觉通道呈现（如突发噪音、无关语音），被试在打字的同时通过耳机接收干扰。需额外配置音频播放组件及声音文件路径，参见 [oddball.md](oddball.md) 的听觉刺激参数。
+- **听觉干扰书写（Auditory distraction writing）**: 干扰刺激为听觉通道呈现（如突发噪音、无关语音），被试在打字的同时通过耳机接收干扰。需额外配置音频播放组件及声音文件路径，参见 oddball.md 的听觉刺激参数。
 - **情绪干扰书写（Emotional distraction writing）**: 系统操控干扰物的情绪效价（负性 vs. 中性图片，通常选自 IAPS 或 CAPS 图片库），考察情绪显著性对书写中断的调节效应。条件文件需增加 `valence` 列标记干扰图片的情绪类别。
 
 ---

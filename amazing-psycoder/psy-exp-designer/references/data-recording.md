@@ -1,48 +1,45 @@
-# Data Recording Standard
+# Data Recording Contract
 
-**→ Output**: CSV data files written by the experiment code. Each row = one trial. Applies to all experiments, regardless of platform or paradigm.
+**Output**: a durable trial-summary table for every experiment, plus a linked event table when a trial can contain repeated responses, clicks, gaze samples, state transitions, or other one-to-many events.
 
-## Required Base Columns
+The schema is semantic rather than paradigm-blind: fields that do not apply are omitted or documented as missing. Never force a rating, free-text task, passive-viewing trial, or adaptive procedure into a keypress-only schema.
 
-Every experiment must record these columns per trial:
+## Trial-Summary Requirements
 
-| Column | Type | Description |
-|--------|------|-------------|
-| subject_id | str | Subject identifier |
-| block | int | Block number (1-indexed) |
-| trial | int | Trial number within block (1-indexed) |
-| condition | str | Condition label |
-| stimulus | str | Stimulus filename or ID |
-| correct_response | str | Expected key (or `""` for no-go) |
-| response | str | Actual key pressed (or `""` for timeout) |
-| rt | float | Reaction time in milliseconds (empty if timeout) |
-| accuracy | int | 1=correct, 0=incorrect, -1=timeout |
-| timestamp | str | ISO 8601 timestamp of trial onset |
+Every row must support these roles, although projects may use different documented column names:
 
-## Saving Rules
+| Role | Required content |
+|------|------------------|
+| Participant/session identity | Pseudonymous `subject_id` and, when repeat sessions are possible, `session_id` |
+| Trial identity | Unique trial identifier plus sequence/run/trial indices that reconstruct order |
+| Design identity | Condition/trial type and stimulus or item identifier needed to reconstruct the manipulation |
+| Exposure | Whether the trial started/completed/aborted and the realized stimulus/timing values, including adaptive values |
+| Response | Recorded response value/type when applicable; missing must not be confused with a real response |
+| Timing | Declared RT field and unit when RT is an outcome, with its onset/event definitions; no plausible numeric sentinel for missing RT |
+| Scoring | Correct answer and accuracy only when the task defines them; scoring convention documented |
+| Provenance | Experiment/config version and sufficient timestamp/order information to trace the run |
 
-1. **Save incrementally** — write and flush after every trial or at minimum every block. Do not defer all writes to the end.
-2. **Use `try/finally`** — wrap the main experiment in try/finally to guarantee file closure even on crash or escape quit.
-3. **Filename convention**: `data/sub-{subject_id}_{task_name}_{date}.csv`
-4. **CSV format**: Use `csv.DictWriter` with `newline=''` for cross-platform compatibility
-5. **Encoding**: UTF-8 with BOM only on Windows; UTF-8 without BOM elsewhere
+Also record paradigm-specific fields needed by the confirmed analysis: for example SSD and stop success, target/lure status, IAT block role, probe side, counterbalance cell, or item identity. The experiment code should acquire these inputs; derived scientific scores such as SSRT, D-score, d-prime, or bias scores belong in the analysis pipeline.
 
-## Accuracy Coding
+## Repeated Event Table
 
-- **1**: correct response within deadline
-- **0**: incorrect response within deadline
-- **-1**: no response (timeout)
+Use a second table when one trial can emit multiple events. Each row includes `subject_id`, `session_id` when applicable, `trial_id`, an event sequence number, event type/value, and a timestamp relative to a documented origin. The foreign key to the trial-summary row must be validated.
 
-For paradigms with no-go trials, accuracy on no-go trials:
-- No response on no-go: accuracy=1 (correct rejection)
-- Response on no-go: accuracy=0 (commission error / false alarm)
+## Response and Missingness Rules
 
-## NaN Handling
+- Store a separate response status such as `responded`, `timeout`, `correct_rejection`, `aborted`, or `device_error` when these states are scientifically distinct.
+- RT is missing for a timeout or valid no-response; never encode missing RT as `0`, `-1`, or `-999`.
+- Accuracy may be `1`/`0` only when correctness is defined. A go-trial timeout may be scored `0` if omission is incorrect; a no-go withholding may be scored `1`. Keep the response status separate so these cases remain distinguishable.
+- Preserve raw response/timing fields. Recode exclusions and derived scores in analysis with an auditable log.
 
-- Missing RT (timeout, correct no-go withholding): record as empty string `''` in CSV, not `'None'` or `'NaN'`
-- Analysis code should handle empty RT values, not the experiment code
+## Persistence Rules
 
-## Cross-platform Notes
+1. Create a durable checkpoint after every completed trial. For browser tasks, choose a configured server, IndexedDB, or a tested device-local store according to payload, quota, privacy, and recovery requirements; an in-memory jsPsych object is not a checkpoint. `localStorage` qualifies only as a bounded, device-local checkpoint after quota/failure/recovery testing and is not a remote backup.
+2. Flush/commit the checkpoint before starting the next trial when feasible, and document any bounded-loss tradeoff.
+3. Route normal completion, Escape/abort, and runtime exceptions through cleanup that closes files/devices and preserves completed rows.
+4. Use collision-resistant filenames or storage keys containing pseudonymous participant/session identity and task/version metadata.
+5. Use a documented machine-readable encoding and delimiter (UTF-8 CSV is acceptable); quote/escape free text correctly.
 
-- macOS/Linux: lines end with `\n`
-- Windows: `csv.DictWriter` handles this automatically; no special handling needed
+## Verification
+
+Before collection, inspect at least one normal run, one timeout/no-response case, one incorrect response, and one interrupted run. Confirm unique trial IDs, declared columns/types/units, design reconstruction, event-table linkage, response-status distinctions, and recovery of all committed trials.

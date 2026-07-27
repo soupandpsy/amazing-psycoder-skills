@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analysis Designer"
+  short_description: "Turn research questions into confirmed analysis plans"
+  default_prompt: "Use $psy-ana-designer to turn my research questions into a confirmed analysis plan."

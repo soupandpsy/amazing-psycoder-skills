@@ -1,10 +1,10 @@
-# jsPsych / PsychoJS Config → Code Mapping
+# jsPsych Config → Code Mapping (with legacy adapter notes)
 
-> **Layer 2**: Config YAML → JavaScript 代码结构映射。覆盖 jsPsych 7.x（推荐）、jsPsych 6.1.0（历史）和 PsychoJS（Pavlovia）三个目标。
+> **Layer 2**: Config YAML → jsPsych 8.x 代码结构。jsPsych 6.1/PsychoJS sections are migration references only, not generation targets.
 
 ## 关键架构区分：三个不同的目标
 
-| 维度 | jsPsych 7.x（推荐） | jsPsych 6.1.0（历史） | PsychoJS (Pavlovia) |
+| 维度 | jsPsych 8.x（生成目标） | jsPsych 6.1.0（历史） | PsychoJS (Pavlovia，独立框架) |
 |------|---------------------|----------------------|---------------------|
 | **架构** | 声明式 timeline | 声明式 timeline | 命令式 Scheduler |
 | **初始化** | `initJsPsych()` + `jsPsych.run()` | `jsPsych.init({timeline: [...]})` | `psychoJS.start()` + `flowScheduler.add()` |
@@ -16,27 +16,28 @@
 | **无按键** | `choices: "NO_KEYS"`（字符串） | `choices: jsPsych.NO_KEYS` | `key_resp` component 不添加 |
 | **时长控制** | `trial_duration: N`（ms） | `trial_duration: N`（ms） | `routineTimer.getTime() < N/1000` |
 | **ITI** | `post_trial_gap: N` | `post_trial_gap: N` | 独立 ISI Routine |
-| **数据保存** | `jsPsych.data.get().localSave('csv', fn)` | `jsPsych.data.get().localSave('csv')` | `psychoJS.experiment.nextEntry()` → server upload |
+| **数据保存** | `on_data_update` durable checkpoint + final `localSave` | durable callback + final `localSave` | `psychoJS.experiment.nextEntry()` → server upload |
 | **预加载** | `jsPsychPreload` + `auto_preload: true` | 无需（HTML 渲染） | Component 在 `experimentInit()` 中初始化 |
 | **范式文件** | 需迁移（当前 25 个均为 v6.1/PsychoJS） | IAT, EAST（2 个原生） | 22 个 PsychoJS + 1 lab.js |
 | **全屏** | `jsPsychFullscreen` plugin | `'fullscreen'` plugin | `psychoJS.openWindow({fullscr: true})` |
 
-**关键结论**: 新代码必须使用 jsPsych 7.x API。jsPsych 6.1.0 模式仅存在于历史范式文件中。PsychoJS 是 PsychoPy Builder 的 JavaScript 运行时，代码结构完全不同。
+**关键结论**: 新代码使用已确认且固定版本的 jsPsych 8.x core/plugins。jsPsych 6.1.0 与 PsychoJS 仅提供迁移/范式逻辑线索；PsychoJS 是 PsychoPy Builder 的 JavaScript runtime，不是 jsPsych 插件。
 
-## Config → Code 映射表（jsPsych 7.x）
+## Config → Code 映射表（jsPsych 8.x）
 
 | Config section | jsPsych code generated |
 |---------------|----------------------|
 | `name` | `const expName = '{name}'` + timeline 注释 |
-| `paradigm` | 范式逻辑 → `timeline_variables` + `on_finish` accuracy |
+| `paradigm` | 仅用于设计标识与精确参考查找；不得生成 `timeline_variables` 或正确性逻辑 |
 | `windows[]` | Nested timeline per trial: `timeline: [{fixation node}, {stimulus node}, ...]` |
-| `windows[].content: "{col}"` | `stimulus: function() { return jsPsych.timelineVariable('col', true) }` |
+| `windows[].content: "{col}"` | static placeholder: `jsPsych.timelineVariable('col')`; inside a function: `jsPsych.evaluateTimelineVariable('col')` |
 | `windows[].duration: N` | `trial_duration: N` — 无 response 时配合 `choices: "NO_KEYS"` |
-| `windows[].duration: [min, max]` | `trial_duration: function() { return Math.random()*(max-min)+min }` |
+| `windows[].duration: [min, max]` | `trial_duration: () => jsPsych.randomization.randomInt(min, max)` after `setSeed()` |
 | `windows[].response: [keys]` | `choices: [keys]` + `response_ends_trial: true` |
 | `windows[].rt_onset` | jsPsych 自动：RT 从 stimulus 出现到按键，记录在 `data.rt` |
 | `blocks[]` | 顶层 `timeline: [block1, block2, ...]` — 每个 block 是独立 timeline 对象 |
 | `blocks[].condition_file` | `timeline_variables: conditionsArray`（JS 数组，非文件加载） |
+| `randomization` | `jsPsych.randomization.setSeed(String(seed))` before any factorial/shuffle; save `rng_seed` with `jsPsych.data.addProperties()` |
 | `response_rules.correct` | `on_finish: function(data) { data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response) }` |
 | `response_rules.mapping` | `choices: ['f', 'j']` + `data:` 中附带 `correct_response` 字段 |
 | `paradigm_config` | 范式特定 — IAT 7-block 结构、SSD staircase、n-back target detection |
@@ -44,7 +45,7 @@
 | `font` | CSS `font-family` 属性 + `<link>` Google Fonts 或系统字体 fallback |
 | `audio` | `jsPsychAudioKeyboardResponse` plugin（`stimulus` 填音频路径），或 `jsPsychPreload` 预加载 `audio` 数组 |
 | `participant_info` | 自定义 HTML 表单（实验前显示），或 URL query params（`?subject=001`），存储到 `jsPsych.data.addProperties()` |
-| `output` | `jsPsych.data.get().filter({...}).localSave('csv', filename)` |
+| `output` | `on_data_update` → server/IndexedDB/localStorage checkpoint; `on_finish` → filtered `.localSave('csv', filename)` |
 
 ## Config → Code 映射表（PsychoJS）
 
@@ -61,9 +62,9 @@
 | `response_rules.correct` | `resp.keys == corr_ans` 在 trialRoutineEnd 中判断 |
 | `output` | `psychoJS.experiment.dataFileName` + server-side CSV download |
 
-## Windows[] → Timeline 节点映射（jsPsych 7.x）
+## Windows[] → Timeline 节点映射（jsPsych 8.x）
 
-jsPsych 7.x 的声明式特性使 `windows[]` 映射为嵌套 timeline 节点数组。
+jsPsych 的声明式特性使 `windows[]` 映射为嵌套 timeline 节点数组。
 
 ### 基本节点模式
 
@@ -75,7 +76,7 @@ const trialTimeline = {
         {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: '<div style="font-size:60px;">+</div>',
-            choices: "NO_KEYS",               // v7: string, not jsPsych.NO_KEYS
+            choices: "NO_KEYS",
             trial_duration: 500,
             response_ends_trial: false,
             data: { window: 'fixation' }
@@ -84,7 +85,7 @@ const trialTimeline = {
         {
             type: jsPsychHtmlKeyboardResponse,
             stimulus: function() {
-                return jsPsych.timelineVariable('stim', true);  // v7: second arg = true
+                return jsPsych.evaluateTimelineVariable('stim');
             },
             choices: ['f', 'j'],
             response_ends_trial: true,
@@ -99,7 +100,7 @@ const trialTimeline = {
 ```js
 // Practice trial with feedback
 {
-    type: jsPsychCategorizeHtml,      // v7: class reference
+    type: jsPsychCategorizeHtml,
     stimulus: jsPsych.timelineVariable('s'),
     choices: ['f', 'j'],
     key_answer: 'f',                  // 或动态: key_answer: function() { return ... }
@@ -131,9 +132,13 @@ const timeline = [
     debriefTrial
 ];
 
+const AUTOSAVE_KEY = 'amazing-psycoder-stroop-autosave';
 const jsPsych = initJsPsych({
+    on_data_update: function() {
+        localStorage.setItem(AUTOSAVE_KEY, jsPsych.data.get().json());
+    },
     on_finish: function() {
-        jsPsych.data.get().filter({task:'stroop'}).localSave('csv', 'stroop_data.csv');
+        jsPsych.data.get().filter({task:'stroop'}).localSave('csv', `sub-${subjectID}_stroop_data.csv`);
     }
 });
 jsPsych.run(timeline);
@@ -141,10 +146,10 @@ jsPsych.run(timeline);
 
 ### Windows[] → Timeline 映射规则
 
-| Config window | jsPsych 7.x timeline node | 关键参数 |
+| Config window | jsPsych 8.x timeline node | 关键参数 |
 |--------------|--------------------------|---------|
 | Fixation (duration: N, no response) | `{type: jsPsychHtmlKeyboardResponse, stimulus: '+', choices: "NO_KEYS", trial_duration: N}` | `response_ends_trial: false` |
-| Stimulus (content: {col}, duration: N) | `{type: jsPsychHtmlKeyboardResponse, stimulus: fn() { return jsPsych.timelineVariable('col', true) }, trial_duration: N}` | `choices: "NO_KEYS"` |
+| Stimulus (content: {col}, duration: N) | `{type: jsPsychHtmlKeyboardResponse, stimulus: () => jsPsych.evaluateTimelineVariable('col'), trial_duration: N}` | `choices: "NO_KEYS"` |
 | Stimulus + Response (content: {col}, response: [keys]) | `{type: jsPsychHtmlKeyboardResponse, stimulus: fn(){...}, choices: [keys]}` | `response_ends_trial: true` |
 | Stimulus + Response + Feedback | `{type: jsPsychCategorizeHtml, stimulus: ..., choices: [keys], key_answer: fn}` | `force_correct_button_press: true/false` |
 | Image stimulus | `{type: jsPsychImageKeyboardResponse, stimulus: fn(){...}, choices: [keys]}` | `stimulus` 填图片路径 |
@@ -238,7 +243,7 @@ function trialRoutineEnd(snapshot) {
 
 ## 条件处理对比
 
-### jsPsych 7.x: timeline_variables 数组
+### jsPsych 8.x: timeline_variables 数组
 
 ```js
 // 方式 1: 内联数据数组
@@ -275,7 +280,7 @@ congruentWords.forEach(function(row) {
 });
 ```
 
-**关键**: jsPsych 7.x 不使用外部 xlsx/csv 文件 — 所有条件在 JavaScript 代码内定义为数组。
+**关键**: 生成物必须在正式 timeline 前完成条件加载/校验并形成数组；不得在时序关键 trial 内请求 xlsx/csv。
 
 ### PsychoJS: TrialHandler + xlsx
 
@@ -312,9 +317,8 @@ async function importConditions(snapshot) {
 
 | 平台 | 方式 | 代码 |
 |------|------|------|
-| jsPsych 7.x | `on_finish` 回调（推荐） | `on_finish: function(data) { data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response) }` |
-| jsPsych 7.x | `correctness_field` 参数 | `data: { correct_response: 'f' }` + `correctness_field: 'correct_response'` |
-| jsPsych 7.x | `categorize-html` 内置 | `key_answer: 'f'` — 插件自动记录 `data.correct` |
+| jsPsych 8.x | `on_finish` 回调（通用） | preserve response/status, then compare against declared `correct_response` when scoring exists |
+| jsPsych 8.x | plugin-specific scoring | Use only after verifying the pinned plugin's current parameter contract |
 | jsPsych 6.1.0 | `key_answer` 函数 | `key_answer: function() { return stim_type === 'pos' ? keyCode('f') : keyCode('j') }` |
 | PsychoJS | Routine 结束层 | `key_resp.corr = (key_resp.keys == corr_ans) ? 1 : 0` |
 | PsychoJS | 无响应处理 | `if (key_resp.keys == undefined) { key_resp.corr = (corr_ans == 'none') ? 1 : 0 }` |
@@ -323,27 +327,29 @@ async function importConditions(snapshot) {
 
 | 平台 | RT 计时方式 | 精度 |
 |------|----------|------|
-| jsPsych 7.x | 插件自动：stimulus 出现 → 按键，记录在 `data.rt`（ms） | ms 级（`performance.now()`） |
-| jsPsych 6.1.0 | 插件自动：记录在 `.rt`（ms） | ms 级 |
-| PsychoJS | `callOnFlip(key_resp.clock.reset())` → `.rt` 自动从 reset 算起 | 帧精确 |
+| jsPsych 8.x | 插件按其文档定义的 onset → event 记录 `data.rt`（ms） | 浏览器/设备时序需在目标环境验证 |
+| jsPsych 6.1.0（仅迁移参考） | 插件自动：记录在 `.rt`（ms） | 旧运行时；单位是 ms，不代表设备达到 1 ms 精度 |
+| PsychoJS（独立运行时，仅迁移参考） | `callOnFlip(key_resp.clock.reset())` → `.rt` 从 reset 算起 | 需按 PsychoJS/Pavlovia 版本和目标设备验证；不能由 API 名称推断帧精度 |
 
 ## 数据保存模式对比
 
-### jsPsych 7.x: 声明式过滤 + localSave
+### jsPsych 8.x: 每 trial checkpoint + 最终 localSave
 
 ```js
+const AUTOSAVE_KEY = `amazing-psycoder-${subID}-${expName}`;
 const jsPsych = initJsPsych({
+    on_data_update: function() {
+        localStorage.setItem(AUTOSAVE_KEY, jsPsych.data.get().json());
+    },
     on_finish: function() {
-        jsPsych.data.get()
-            .filter({task: 'response'})              // 仅正式实验数据
-            .filterCustom(function(t) {               // 自定义 RT 过滤
-                return t.rt > 200 && t.rt < 3000;
-            })
-            .ignore(['internal_node_id', 'stimulus', 'trial_type', 'plugin_version'])
+      jsPsych.data.get()
+            .filter({task: 'response'})
             .localSave('csv', `${expName}_${subID}.csv`);
     }
 });
 ```
+
+Do not apply analysis exclusions during acquisition export. Preserve raw trial fields; perform confirmed RT/missingness exclusions in the analysis pipeline with provenance.
 
 ### PsychoJS: ExperimentHandler 自动管理
 
@@ -360,9 +366,9 @@ psychoJS.experiment.dataFileName = `data/${participant}_${expName}_${date}`;
 
 ## 12 步模板实现对比
 
-| 步骤 | jsPsych 7.x | jsPsych 6.1.0 | PsychoJS |
+| 步骤 | jsPsych 8.x | jsPsych 6.1.0 | PsychoJS |
 |------|-----------|--------------|----------|
-| 1 Imports | `<script src="unpkg.com/jspsych@7.3.4">` + 独立 plugin scripts | `<script>` tags + inline JS | `import { core, data, util, visual } from './lib/psychojs-*.js'` |
+| 1 Imports | pinned `jspsych@8.2.3` + compatible pinned plugin packages (or project-bundled equivalents) | `<script>` tags + inline JS | `import { core, data, util, visual } from './lib/psychojs-*.js'` |
 | 2 Params | `const jsPsych = initJsPsych({...})` | `const subID = jsPsych.randomization.randomID(8)` | `expInfo = {participant: '', session: '001'}` |
 | 3 Display | `jsPsychFullscreen` plugin + CSS 样式 | `'fullscreen'` plugin + CSS | `psychoJS.openWindow({fullscr: true, units: 'height'})` |
 | 4 Preloading | `jsPsychPreload` + `auto_preload: true` | 无需（HTML/CSS 渲染） | Component 在 `experimentInit()` 中初始化 |
@@ -374,16 +380,16 @@ psychoJS.experiment.dataFileName = `data/${participant}_${expName}_${date}`;
 | 9b Randomize | `randomize_order: true` | `randomize_order: true` | `TrialHandler.Method.RANDOM` |
 | 9c Per-trial | Timeline 节点数组 | Timeline 节点数组 | Routine Begin/EachFrame/End 三段 |
 | 9d Block fb | `on_finish` 中计算并显示 | `categorize-html` correct_text/incorrect_text | 独立 feedback Routine |
-| 10 Data save | `jsPsych.data.get().localSave('csv', fn)` | `jsPsych.data.get().localSave('csv')` | `addData()` + `nextEntry()` |
-| 11 Cleanup | `jsPsych.endExperiment()` | `jsPsych.endExperiment()` | `quitPsychoJS(msg)` → `closeWindow()` |
+| 10 Data save | `on_data_update` checkpoint + final `localSave` | durable callback + final `localSave` | `addData()` + `nextEntry()` |
+| 11 Cleanup | durable checkpoint + `jsPsych.abortExperiment()` for aborts | legacy `jsPsych.endExperiment()` | `quitPsychoJS(msg)` → `closeWindow()` |
 | 12 Package | 单个 `.html` + CDN scripts | 单个 `.html` + inline JS | 单个 `.js` 模块 |
 
-## jsPsych 6.1.0 → 7.x 迁移速查
+## Legacy jsPsych → 8.x 迁移速查
 
-从现有范式文件（大部分为 6.1.0/PsychoJS）迁移到 7.x 的核心变更：
+从现有逻辑参考迁移到当前生成目标时，至少处理：
 
-| 6.1.0 模式 | 7.x 替代 | 影响范围 |
-|-----------|---------|---------|
+| Legacy mode | 8.x target | Scope |
+|-------------|------------|-------|
 | `jsPsych.init({timeline: t})` | `initJsPsych({...}); jsPsych.run(t)` | 所有实验 |
 | `type: 'html-keyboard-response'` | `type: jsPsychHtmlKeyboardResponse` | 所有 trial 节点 |
 | `type: 'categorize-html'` | `type: jsPsychCategorizeHtml` | 反馈 trial |
@@ -391,7 +397,7 @@ psychoJS.experiment.dataFileName = `data/${participant}_${expName}_${date}`;
 | `type: 'fullscreen'` | `type: jsPsychFullscreen` | 全屏请求 |
 | `jsPsych.NO_KEYS` | `"NO_KEYS"`（字符串） | fixation / 无响应节点 |
 | `jsPsych.ALL_KEYS` | `"ALL_KEYS"`（字符串） | 任意按键响应 |
-| `jsPsych.timelineVariable('x')` in function | `jsPsych.timelineVariable('x', true)` | 函数内引用 |
+| `jsPsych.timelineVariable('x', true)` in function | `jsPsych.evaluateTimelineVariable('x')` | v7 immediate-evaluation calls |
 | `jsPsych.currentTimelineNodeID()` | `jsPsych.getCurrentTimelineNodeID()` | getter 迁移 |
 | `jsPsych.progress()` | `jsPsych.getProgress()` | getter 迁移 |
 | `jsPsych.totalTime()` | `jsPsych.getTotalTime()` | getter 迁移 |
@@ -401,7 +407,7 @@ psychoJS.experiment.dataFileName = `data/${participant}_${expName}_${date}`;
 
 | 范式 | 平台 | 关键架构模式 |
 |------|------|-----------|
-| IAT | jsPsych 6.1.0 | 7-block 工厂函数, `factorial` counterbalance, D-score `on_finish` |
+| IAT | jsPsych 6.1.0 | 7-block/counterbalance logic only; acquire raw RT/error/block fields, compute D-score in analysis |
 | EAST | jsPsych 6.1.0 | 3-phase: 2 practice + 1 test, color-word mapping via `stim_type`, `key_answer` 动态函数 |
 | Antisaccade | PsychoJS | Routine Begin/EachFrame/End, `conditions.xlsx`, `callOnFlip(clock.reset)` |
 | Change-detection | PsychoJS | 2-phase: detection + localisation, dynamic `ShapeStim`, CSV-driven positions |
@@ -415,6 +421,6 @@ psychoJS.experiment.dataFileName = `data/${participant}_${expName}_${date}`;
 
 | 平台 | 禁止的模式 | 替代 |
 |------|----------|------|
-| jsPsych 7.x | `timeline_variables` 作为函数 | 脚本加载时预计算所有条件（条件文件映射为 JS 数组） |
-| jsPsych 7.x | 不在 timeline 起始放 preload | `timeline: [preload, ...]` — 刺激预加载必须作为 timeline 第一个节点 |
+| jsPsych 8.x | `timeline_variables` 作为函数 | 在 timeline 构造前加载/验证并形成条件数组 |
+| jsPsych 8.x | 媒体首次呈现前未 preload | 在首次媒体 trial 之前放 preload；纯文本任务无需空节点 |
 | PsychoJS | 在 trial 循环内 `new visual.TextStim()` | `experimentInit()` 中初始化，循环内只 `.setText()` — 对应 config 的 stimulus_folder 预加载规则 |

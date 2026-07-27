@@ -1,58 +1,30 @@
-# Randomization Standard
+# Randomization and Counterbalancing Contract
 
-Applies to all experiments, regardless of platform or paradigm.
+Randomization is a design decision, not a universal shuffle. Confirm whether the goal is unpredictable presentation, balance across positions, constrained sequences, adaptive sampling, or an intentionally fixed/calibration order.
 
-## Trial Order
+## Supported Strategies
 
-### Within-block randomizations
+- **Random**: shuffle the declared multiset without sequence constraints.
+- **Constrained/pseudorandom**: construct or search for an order satisfying explicit constraints. Use bounded attempts and fail loudly if infeasible; never run an unbounded re-shuffle loop.
+- **Blocked/stratified**: preserve declared balance within sub-blocks or strata, then randomize only allowed positions.
+- **Counterbalanced**: assign participants/sessions to precomputed orders (full permutation, Latin/Williams square, or a declared subset).
+- **Fixed**: use a predeclared order when scientifically justified; it is not limited to practice but its order effects must be accepted or controlled.
+- **Adaptive**: log every realized state/value and the inputs that drove the update.
 
-- **Full random**: Shuffle all trials in the block. No constraints. Fastest to implement.
-- **Pseudorandom**: Shuffle with constraints (e.g., no more than 3 consecutive same-condition trials). Implement by re-shuffling until constraint is met, or use a constraint-based algorithm.
-- **Blocked**: Group trials by condition, randomize within each sub-block. Used when conditions must be evenly distributed.
-- **Fixed**: Predefined order, same for all subjects. Only acceptable for practice blocks or calibration.
+## Seed Strategy
 
-### Between-block randomizations
+For stochastic ordering, config must declare `seed_scope` (`per_session`, `per_subject`, or intentionally `fixed`), a resolvable seed, and `record_resolved_seed: true`. A fixed seed gives every run the same pseudorandom order; use it only with a recorded justification.
 
-- **Same order, re-randomized**: Each block gets its own independent randomization of the same condition set.
-- **Counterbalanced across subjects**: Each subject gets one of N predetermined orders. Use a condition file or subject-ID-based assignment.
-- **Latin square**: For N conditions, N subjects each see a different order. Reduces order effects in within-subjects designs.
+Prefer a versioned, stable derivation over language-runtime defaults. For example, hash `task_version + pseudonymous_subject_id + session_id`, convert part of the digest to an integer, and record both the derivation version and resolved seed. Avoid Python's process-salted `hash()` and do not assume the same seed yields identical sequences across languages/library versions.
 
-## Counterbalancing
-
-For within-subjects designs where order effects matter:
-
-1. **Across subjects**: Each subject assigned to one counterbalance order at startup
-2. **Within subject**: Each subject experiences all counterbalance orders across blocks
-3. **Full permutation**: Use all N! possible orders (feasible only for small N)
-4. **Latin square**: Use N orders, each condition appears once per position
-
-Implementation:
-```python
-# Example: assign counterbalance order by subject ID
-import random
-random.seed(subject_id)
-order = random.choice(['order_a', 'order_b'])
-```
-
-## Constraints
-
-Common constraints to implement:
-
-- **No more than N consecutive same-condition trials**: Re-shuffle until constraint met
-- **No condition repetitions on critical trials**: Exclude from randomization
-- **Equal condition count per block**: Required by design; verify after randomization
-- **Go/No-go consecutive limit**: Typically max 1-2 no-go trials in a row
-
-## Seed Management
-
-- Always set `random.seed()` for reproducibility
-- Seed can be based on subject ID, or use a fixed seed and save the state
-- Document the seed in data output or a separate log file
+For counterbalance assignment, a stable digest modulo the number of precomputed cells is auditable, but monitor realized enrollment counts and define handling for exclusions/replacements. Do not confuse counterbalance-cell assignment with within-cell trial randomization.
 
 ## Validation
 
-After generating trial order, verify:
-1. All conditions appear the expected number of times
-2. No constraint violations
-3. Block transitions are at correct trial indices
-4. Counterbalance order is correctly assigned
+After constructing the realized order:
+
+1. Verify the exact declared trial multiset and condition counts.
+2. Verify every sequence constraint and report infeasibility explicitly.
+3. Verify sequence boundaries and counterbalance/adaptive state transitions.
+4. Save the resolved seed or complete realized order with subject/session/task version.
+5. Test that different intended scopes vary and intentionally fixed scopes reproduce.

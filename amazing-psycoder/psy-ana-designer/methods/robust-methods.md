@@ -97,10 +97,9 @@ APA 7th 格式报告示例:
 
 ## 备选方法
 
-- [传统参数检验](traditional-parametric.md) — 当正态性和方差齐性满足时
+- 传统参数检验 — 当正态性和方差齐性满足时
 - [非参数检验](nonparametric.md) — 转为秩次, 对异常值相对稳健
 - [Bootstrap 方法](bootstrap.md) — 不依赖分布假设, 适合小样本
-- [混合效应模型](mixed-models.md) — 处理层级数据时比剔除聚合更优
-- [贝叶斯稳健回归](bayesian-robust.md) — 使用 Student-t 似然估计替代正态假设
-
+- 混合效应模型 — 处理层级数据时比剔除聚合更优
+- 贝叶斯稳健回归 — 使用 Student-t 似然估计替代正态假设
 

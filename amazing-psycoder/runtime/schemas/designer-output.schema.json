@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psycoder.studio/schemas/designer-output.schema.json",
+  "title": "PsyCoder DesignerModelOutput",
+  "type": "object",
+  "required": [
+    "assistantMessage",
+    "questions",
+    "decisions",
+    "missingFields",
+    "commands",
+    "proposalSummary",
+    "warnings"
+  ],
+  "properties": {
+    "assistantMessage": { "type": "string", "minLength": 1, "maxLength": 12000 },
+    "questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "string", "maxLength": 2000 }
+    },
+    "decisions": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": ["path", "label", "value", "source", "status"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "label": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "value": {},
+          "source": { "enum": ["user", "agent", "system"] },
+          "status": { "enum": ["proposed", "confirmed", "assumed", "missing"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "missingFields": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "type": "string", "maxLength": 300 }
+    },
+    "commands": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["type", "payload"],
+        "properties": {
+          "type": {
+            "enum": [
+              "create_experiment",
+              "update_experiment_meta",
+              "add_sequence",
+              "update_sequence",
+              "remove_sequence",
+              "reorder_sequences",
+              "add_window",
+              "update_window",
+              "remove_window",
+              "reorder_windows",
+              "move_window_to_sequence",
+              "update_condition_source",
+              "update_response_rule",
+              "set_platform",
+              "update_data_schema",
+              "update_timing_defaults",
+              "update_runtime_contract",
+              "update_output_contract"
+            ]
+          },
+          "payload": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "proposalSummary": { "type": "string", "maxLength": 2000 },
+    "warnings": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "maxLength": 2000 }
+    }
+  },
+  "additionalProperties": false
+}

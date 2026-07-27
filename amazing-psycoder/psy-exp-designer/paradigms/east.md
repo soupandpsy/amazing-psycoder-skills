@@ -24,7 +24,7 @@ Each trial consists of a nested timeline:
 1. **Fixation** — 500 ms cross (+) with category label tags displayed at screen top-left and top-right (left tag maps to F, right tag maps to J)
 2. **Stimulus classification** — Word presented at center. White words are classified by meaning (positive/negative). Colored words are classified by ink color (blue/green). Response: F or J key.
 3. **Error feedback** — During practice blocks: green checkmark (correct) or red X (incorrect) with forced correction (must press correct key to advance). No feedback during test block.
-4. **ITI** — Practice blocks: brief fixed interval. Test block: randomized 1–2 seconds (`Math.random() * 1000 + 1000`).
+4. **ITI** — Practice blocks: brief fixed interval. Test block: seeded randomized 1–2 seconds; record the resolved duration on every trial.
 
 ### Block Structure
 
