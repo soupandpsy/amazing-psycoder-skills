@@ -187,17 +187,27 @@ different claims:
 | PsychoPy | Python parse plus experiment static-contract checks | PsychoPy dependency install, display/input launch, timing and device smoke tests |
 | jsPsych 8.x | Node.js syntax plus experiment static-contract checks | Supported browser deployment, persistence, timing and device tests |
 | Psychtoolbox | MATLAB-oriented static-contract checks | MATLAB/Octave `checkcode`, Psychtoolbox sync tests, display/input/audio calibration |
-| Python analysis | Python AST plus analysis static-contract checks | Clean environment execution against representative or real data and output review |
-| R analysis | R static-contract checks; `Rscript --vanilla` parse when a usable R runtime is present | `renv` restore, clean execution, diagnostics and result review |
+| Python analysis | Python AST/static-contract checks plus a clean paired-analysis fixture whose run/input/output/environment hashes are verified | Clean execution against the user's real schema/data, diagnostics and result review |
+| R analysis | R static/parse checks plus a `renv`-restored paired-analysis fixture whose run/input/output/environment hashes are verified | Clean execution against the user's real schema/data, diagnostics and result review |
 
 The installer uses the standard-library-only portable preflight, so installing
 the skills does not require Studio services or contributor test dependencies.
+Before an analysis Designer/Coder/Reviewer runs `validate_analysis.py`, use an
+isolated interpreter with the packaged validation dependencies; do not assume
+the host's default `python3` has PyYAML:
+
+```bash
+AMAZING_PSYCODER_ROOT="/absolute/path/to/amazing-psycoder"
+python3 -m venv .venv-validation
+. .venv-validation/bin/activate
+python -m pip install -r "$AMAZING_PSYCODER_ROOT/requirements-dev.txt"
+export PYTHON_BIN="$(command -v python)"
+"$PYTHON_BIN" -c "import yaml"
+```
+
 Release and contributor validation remains strict:
 
 ```bash
-python3 -m venv .venv-validation
-. .venv-validation/bin/activate
-python -m pip install -r amazing-psycoder/requirements-dev.txt
 python amazing-psycoder/scripts/validate_skills.py
 python -m unittest discover -s amazing-psycoder/tests -v
 ```

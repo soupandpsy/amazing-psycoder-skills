@@ -1,12 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://psycoder.studio/schemas/artifact-output.schema.json",
-  "title": "PsyCoder Model-Owned Artifact Output",
+  "title": "PsyCoder Model-Owned Runtime Artifact Output",
+  "description": "Current v1.4 internal contract for AI inspection output over compiler-authored runtime files. The Worker validates the frozen ExperimentModel@4 and asset-set binding plus the exact platform path allowlist. Initial generation output remains compiler-identical; changed source is accepted only by the separate repair-attempt path after runtime-kernel proof, evidence rebinding, deterministic validation, and independent rereview.",
   "type": "object",
-  "required": ["platform", "executionPlanHash", "files", "warnings", "assumptions"],
+  "required": ["platform", "modelHash", "assetSetHash", "files", "warnings", "assumptions"],
   "properties": {
     "platform": { "enum": ["psychopy", "jspsych", "psychtoolbox"] },
-    "executionPlanHash": {
+    "modelHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assetSetHash": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },

@@ -94,7 +94,8 @@ for input_file in input_files:
     frames.append(frame)
 data_raw = pd.concat(frames, ignore_index=True)
 
-required = {config["experiment"]["id_columns"]["subject"]}
+required = {value for value in config["experiment"]["id_columns"].values() if value}
+required.update(config["design"]["clustering"])
 required.update(iv["name"] for iv in config["design"]["ivs"])
 required.update(dv["name"] for dv in config["design"]["dvs"])
 missing = required - set(data_raw.columns)
@@ -121,6 +122,10 @@ output_dir.mkdir(parents=True, exist_ok=True)
     json.dumps(environment, indent=2), encoding="utf-8"
 )
 ```
+
+Treat this as the setup core, not a complete deliverable. Wrap execution so an unhandled failure writes valid JSON with timestamps, non-zero exit status, available artifact/input hashes, environment, and traceback. On success, hash every generated output and run `validate_analysis.py ... --execution-log <configured-log>`; do not hand-write a success-only manifest.
+
+Resolve imports against the declared dependency artifact before execution. The generated lock/pin artifact must cover every third-party distribution imported by the completed script; a syntactically pinned but incomplete file blocks delivery.
 
 ## Method/API Guidance
 

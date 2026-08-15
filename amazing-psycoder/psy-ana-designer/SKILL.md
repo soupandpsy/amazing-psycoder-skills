@@ -475,7 +475,7 @@ Plan only sensitivities that address a plausible, claim-relevant uncertainty: in
 □ Claim-relevant sensitivity plan, or documented reason none is needed
 □ Analysis config complete (can serve as pre-registration analysis plan)
 
-**Gate 5**: User explicitly confirms all decisions, including R/Python, exact language version, the dependency strategy (Python: exact pins or lockfile; R: `renv.lock`), the concrete dependency artifact path, and target environment. Save analysis config YAML, run `python3 <amazing-psycoder-root>/scripts/validate_analysis.py <analysis_config.yaml>`, resolve every error, report the saved path, and route it to `psy-ana-coder`.
+**Gate 5**: User explicitly confirms all decisions, including R/Python, exact language version, the dependency strategy (Python: exact pins or lockfile; R: `renv.lock`), the concrete dependency artifact path, and target environment. Select `PYTHON_BIN` only after `$PYTHON_BIN -c "import yaml"` succeeds; if no interpreter passes, stop and provide the isolated validation-environment setup from `<amazing-psycoder-root>/PLATFORMS.md`. Save analysis config YAML, run `$PYTHON_BIN <amazing-psycoder-root>/scripts/validate_analysis.py <analysis_config.yaml>`, resolve every error, report the saved path, and route it to `psy-ana-coder`.
 
 > **Next step**: Analysis plan is complete. Enter `/psy-ana-coder` and provide the `analysis_config.yaml` to that skill to start generating analysis code. You may also enter `/psy-ana-reviewer` first and select `plan-review` mode for a pre-audit of the analysis plan.
 

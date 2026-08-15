@@ -3,11 +3,10 @@
   "language": "python",
   "entrypoint": "main.py",
   "files": [
-    {"path": "main.py", "required": true, "owner": "model", "priority": 1},
-    {"path": "conditions.csv", "required": true, "owner": "compiler", "priority": 2},
-    {"path": "execution_plan.json", "required": true, "owner": "compiler", "priority": 3},
+    {"path": "main.py", "required": true, "owner": "model", "semanticProtection": "compiler_hash_bound", "priority": 1},
+    {"path": "compilation_manifest.json", "required": true, "owner": "compiler", "priority": 2},
+    {"path": "source_map.json", "required": true, "owner": "compiler", "priority": 3},
     {"path": "README.md", "required": true, "owner": "compiler", "priority": 4},
-    {"path": "audit_report.md", "required": true, "owner": "compiler", "priority": 5},
-    {"path": "experiment_config.json", "required": true, "owner": "compiler", "priority": 6}
+    {"path": "experiment_model.json", "required": true, "owner": "compiler", "priority": 5}
   ]
 }

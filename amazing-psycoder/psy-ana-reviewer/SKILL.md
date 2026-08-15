@@ -70,7 +70,7 @@ Mode auto-detection: complete execution evidence + outputs → `result-audit`; s
 
 For `analysis-audit`/`result-audit`: Re-run the Coder Quality Gate, record every failure, and continue the remaining safe checks so the user receives a complete evidence-backed audit. A gate failure affects the verdict but must not truncate diagnosis.
 
-When config and code are available, also run `scripts/validate_analysis.py <analysis_config.yaml> --code <script> --language r|python`. Treat it as deterministic static evidence, never as proof of successful execution or correct reported results.
+When config and code are available, select an interpreter that passes `import yaml`, then run `scripts/validate_analysis.py <analysis_config.yaml> --code <script> --language r|python`. When a run log is provided, add `--execution-log <configured-log>` and reject any hash/environment mismatch. Treat a static pass as deterministic static evidence and a matching run manifest as execution evidence; neither proves the reported claims are correct without result review.
 
 For `plan-review` mode: Skip Gate 0 (no script to check). Proceed directly to design-level review.
 

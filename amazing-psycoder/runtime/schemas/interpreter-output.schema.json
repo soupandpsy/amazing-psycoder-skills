@@ -3,9 +3,10 @@
   "$id": "https://psycoder.studio/schemas/interpreter-output.schema.json",
   "title": "PsyCoder Immutable-Spec Interpretation",
   "type": "object",
-  "required": ["executionPlanHash", "interpretations", "warnings"],
+  "required": ["modelHash", "assetSetHash", "interpretations", "warnings"],
   "properties": {
-    "executionPlanHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "modelHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "assetSetHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "interpretations": {
       "type": "array",
       "maxItems": 500,
@@ -15,7 +16,7 @@
         "properties": {
           "path": { "type": "string", "minLength": 1, "maxLength": 500 },
           "meaning": { "type": "string", "minLength": 1, "maxLength": 4000 },
-          "source": { "const": "confirmed_spec" }
+          "source": { "const": "frozen_model" }
         },
         "additionalProperties": false
       }

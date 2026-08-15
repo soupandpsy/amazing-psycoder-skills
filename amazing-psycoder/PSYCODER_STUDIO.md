@@ -1,131 +1,152 @@
 # PsyCoder Studio Compatibility
 
-This skill set defines the **professional context and integration contract** for PsyCoder Studio's AI generation pipeline. The machine-readable `runtime/` directory is authoritative for the capability profiles, schemas, and artifact contracts that a deployment may advertise. Prose cannot expand those profiles. The presence of these files does not prove that a website Worker, generator, reviewer, or packager is deployed or has passed end-to-end integration testing.
+This skill set defines the professional context and integration contract for
+PsyCoder Studio. The machine-readable `runtime/` directory is authoritative for
+deployment capability profiles, schemas, artifact contracts, and evidence
+boundaries. Prose cannot expand those profiles, and repository validation does not prove
+that a live Worker or target laboratory machine is correct.
 
-## Pipeline Integration
+## Pipeline integration
 
 ```text
-Unlocked project
-  └─ Design Assistant (pre-generation UI)
-     Input: editable project state
-     Output: designer-output commands applied by the backend
-     Gate: user confirmation + deterministic compilation/validation
-
-Worker receives an immutable Generation Envelope 2.0
-  │
-  ├─ Stage 1: Spec Interpreter
-  │   Skill source: psy-exp-designer
-  │   Input: immutable PsyCoderExperimentSpecV2@2.4 + ExecutionPlan@2.0 + plan hash
-  │   Output: interpreter-output annotations tied to the same plan hash
-  │   Contract: no commands, mutations, inferred runtime semantics, or replacement plan
-  │
-  ├─ Stage 2: AI Platform Coder + Deterministic Contract Baseline
-  │   Skill source: psy-exp-coder
-  │   Input: validated envelope + immutable ExecutionPlan
-  │   Output: model-owned allowlisted files only; compiler-owned files are merged later
-  │   Contract: every response echoes the plan hash; the Coder cannot change the
-  │             ExecutionPlan, conditions, config, file ownership, or order
-  │
-  ├─ Stage 3: Read-only Reviewer
-  │   Skill source: psy-exp-reviewer
-  │   Input: immutable plan + content-addressed artifact set + target platform
-  │   Output: primitive findings and reviewed file hashes only
-  │   Contract: no rewritten files, repairs, issue counts, or readiness claims
-  │
-  ├─ Stage 3b: Constrained Coder Repair (only when blocking findings exist)
-  │   Input: review ID + exact issue IDs + previous artifact hash + plan hash
-  │   Output: model-owned allowlisted replacements under repair-attempt schema
-  │   Contract: backend revalidates and re-reviews; maximum two attempts
-  │
-  ├─ Stage 4: Deterministic Validator and Readiness Deriver
-  │   NOT a skill stage — pure code enforcement
-  │   Checks: schema validity, hashes, file ownership, required files, safe paths,
-  │           archive validity, issue severity counts, and structured RuntimeEvidence
-  │   Output: backend-owned readiness-snapshot; models never self-certify readiness
-  │
-  └─ Stage 5: Artifact Packager
-      Generates: project.zip with all files + immutable _pipeline/ metadata;
-                 renders audit_report.md from the structured review record
+Editable ExperimentModel@4
+  -> confirmed atomic Model transaction
+  -> frozen Generation Envelope 4.0
+     (jobSchemaVersion 2.0, modelHash, assetSetHash)
+  -> deterministic direct compiler for the selected platform
+  -> required AI interpretation and compiler-runtime inspection
+  -> frozen-shell, additive fail-closed repair proof, deterministic validation and conformance gates
+  -> independent read-only review
+  -> at most three allowlisted runtime-kernel repair proposals, each fully revalidated and rereviewed
+  -> package for target-machine smoke testing
+  -> backend-derived collection readiness from structured RuntimeEvidence
 ```
 
-This repository declares and validates three parallel capability-based profiles:
-`psychopy-generated-text-v1`, `jspsych-generated-text-v1`, and
-`psychtoolbox-generated-text-v1`. It also retains the optimized exact
-`psychopy-color-word-stroop-v1` profile. The generic profiles accept custom
-experiments only when their complete saved semantics fit the generated-text
-contract in `runtime/capabilities.json`; platform or paradigm labels do not
-expand that contract. Semantic, emotional, numerical, bilingual, and custom
-Stroop-family experiments therefore need their own confirmed factors, windows,
-correctness, timing, and data rules rather than inheriting classic Stroop logic.
-A Studio deployment may advertise one of these profiles only after it loads the
-matching contracts, passes Studio-side integration tests, and records the
-required target-runtime evidence. Repository validation alone is not live
-deployment evidence.
+`ExperimentModel@4.0` is the only persisted, editable, transmittable semantic
+authority. The Canvas, jsPsych static/dynamic previews, window source, sequence
+source, complete source, compilation manifest, source map, conformance trace,
+and generated archive are derived evidence. They must never become a second
+experiment fact or write semantics back into the Model.
 
-All generic profiles currently require generated factorial trial sources,
-text/blank windows, one scored response window per trial, `rtOnset=self`, and
-explicit condition-to-correct-key semantics. The shared canonical key set is a
-single lowercase alphanumeric key plus `space` and `enter`; text color fields
-must materialize to black, white, red, green, blue, yellow, gray, or grey.
-An implementation conforming to this contract must reject unsupported media,
-imports, timing, fields, keys, colors, or response mappings before creating a
-run. Psychtoolbox remains static-verified until a
-MATLAB/Psychtoolbox target-machine smoke test is attached. This deployment
-boundary does not block standalone candidate generation; see `STANDALONE.md`.
+The Generation Envelope 4.0 contains exactly the frozen Model, canonical model
+hash, exact asset manifest and asset-set hash, target, compiler version, export
+request, and validation summary. It contains no ExecutionPlan, compiled spec,
+IR, duplicated experiment parameters, or template-derived defaults.
 
-## Skill Responsibility vs. Pipeline Responsibility
+## Direct compilation and preview boundary
 
-| Layer | Responsibility |
-|-------|---------------|
-| **Skill** | Professional standards: experiment semantics, API patterns, anti-patterns, quality gates, reference knowledge, data recording rules, platform-specific correctness |
-| **Pipeline** | Immutable-plan enforcement, protected artifact ownership, runtime path allowlist, static/review gates, zip packaging, status tracking, Redis communication |
+PsychoPy, jsPsych, and Psychtoolbox adapters directly consume the same frozen
+Model. A compiler may build temporary typed objects inside one function, but
+may not persist, transfer, expose for editing, or package them as experiment
+semantics. Each adapter emits window fragments, sequence units, a complete
+experiment unit, a compilation manifest, and a source map back to Model JSON
+Pointers.
 
-Skills define **the current contracts, checks, and evidence limits**. The pipeline enforces **which transition is blocked**; neither layer can infer unobserved runtime correctness.
+The browser uses jsPsych for shared static and interactive preview. Preview can
+check scene content, order, reference-space position and size, bindings,
+nominal timing, keys, and feedback transitions. It does not establish native
+PsychoPy/Psychtoolbox frame timing, display refresh, input latency, codecs,
+font metrics, or target-hardware readiness.
 
-## Stage-Aware Skill Routing
+## Agent transactions
 
-The Skill Reference Engine in PsyCoder Studio routes required documents by:
+Direct user edits and Psycoder edits both become the same atomic Model
+transaction. Every Agent command includes the base Model revision, frozen
+scope, exact Model pointers, before/after summary, destructive flag, and
+confirmation level. A changed revision rejects the proposal and requires a
+reread or explicit rebase.
 
-- `stage`: interpreter | code_generator | reviewer
-- `platform`: psychopy | jspsych | psychtoolbox
-- optional exact paradigm reference when one exists
+A selected window restricts changes to that window and explicit dependencies;
+a selected sequence restricts changes to that sequence, its windows, and
+explicit dependencies. No selection means whole-experiment scope, but Psycoder
+must first confirm the experiment logic before proposing changes. Destructive
+edits, scope expansion, table creation/import, and shared-dependency changes
+require explicit confirmation. Any failure rolls back the entire transaction.
 
-Missing paradigm references never invalidate a custom design. They only remove
-reference guidance. Required generation context is the canonical v2 snapshot,
-compiled ExecutionPlan, platform adapter contract, and artifact contract. The
-retired v1 `ExperimentSpec`, `canvas_state`, and `legacySpec` fields are not part
-of new Studio jobs or packages.
+The Agent may inspect derived window, sequence, and complete source through the
+source map. Semantic changes must return to the Model. A compiler defect enters
+the system-fix path; the Agent cannot quietly edit generated source into a new
+experiment fact.
 
-Context allocation is deployment-owned. This skill contract imposes no fixed
-per-stage token ceiling; correctness is enforced by schemas, artifact hashes,
-deterministic gates, and bounded repair attempts.
+The Worker does not treat an allowlist or newly computed hash as proof that
+arbitrary AI-authored runtime preserves Model semantics. Model-derived window,
+sequence, entrypoint, condition, resource, and data-contract source remains
+frozen. Under repair profile 1.0, every executable reference statement in the
+target runtime kernel must remain byte-identical and in the same order. Changed
+AI runtime may add only host-recognized, position-bound fail-closed guard blocks
+at their declared reference statements, or standalone comments; it cannot
+delete, replace, reorder, relocate, or insert arbitrary executable behavior. The
+host then reruns syntax and deterministic validation, rebinds evidence, and
+requires an independent rereview.
 
-## Review Gate Semantics
+## No silent experiment content
 
-The psy-exp-reviewer defines findings; PsyCoder Studio derives separate
-static-packaging and runtime-collection states from those findings and the
-structured evidence. Counts and booleans are never accepted from a model:
+Neither skills nor compilers may create missing scientific content. In
+particular, they must not silently add condition tables, columns, stimuli,
+images, feedback text, response keys, correctness rules, repetitions, ITIs,
+data fields, or English placeholder strings. An unbound fixed-content sequence
+is valid. A condition binding must reference a real column in the sequence's
+actual condition table. Unsupported advanced logic remains explicit and blocks
+formal generation rather than being guessed or discarded.
 
-- `static_review_passed`: backend count of current findings has zero critical AND zero major
-- `ready_for_collection`: `static_review_passed` AND all required structured target-machine `RuntimeEvidence` records pass; `smoke_test_status` is derived from those records
-- `not_ready_for_collection`: critical/major exist, or smoke evidence is missing/failed
-- `ready_for_packaging`: derived from static review + complete files; may package a non-collection-ready build for smoke testing
-- unresolved critical/major issues: `ready_for_packaging = false`; missing smoke evidence alone does not block a package whose purpose is runtime testing
+## Generation, review, and repair
 
-The canonical machine contracts are listed in `runtime/manifest.json`:
-`designer-output` is the only mutation-capable pre-lock contract;
-`interpreter-output`, `review-output`, and `runtime-evidence` are immutable
-evidence records; `repair-attempt` is Coder-only; and `readiness-snapshot` is
-backend-only.
+The primary Coder may replace only exact allowlisted runtime paths. The host
+preserves the frozen shell and executable runtime baseline, verifies
+model/asset hashes, checks the source
+map and conformance trace, runs platform static and mock tests, hashes the
+artifact set, and invokes an independent Reviewer. Reviewer never returns rewritten files.
+It returns primitive hash-bound findings only.
 
-Reviewer never returns rewritten files; only the separately invoked Coder may
-return an allowlisted repair attempt.
+Blocking implementation findings may enter at most three separate Coder repair
+rounds. A repair cannot mutate the Model, asset manifest, conditions,
+compilation metadata, source map, conformance evidence, or readiness evidence.
+Every replacement is revalidated, rehashed, and independently rereviewed. A
+run that still fails after three rounds fails closed and never produces a
+successful downloadable build.
 
-The Worker should run `scripts/validate_studio_runtime.py` (or an exact port of
-its rules) at every record boundary. Execution-plan hashes use UTF-8 JSON with
+## Artifact and evidence contract
+
+New packages contain:
+
+```text
+experiment_model.json
+compilation_manifest.json
+source_map.json
+target runtime and window/sequence source units
+resources
+README.md
+_pipeline/ AI interpretation, review, repair, and validation evidence
+```
+
+They do not contain `execution_plan.json`, `experiment_ir.json`, `window_ir`,
+or `sequence_ir`. Historical packages remain downloadable archives and are not
+reinterpreted by the new runtime.
+
+The backend derives `ready_for_packaging` and `ready_for_collection`; no model
+may self-certify them. Static success only permits packaging for target tests.
+Collection additionally requires structured, hash-bound target-machine
+RuntimeEvidence. A browser/user submission is `user_attested`; only an
+authorized machine or reviewer workflow closes the collection gate.
+
+The Worker must run `scripts/validate_studio_runtime.py` (or an exact port) at
+every record boundary. Model and asset-set hashes use canonical UTF-8 JSON with
 sorted keys, no insignificant whitespace, `ensure_ascii=false`, and no NaN or
 Infinity before SHA-256.
 
+## Skill responsibility vs pipeline responsibility
+
+| Layer | Responsibility |
+| --- | --- |
+| Skill | Scientific and platform guidance, anti-patterns, quality gates, review knowledge, evidence limits |
+| Pipeline | Model schema and scope enforcement, canonical hashes, direct compilation, source mapping, conformance, repair allowlists, packaging, task state, and readiness derivation |
+
+Amazing PsyCoder is revisable professional guidance, not infallible authority.
+If maintained guidance conflicts with the confirmed Model or reproducible
+evidence, update and validate this source repository before synchronizing a
+PsyCoder Studio Worker bundle.
+
 ## Version
 
-v1.4.0 — unified Generation Envelope 2.0 and ExecutionPlan 2.0 contract, 2026-07-23.
+v1.4.0 — Generation Envelope 4.0 and direct ExperimentModel@4 contract;
+`jobSchemaVersion` 2.0, 2026-08-15.

@@ -45,11 +45,19 @@
       "maxItems": 20,
       "items": {
         "type": "object",
-        "required": ["type", "payload"],
+        "required": [
+          "type",
+          "baseModelRevision",
+          "scope",
+          "modelPaths",
+          "beforeAfterSummary",
+          "destructive",
+          "confirmationLevel",
+          "payload"
+        ],
         "properties": {
           "type": {
             "enum": [
-              "create_experiment",
               "update_experiment_meta",
               "add_sequence",
               "update_sequence",
@@ -60,15 +68,53 @@
               "remove_window",
               "reorder_windows",
               "move_window_to_sequence",
-              "update_condition_source",
-              "update_response_rule",
+              "add_scene_element",
+              "update_scene_element",
+              "remove_scene_element",
+              "reorder_scene_elements",
+              "update_window_timing",
+              "update_window_response",
+              "update_window_data",
+              "import_condition_table",
+              "create_condition_table",
+              "bind_condition_table",
+              "unbind_condition_table",
               "set_platform",
-              "update_data_schema",
-              "update_timing_defaults",
+              "update_display_contract",
+              "update_data_contract",
               "update_runtime_contract",
-              "update_output_contract"
+              "upsert_advanced_logic",
+              "remove_advanced_logic"
             ]
           },
+          "baseModelRevision": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "scope": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": { "enum": ["experiment", "sequence", "window"] },
+              "sequenceId": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "windowId": { "type": "string", "minLength": 1, "maxLength": 200 }
+            },
+            "additionalProperties": false
+          },
+          "modelPaths": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^/", "maxLength": 1000 }
+          },
+          "beforeAfterSummary": {
+            "type": "object",
+            "required": ["before", "after"],
+            "properties": {
+              "before": { "type": "string", "minLength": 1, "maxLength": 2000 },
+              "after": { "type": "string", "minLength": 1, "maxLength": 2000 }
+            },
+            "additionalProperties": false
+          },
+          "destructive": { "type": "boolean" },
+          "confirmationLevel": { "enum": ["proposal", "explicit_user_confirmation"] },
           "payload": { "type": "object" }
         },
         "additionalProperties": false

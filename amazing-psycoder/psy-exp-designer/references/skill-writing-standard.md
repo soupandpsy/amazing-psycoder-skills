@@ -84,7 +84,7 @@ Load only the resources needed for the current task:
 For experiment code generation, preserve priority:
 
 ```text
-confirmed config/ExecutionPlan > platform spec > config mapping > exact optional design reference > raw demos
+confirmed standalone config or frozen Studio ExperimentModel@4 > platform spec > config/Model mapping > exact optional design reference > raw demos
 ```
 
 For review, use the same authoritative platform spec as the coder rather than maintaining a second anti-pattern list.

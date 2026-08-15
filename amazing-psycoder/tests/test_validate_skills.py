@@ -97,13 +97,7 @@ class SemanticContractTests(unittest.TestCase):
             *sorted((repository / "docs").glob("README_*.md")),
         ]
         for directory, excluded, expected, documented in inventories:
-            actual = len(
-                [
-                    path
-                    for path in directory.glob("*.md")
-                    if path.name not in excluded
-                ]
-            )
+            actual = len([path for path in directory.glob("*.md") if path.name not in excluded])
             self.assertEqual(expected, actual, f"unexpected inventory count in {directory}")
             for readme in readmes:
                 self.assertIn(documented, readme.read_text(encoding="utf-8"))
@@ -350,6 +344,25 @@ class SemanticContractTests(unittest.TestCase):
         self.assertNotIn("The Studio uses a Skill Reference Engine", orchestrator)
         self.assertIn("does not prove a live Studio deployment", orchestrator)
 
+    def test_studio_designer_docs_use_model_v4_condition_table_terms(self) -> None:
+        studio_designer_docs = (
+            ROOT / "psy-exp-designer" / "SKILL.md",
+            ROOT / "psy-exp-designer" / "references" / "canvas-presentation.md",
+        )
+        for path in studio_designer_docs:
+            content = path.read_text(encoding="utf-8")
+            self.assertNotIn(
+                "TrialSource", content, f"{path} still teaches the retired Studio term"
+            )
+            self.assertNotIn(
+                "reshuffleEachCycle",
+                content,
+                f"{path} still teaches a setting absent from ExperimentModel@4",
+            )
+        skill = studio_designer_docs[0].read_text(encoding="utf-8")
+        for marker in ("conditionTableId", "windowIds", "orderMode", "fixedSeed"):
+            self.assertIn(marker, skill)
+
     def test_portable_validator_runs_without_site_packages(self) -> None:
         result = subprocess.run(
             [sys.executable, "-S", str(SCRIPT), "--portable"],
@@ -375,7 +388,9 @@ class SemanticContractTests(unittest.TestCase):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("\n".join(markers), encoding="utf-8")
             stale = root / "reference.md"
-            stale.write_text("The keyboard backend always causes a 50-70ms RT error.", encoding="utf-8")
+            stale.write_text(
+                "The keyboard backend always causes a 50-70ms RT error.", encoding="utf-8"
+            )
             errors = validator.semantic_contract_errors(root)
         self.assertTrue(any("fixed backend latency" in error for error in errors))
 
@@ -444,104 +459,116 @@ class RuntimeSchemaTests(unittest.TestCase):
     HASH = "a" * 64
 
     @classmethod
-    def execution_plan(cls) -> dict:
+    def experiment_model(cls) -> dict:
         return {
-            "schemaVersion": "2.0",
-            "projectName": "Schema fixture",
-            "project": {
-                "id": "project-1",
+            "format": "PSYCODER-EXPERIMENT-MODEL",
+            "version": "4.0",
+            "id": "project-1",
+            "revision": "model-v4-0123456789abcdef-1",
+            "metadata": {
                 "name": "Schema fixture",
+                "description": "Minimal Model@4 schema fixture.",
                 "paradigm": "custom",
-                "paradigmFamily": None,
-                "variant": None,
             },
-            "target": {"platform": "psychopy"},
-            "generationProfile": None,
+            "presentation": {
+                "display": {
+                    "referenceViewport": {"width": 1280, "height": 720},
+                    "scaleMode": "contain",
+                    "coordinateSystem": "center_pixel_y_up",
+                    "backgroundColor": "#000000",
+                    "fontPolicy": {
+                        "family": "Arial",
+                        "strictMetrics": False,
+                    },
+                },
+                "windows": [
+                    {
+                        "id": "response-1",
+                        "scene": {
+                            "elements": [
+                                {
+                                    "id": "text-1",
+                                    "order": 1,
+                                    "position": {"x": 0, "y": 0},
+                                    "anchor": "center",
+                                    "kind": "text",
+                                    "content": {"kind": "literal", "value": "X"},
+                                    "color": {"kind": "literal", "value": "#ffffff"},
+                                    "fontSizePx": 48,
+                                    "textAlign": "center",
+                                }
+                            ]
+                        },
+                        "timing": {
+                            "mode": "fixed",
+                            "durationMs": 1000,
+                            "continueKeys": [],
+                        },
+                        "response": {
+                            "enabled": True,
+                            "allowedKeys": ["f"],
+                            "responseEndsWindow": True,
+                            "correctAnswer": {"kind": "fixed", "value": "f"},
+                            "recordResponse": True,
+                            "recordRt": True,
+                            "recordAccuracy": True,
+                            "recordOnset": True,
+                            "rtOnset": "self",
+                        },
+                        "notes": "",
+                    }
+                ],
+            },
             "sequences": [
                 {
                     "id": "sequence-1",
                     "name": "Trial",
                     "order": 1,
                     "windowIds": ["response-1"],
-                    "execution": {"mode": "once"},
-                }
-            ],
-            "windows": [
-                {
-                    "id": "response-1",
-                    "label": "Response",
-                    "order": 1,
-                    "durationMs": 1000,
-                    "stimulus": {
-                        "type": "text",
-                        "displayMode": "text",
-                        "staticText": "X",
-                    },
-                    "response": {
-                        "enabled": True,
-                        "allowedKeys": ["f"],
-                        "event": "key_down",
-                        "correctKeyMode": "fixed",
-                        "correctKey": "f",
-                        "rtOnset": "response-1",
-                        "recordRt": True,
-                        "recordAccuracy": True,
-                    },
-                    "timing": {"mode": "fixed"},
-                    "data": {
-                        "recordResponse": True,
-                        "recordRt": True,
-                        "recordAccuracy": True,
-                        "recordOnset": True,
-                        "recordTrialFields": True,
+                    "execution": {
+                        "repetitions": 1,
+                        "orderMode": "table_order",
                     },
                 }
             ],
-            "trialSource": {
-                "mode": "generated",
-                "factors": [{"name": "condition", "levels": ["a"], "balance": "equal"}],
-                "randomization": {"seed": "participant-session"},
+            "conditionTables": [],
+            "conditionRules": [],
+            "variables": [],
+            "computations": [],
+            "dataContract": {
+                "participantFields": [],
+                "outputFields": [],
+                "savePolicy": "incremental_trial",
             },
-            "conditions": {"mode": "generated", "fields": [], "rules": []},
-            "responses": {
-                "id": "response-rule-1",
-                "allowedKeys": ["f"],
-                "correctKeySource": "fixed",
-                "correctKey": "f",
-                "rtOnset": "response-1",
-                "responseEvent": "key_down",
-                "recordRT": True,
-                "recordAccuracy": True,
+            "runtime": {
+                "participantDialog": True,
+                "abortKeys": ["escape"],
             },
-            "dataSchema": [],
+            "advancedLogic": [],
             "assets": [],
-            "itiMs": 0,
+            "targets": ["psychopy"],
+            "provenance": {
+                "createdAt": "2026-08-15T10:00:00+08:00",
+                "updatedAt": "2026-08-15T10:00:00+08:00",
+                "lastEditor": "user",
+            },
         }
 
     @classmethod
     def generation_envelope(cls) -> dict:
+        model = cls.experiment_model()
+        assets: list[dict] = []
         return {
-            "schemaVersion": "2.0",
+            "schemaVersion": "4.0",
+            "jobSchemaVersion": "2.0",
             "projectName": "Schema fixture",
             "target": {"platform": "psychopy"},
-            "experimentSpec": {
-                "schemaVersion": "2.4",
-                "meta": {},
-                "flow": [{}],
-                "trialRoutines": [{}],
-                "windows": [{}],
-                "conditions": {},
-                "responses": {},
-                "dataSchema": [{}],
-                "assets": [],
-                "builderState": {},
-                "designLifecycle": {
-                    "status": "confirmed",
-                    "confirmedAt": "2026-07-23T10:00:00+08:00",
-                },
-            },
-            "executionPlan": cls.execution_plan(),
-            "executionPlanHash": cls.HASH,
+            "experimentModel": model,
+            "modelHash": runtime_validator.canonical_json_sha256(model),
+            "assetSetHash": runtime_validator.canonical_json_sha256(assets),
+            "assetManifest": assets,
+            "compilerVersion": "studio-compiler-v4-fixture",
+            "exportRequest": {},
             "validationSummary": {
                 "valid": True,
                 "errorCount": 0,
@@ -566,11 +593,14 @@ class RuntimeSchemaTests(unittest.TestCase):
         envelope["validationSummary"]["valid"] = False
         self.assertFalse(self.validator("generation-input").is_valid(envelope))
 
+    def test_generation_accepts_authenticated_mode_only(self) -> None:
+        for retired_mode in ("platform_credit", "user_api_key"):
+            envelope = self.generation_envelope()
+            envelope["aiMode"] = retired_mode
+            self.assertFalse(self.validator("generation-input").is_valid(envelope))
+
     def test_generation_semantics_verify_hash_references_and_totals(self) -> None:
         envelope = self.generation_envelope()
-        envelope["executionPlanHash"] = runtime_validator.canonical_json_sha256(
-            envelope["executionPlan"]
-        )
         self.assertEqual([], runtime_validator.validate_record(ROOT, "generation", envelope))
 
         envelope["validationSummary"]["totalIssues"] = 1
@@ -578,18 +608,251 @@ class RuntimeSchemaTests(unittest.TestCase):
         self.assertTrue(any("totalIssues must equal" in error for error in errors))
 
         envelope["validationSummary"]["totalIssues"] = 0
-        envelope["executionPlan"]["sequences"][0]["windowIds"] = ["missing-window"]
-        envelope["executionPlanHash"] = runtime_validator.canonical_json_sha256(
-            envelope["executionPlan"]
-        )
+        envelope["experimentModel"]["sequences"][0]["windowIds"] = ["missing-window"]
+        envelope["modelHash"] = runtime_validator.canonical_json_sha256(envelope["experimentModel"])
         errors = runtime_validator.validate_record(ROOT, "generation", envelope)
         self.assertTrue(any("unknown windows" in error for error in errors))
         self.assertTrue(any("unreachable windows" in error for error in errors))
 
+    def test_empty_model_has_no_silent_experiment_content(self) -> None:
+        model = self.experiment_model()
+        model["presentation"]["windows"] = []
+        model["sequences"] = []
+        model["dataContract"]["participantFields"] = []
+        model["dataContract"]["outputFields"] = []
+        self.assertTrue(self.validator("experiment-model").is_valid(model))
+        serialized = json.dumps(model, ensure_ascii=False)
+        for forbidden in (
+            "trial-source-default",
+            "congruency",
+            "correct_key",
+            "Correct / Incorrect",
+            '"r"',
+            '"g"',
+            '"b"',
+            '"y"',
+        ):
+            self.assertNotIn(forbidden, serialized)
+
+    def test_model_rejects_system_created_condition_table(self) -> None:
+        model = self.experiment_model()
+        model["conditionTables"] = [
+            {
+                "id": "table-1",
+                "name": "Invalid default",
+                "columns": [{"name": "stimulus", "dataType": "string"}],
+                "rows": [{"stimulus": "X"}],
+                "contentHash": self.HASH,
+                "source": {"kind": "system_default", "name": "template"},
+            }
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+
+    def test_condition_binding_requires_real_bound_column(self) -> None:
+        model = self.experiment_model()
+        element = model["presentation"]["windows"][0]["scene"]["elements"][0]
+        element["content"] = {"kind": "condition_column", "column": "stimulus"}
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("without a bound condition table" in error for error in errors))
+
+        model["conditionTables"] = [
+            {
+                "id": "table-1",
+                "name": "Confirmed table",
+                "columns": [{"name": "other", "dataType": "string"}],
+                "rows": [{"other": "X"}],
+                "contentHash": self.HASH,
+                "source": {"kind": "user_import", "name": "conditions.csv"},
+            }
+        ]
+        model["sequences"][0]["conditionTableId"] = "table-1"
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("columns missing" in error for error in errors))
+
+    def test_disabled_response_cannot_retain_default_keys(self) -> None:
+        model = self.experiment_model()
+        response = model["presentation"]["windows"][0]["response"]
+        response.update(
+            {
+                "enabled": False,
+                "allowedKeys": ["r", "g", "b", "y"],
+                "responseEndsWindow": False,
+                "recordResponse": False,
+                "recordRt": False,
+                "recordAccuracy": False,
+            }
+        )
+        response.pop("correctAnswer")
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("disabled response" in error for error in errors))
+
+    def test_incremental_trial_rejects_ambiguous_multi_window_writers(self) -> None:
+        model = self.experiment_model()
+        second = json.loads(json.dumps(model["presentation"]["windows"][0]))
+        second["id"] = "response-2"
+        second["scene"]["elements"][0]["id"] = "text-2"
+        model["presentation"]["windows"].append(second)
+        model["sequences"][0]["windowIds"].append("response-2")
+        model["dataContract"]["outputFields"] = [
+            {"name": "response_key", "source": "response", "required": False},
+            {"name": "onset", "source": "system", "required": False},
+        ]
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("windows writing response" in error for error in errors))
+        self.assertTrue(any("windows writing onset" in error for error in errors))
+
+        model["dataContract"]["savePolicy"] = "incremental_window"
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertFalse(any("incremental_trial field" in error for error in errors))
+
+    def test_variable_initial_value_must_match_declared_type(self) -> None:
+        model = self.experiment_model()
+        model["variables"] = [
+            {
+                "id": "variable-1",
+                "name": "score",
+                "type": "number",
+                "scope": "experiment",
+                "source": "advanced_logic",
+                "required": False,
+                "initialValue": "not-a-number",
+            }
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+        model["variables"][0]["initialValue"] = 0
+        self.assertTrue(self.validator("experiment-model").is_valid(model))
+
+    def test_data_field_sources_cannot_create_uncollected_participant_outputs(self) -> None:
+        model = self.experiment_model()
+        model["dataContract"]["participantFields"] = [
+            {"name": "participant_id", "source": "condition", "required": True}
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+
+        model = self.experiment_model()
+        model["dataContract"]["outputFields"] = [
+            {"name": "participant_id", "source": "participant", "required": True}
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+
+    def test_data_contract_and_advanced_logic_bind_only_real_model_values(self) -> None:
+        model = self.experiment_model()
+        model["dataContract"]["outputFields"] = [
+            {"name": "invented_column", "source": "condition", "required": True}
+        ]
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(
+            any("does not map to any real condition-table column" in error for error in errors)
+        )
+
+        model = self.experiment_model()
+        model["dataContract"]["outputFields"] = [
+            {"name": "score", "source": "advanced_logic", "required": True}
+        ]
+        model["variables"] = [
+            {
+                "id": "score-1",
+                "name": "score",
+                "type": "number",
+                "scope": "experiment",
+                "source": "advanced_logic",
+                "required": True,
+            }
+        ]
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("requires a typed initialValue" in error for error in errors))
+
+        model["variables"][0]["initialValue"] = 0
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(
+            any("has no verified after-window logic writer" in error for error in errors)
+        )
+
+        model["variables"].append({**model["variables"][0], "id": "score-2"})
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("variables has duplicate name" in error for error in errors))
+
+        model["variables"] = [{**model["variables"][0], "scope": "condition_row"}]
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("supports experiment scope only" in error for error in errors))
+
+    def test_required_record_fields_have_a_writer_for_each_save_policy(self) -> None:
+        model = self.experiment_model()
+        model["presentation"]["windows"][0]["response"]["recordOnset"] = False
+        model["dataContract"]["outputFields"] = [
+            {"name": "onset", "source": "system", "required": True}
+        ]
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("no writer for required onset output" in error for error in errors))
+
+        model["dataContract"]["savePolicy"] = "incremental_window"
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(any("no writer for required" in error for error in errors))
+
+        model = self.experiment_model()
+        model["dataContract"]["savePolicy"] = "incremental_window"
+        model["dataContract"]["outputFields"] = [
+            {"name": "word", "source": "condition", "required": True}
+        ]
+        for window in model["presentation"]["windows"]:
+            for flag in ("recordResponse", "recordRt", "recordAccuracy", "recordOnset"):
+                window["response"][flag] = False
+        errors = runtime_validator.experiment_model_errors(model)
+        self.assertTrue(
+            any("incremental_window requires at least one explicit" in error for error in errors)
+        )
+
+    def test_computation_and_condition_rule_cannot_be_empty(self) -> None:
+        model = self.experiment_model()
+        model["computations"] = [
+            {
+                "id": "computation-1",
+                "scope": {"kind": "experiment"},
+                "reads": [],
+                "writes": [],
+                "operation": {},
+            }
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+
+        model = self.experiment_model()
+        model["conditionRules"] = [
+            {
+                "id": "rule-1",
+                "scope": {"sequenceId": "sequence-1"},
+                "rule": {},
+            }
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+
+    def test_non_experiment_scope_requires_an_id(self) -> None:
+        model = self.experiment_model()
+        model["computations"] = [
+            {
+                "id": "computation-1",
+                "scope": {"kind": "window"},
+                "reads": [],
+                "writes": ["score"],
+                "operation": {"kind": "assign"},
+            }
+        ]
+        self.assertFalse(self.validator("experiment-model").is_valid(model))
+        model["computations"][0]["scope"]["id"] = "response-1"
+        self.assertTrue(self.validator("experiment-model").is_valid(model))
+
+    def test_generation_rejects_model_or_asset_hash_drift(self) -> None:
+        envelope = self.generation_envelope()
+        envelope["modelHash"] = self.HASH
+        envelope["assetSetHash"] = self.HASH
+        errors = runtime_validator.validate_record(ROOT, "generation", envelope)
+        self.assertTrue(any("modelHash does not match" in error for error in errors))
+        self.assertTrue(any("assetSetHash does not match" in error for error in errors))
+
     def test_artifact_output_rejects_path_traversal(self) -> None:
         output = {
             "platform": "psychopy",
-            "executionPlanHash": self.HASH,
+            "modelHash": self.HASH,
+            "assetSetHash": self.HASH,
             "files": [
                 {
                     "path": "../escape.py",
@@ -609,7 +872,8 @@ class RuntimeSchemaTests(unittest.TestCase):
     def test_artifact_semantics_reject_duplicate_paths(self) -> None:
         output = {
             "platform": "psychopy",
-            "executionPlanHash": self.HASH,
+            "modelHash": self.HASH,
+            "assetSetHash": self.HASH,
             "files": [
                 {
                     "path": "main.py",
@@ -634,7 +898,8 @@ class RuntimeSchemaTests(unittest.TestCase):
         report = {
             "review_id": "review-1",
             "artifact_set_hash": self.HASH,
-            "execution_plan_hash": self.HASH,
+            "model_hash": self.HASH,
+            "asset_set_hash": self.HASH,
             "mode": "code-audit",
             "scope": {"reviewed": ["main.py"], "not_reviewed": ["target timing"]},
             "issues": [],
@@ -652,7 +917,8 @@ class RuntimeSchemaTests(unittest.TestCase):
         report = {
             "review_id": "review-1",
             "artifact_set_hash": self.HASH,
-            "execution_plan_hash": self.HASH,
+            "model_hash": self.HASH,
+            "asset_set_hash": self.HASH,
             "mode": "code-audit",
             "scope": {"reviewed": ["README.md"], "not_reviewed": []},
             "issues": [],
@@ -667,13 +933,16 @@ class RuntimeSchemaTests(unittest.TestCase):
         repair = {
             "attempt": 1,
             "platform": "psychopy",
+            "repair_profile_version": "1.0",
+            "semantic_change": False,
             "source_review_id": "review-1",
             "input_artifact_set_hash": self.HASH,
-            "execution_plan_hash": self.HASH,
+            "model_hash": self.HASH,
+            "asset_set_hash": self.HASH,
             "addressed_issue_ids": ["REV-001"],
             "files": [
                 {
-                    "path": "_pipeline/execution_plan.json",
+                    "path": "_pipeline/experiment_model.json",
                     "content": "{}",
                     "ownership": "model",
                 }
@@ -683,6 +952,12 @@ class RuntimeSchemaTests(unittest.TestCase):
         self.assertFalse(self.validator("repair-attempt").is_valid(repair))
         repair["files"][0]["path"] = "main.py"
         self.assertTrue(self.validator("repair-attempt").is_valid(repair))
+
+        repair["repair_profile_version"] = "2.0"
+        self.assertFalse(self.validator("repair-attempt").is_valid(repair))
+        repair["repair_profile_version"] = "1.0"
+        repair["semantic_change"] = True
+        self.assertFalse(self.validator("repair-attempt").is_valid(repair))
 
     def test_readiness_rejects_contradictory_state(self) -> None:
         snapshot = {
@@ -710,7 +985,8 @@ class RuntimeSchemaTests(unittest.TestCase):
         report = {
             "review_id": "review-1",
             "artifact_set_hash": self.HASH,
-            "execution_plan_hash": self.HASH,
+            "model_hash": self.HASH,
+            "asset_set_hash": self.HASH,
             "mode": "code-audit",
             "scope": {"reviewed": ["main.py"], "not_reviewed": []},
             "issues": [],
@@ -750,11 +1026,24 @@ class RuntimeSchemaTests(unittest.TestCase):
                     "full_short_session",
                     "data_integrity",
                     "incremental_recovery",
+                    "timing_device_check",
                 )
             ],
             "started_at": "2026-07-23T10:00:00+08:00",
             "completed_at": "2026-07-23T10:20:00+08:00",
             "recorded_by": "lab operator",
+            "verification": {
+                "level": "machine_verified",
+                "verified_by": "test harness",
+                "verified_at": "2026-07-23T10:25:00+08:00",
+                "file_digests": [
+                    {
+                        "path": "smoke/session.log",
+                        "sha256": self.HASH,
+                        "size_bytes": 128,
+                    }
+                ],
+            },
         }
         passed = runtime_validator.derive_readiness(
             ROOT,

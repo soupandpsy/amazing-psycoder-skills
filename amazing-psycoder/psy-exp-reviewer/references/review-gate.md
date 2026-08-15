@@ -4,10 +4,7 @@ v1.4.0 — unified, evidence-gated, and PsyCoder Studio-compatible.
 
 ## Purpose
 
-Define fail-closed backend derivation rules. The Reviewer supplies only
-primitive findings and reviewed file hashes. It never supplies issue counts,
-repair state, `ready_for_packaging`, `smoke_test_status`, or
-`ready_for_collection`.
+Define fail-closed backend derivation rules. The Reviewer supplies only primitive findings and reviewed file hashes. It never supplies issue counts, repair state, `ready_for_packaging`, `smoke_test_status`, or `ready_for_collection`.
 
 ## Gate Rules
 
@@ -33,9 +30,7 @@ IF major_count > 0:
     packaging MUST stop
 ```
 
-Counts are derived from the current immutable review; they are not accepted as
-model output. A repair creates a new content-addressed artifact set and requires
-a fresh review. Findings are never mutated to `resolved`.
+Counts are derived from the current immutable review; they are not accepted as model output. In Studio, a blocking compiler defect fails the run. Repair the maintained adapter with a regression test and regenerate a new content-addressed artifact set for a fresh review. Findings are never mutated to `resolved` and the reviewed runtime is never patched in place by a model.
 
 ### Rule 3: Static Packaging Derivation
 
@@ -51,9 +46,7 @@ ready_for_packaging =
     AND all_reviewed_hashes_match
 ```
 
-`ready_for_packaging` is written only to the backend-owned
-`ReadinessSnapshot`. Packaging may produce a candidate for target-machine
-testing; it does not imply collection readiness.
+`ready_for_packaging` is written only to the backend-owned `ReadinessSnapshot`. Packaging may produce a candidate for target-machine testing; it does not imply collection readiness.
 
 ### Rule 4: Artifact Identity and Path Safety
 
@@ -64,15 +57,16 @@ ELSE IF reviewed_files does not cover every required in-scope artifact:
     packaging MUST stop
 ELSE IF review.artifact_set_hash != current_artifact_set_hash:
     packaging MUST stop
-ELSE IF review.execution_plan_hash != immutable_execution_plan_hash:
+ELSE IF review.model_hash != immutable_model_hash:
+    packaging MUST stop
+ELSE IF review.asset_set_hash != immutable_asset_set_hash:
     packaging MUST stop
 ELSE IF any path is absolute, contains a backslash, traverses a parent,
         is unreadable, violates ownership, or its SHA-256 mismatches:
     packaging MUST stop
 ```
 
-Review reports contain hashes, not duplicated file content. Compiler-owned
-artifacts and `_pipeline/` metadata can never be replaced by a Coder repair.
+Review reports contain hashes, not duplicated file content. Studio `_pipeline/` metadata is host-owned. Runtime files may be replaced only by the separate Coder through a hash-bound allowlist; the Reviewer itself never rewrites files.
 
 ### Rule 5: Runtime Readiness
 
@@ -81,11 +75,9 @@ required_runtime_checks = {
     "launch_exit",
     "full_short_session",
     "data_integrity",
-    "incremental_recovery"
+    "incremental_recovery",
+    "timing_device_check"
 }
-
-IF a config-dependent hardware/timing claim exists:
-    required_runtime_checks += {"timing_device_check"}
 
 smoke_test_status =
     "passed" only if every required check has a validated passing record
@@ -98,16 +90,14 @@ ready_for_collection =
     AND smoke_test_status == "passed"
 ```
 
-Every passing `RuntimeEvidence` record must match the current artifact hash and
-include the exact target environment, procedure, timestamps, observer, and
-inspectable evidence paths. A summary assertion is not evidence.
+All five checks are required exactly once because every supported experiment depends on display/input timing at its declared target. Every passing `RuntimeEvidence` record must match the current artifact hash and include the exact target environment, procedure, timestamps, observer, and inspectable evidence paths. The record is append-only and every evidence file has a server-computed SHA-256 digest. `user_attested` submissions remain useful triage records but cannot produce `smoke_test_status = "passed"`; that requires `machine_verified` or `reviewer_verified` evidence issued by an authenticated backend workflow. A summary assertion is not evidence.
 
 ## Skill vs. Pipeline Responsibility
 
 | Layer | Responsibility |
-|-------|---------------|
+| --- | --- |
 | **Reviewer skill** | Defines professional checks and emits evidence-based Critical/Major/Minor findings plus reviewed file hashes. |
-| **Coder repair** | Replaces only authorized model-owned files for explicit issue IDs; maximum two attempts. |
+| **Constrained repair** | Separate Coder replaces only allowlisted runtime paths; host revalidates and re-reviews the new artifact set. Recurring defects also receive a maintained adapter regression fix. |
 | **Pipeline validator** | Validates schemas, paths, ownership, hashes, required artifacts, and static checks; computes counts and readiness. |
 | **Target workflow** | Produces structured observed `RuntimeEvidence`; never inferred from source inspection. |
 
@@ -117,9 +107,10 @@ inspectable evidence paths. A summary assertion is not evidence.
 Stage 3: Read-only Reviewer
   -> ReviewReport(findings + hashes)
 
-Optional Stage 3b: Coder Repair
-  -> RepairAttempt(authorized model-owned files)
-  -> validate -> new artifact hash -> new review
+Optional Stage 3b: Adapter Defect Recovery
+  -> fail current generation
+  -> fix maintained adapter + regression test
+  -> deploy -> regenerate -> new artifact hash -> new review
 
 Stage 4: Deterministic Validator
   -> derive counts, static state, smoke state, and ReadinessSnapshot

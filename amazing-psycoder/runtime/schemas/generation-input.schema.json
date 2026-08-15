@@ -1,21 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://psycoder.studio/schemas/generation-input.schema.json",
-  "title": "PsyCoder Studio Generation Envelope 2.0",
+  "title": "PsyCoder Studio Generation Envelope 4.0",
   "type": "object",
   "required": [
     "schemaVersion",
+    "jobSchemaVersion",
     "projectName",
     "target",
-    "experimentSpec",
-    "executionPlan",
-    "executionPlanHash",
+    "experimentModel",
+    "modelHash",
+    "assetSetHash",
+    "assetManifest",
+    "compilerVersion",
+    "exportRequest",
     "validationSummary",
     "aiMode",
     "requestedAt"
   ],
   "properties": {
-    "schemaVersion": { "const": "2.0" },
+    "schemaVersion": { "const": "4.0" },
+    "jobSchemaVersion": { "const": "2.0" },
     "projectName": { "type": "string", "minLength": 1, "maxLength": 100 },
     "target": {
       "type": "object",
@@ -25,48 +30,32 @@
       },
       "additionalProperties": false
     },
-    "experimentSpec": {
-      "type": "object",
-      "required": [
-        "schemaVersion",
-        "meta",
-        "flow",
-        "trialRoutines",
-        "windows",
-        "conditions",
-        "responses",
-        "dataSchema",
-        "builderState",
-        "designLifecycle"
-      ],
-      "properties": {
-        "schemaVersion": { "const": "2.4" },
-        "meta": { "type": "object" },
-        "flow": { "type": "array", "minItems": 1 },
-        "trialRoutines": { "type": "array", "minItems": 1 },
-        "windows": { "type": "array", "minItems": 1 },
-        "conditions": { "type": "object" },
-        "responses": { "type": "object" },
-        "dataSchema": { "type": "array", "minItems": 1 },
-        "assets": { "type": "array" },
-        "builderState": { "type": "object" },
-        "designLifecycle": {
-          "type": "object",
-          "required": ["status"],
-          "properties": {
-            "status": { "const": "confirmed" },
-            "confirmedAt": { "type": "string", "format": "date-time" }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": false
-    },
-    "executionPlan": { "$ref": "execution-plan.schema.json" },
-    "executionPlanHash": {
+    "experimentModel": { "$ref": "experiment-model.schema.json" },
+    "modelHash": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
     },
+    "assetSetHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assetManifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "sha256", "sizeBytes", "mediaType"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "path": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "sizeBytes": { "type": "integer", "minimum": 1 },
+          "mediaType": { "type": "string", "minLength": 1, "maxLength": 200 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "compilerVersion": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "exportRequest": { "type": "object" },
     "validationSummary": {
       "type": "object",
       "required": ["valid", "errorCount", "warningCount", "infoCount", "totalIssues", "topIssueCodes"],
@@ -86,7 +75,7 @@
       "additionalProperties": false
     },
     "aiMode": {
-      "enum": ["authenticated", "platform_credit", "user_api_key"]
+      "const": "authenticated"
     },
     "requestedAt": { "type": "string", "format": "date-time" }
   },

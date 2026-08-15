@@ -27,6 +27,7 @@ experiment:
     subject: subject_id
     item: stimulus               # null when items are not sampled/repeated
     session: null
+    site: null                   # null when site/lab does not create a sampling or dependence level
 
 design:
   ivs:                # name, type, levels
@@ -78,6 +79,7 @@ output:
 - Require `analysis_mode`, an estimand/role, and a selected method for every analyzed outcome; recorded QC/logging variables need no inferential question.
 - Require a confirmed analysis language, exact language version, dependency strategy, concrete project-relative dependency file, and target environment; Coder must not silently change ecosystems.
 - Require observation level and all dependence/clustering units that affect the model (subjects, items, sessions, sites).
+- Require every non-null ID and every declared clustering column to be validated by generated code before cleaning/modeling.
 - For multi-file input, `data_path` names a directory and `file_pattern` names files within it. Require explicit delimiter/sheet/JSON orientation where the format would otherwise be ambiguous.
 - Require alpha/preregistration provenance for confirmatory questions and label post-data decisions as exploratory.
 - Require a seed only when `model.stochastic` is true; environment capture is always required.
@@ -85,3 +87,4 @@ output:
 - Mark defaults and inferences as `[ASSUMED]` until Gate 5 confirmation.
 - Do not pass unresolved fields to `psy-ana-coder`.
 - Save it as `analysis_config.yaml` after Gate 5, report its path, and show its contents on request.
+- After a clean run, validate the configured `analysis-run.json` against the reviewed config, code, dependency, input, and output hashes; a matching run still requires result review before publication readiness.

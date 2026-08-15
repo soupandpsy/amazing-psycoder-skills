@@ -70,7 +70,7 @@ REQUIRED_CONTRACTS = {
     "psy-ana-designer/references/config-schema.md": ('version: "1.2"', "runtime:", "language_version", "dependency_strategy", "dependency_file", "loader_options", "model_formula", "dependence_structure"),
     "psy-exp-designer/references/data-recording.md": ("response status", "linked event table", "never encode missing RT"),
     "scripts/validate_experiment.py": ("ready_for_collection\": False", "pre_code_ready", "ENV001", "WIN007", "WIN010", "WIN011", "RND004", "OUT005"),
-    "scripts/validate_analysis.py": ("ready_for_publication\": False", "analysis_plan_ready", "Q007", "CODE005", "CODE010", "CODE011", "CODE013", "ENV002", "ENV005", "ENV009", "DATA009"),
+    "scripts/validate_analysis.py": ("ready_for_publication\": False", "analysis_plan_ready", "execution_evidence_passed", "Q007", "CODE005", "CODE010", "CODE011", "CODE013", "CODE014", "CODE015", "RUN007", "RUN012", "ENV002", "ENV005", "ENV009", "DATA009"),
     "psy-exp-reviewer/references/review-report-schema.md": ("RuntimeEvidence", "FileObject", "launch_exit", "incremental_recovery", "evidence_paths", "sha256"),
     "psy-exp-coder/jspsych/spec/README.md": ("jspsych@8.2.3", "evaluateTimelineVariable", "abortExperiment"),
 }
@@ -86,9 +86,9 @@ RUNTIME_FILES = (
     "runtime/artifacts/jspsych.json",
     "runtime/artifacts/psychtoolbox.json",
     "runtime/schemas/designer-output.schema.json",
+    "runtime/schemas/experiment-model.schema.json",
     "runtime/schemas/generation-input.schema.json",
     "runtime/schemas/interpreter-output.schema.json",
-    "runtime/schemas/execution-plan.schema.json",
     "runtime/schemas/artifact-output.schema.json",
     "runtime/schemas/review-output.schema.json",
     "runtime/schemas/repair-attempt.schema.json",
@@ -104,7 +104,7 @@ CONTRACT_VERSION_FILES = (
     "runtime/primitives.json",
 )
 
-MODEL_ARTIFACTS = {
+STUDIO_RUNTIME_ARTIFACTS = {
     "psychopy": {"main.py"},
     "jspsych": {"index.html", "experiment.js"},
     "psychtoolbox": {"main.m"},
@@ -288,8 +288,21 @@ def runtime_contract_errors(root: Path, *, require_jsonschema: bool = True) -> l
             errors.append(f"{root / relative}: contractVersion must match manifest contractVersion {contract_version!r}")
 
     serialization = manifest.get("serialization", {})
-    if not isinstance(serialization, dict) or serialization.get("executionModel") != "ExecutionPlan@2.0":
-        errors.append(f"{root / 'runtime/manifest.json'}: executionModel must be ExecutionPlan@2.0")
+    if not isinstance(serialization, dict):
+        errors.append(f"{root / 'runtime/manifest.json'}: serialization must be an object")
+    else:
+        if serialization.get("generationEnvelope") != "4.0":
+            errors.append(f"{root / 'runtime/manifest.json'}: generationEnvelope must be 4.0")
+        if serialization.get("jobSchemaVersion") != "2.0":
+            errors.append(f"{root / 'runtime/manifest.json'}: jobSchemaVersion must be 2.0")
+        if serialization.get("authorityModel") != "ExperimentModel@4.0":
+            errors.append(f"{root / 'runtime/manifest.json'}: authorityModel must be ExperimentModel@4.0")
+        forbidden = sorted({"semanticModel", "executionModel"}.intersection(serialization))
+        if forbidden:
+            errors.append(
+                f"{root / 'runtime/manifest.json'}: obsolete authority fields are forbidden: "
+                + ", ".join(forbidden)
+            )
 
     contracts = manifest.get("contracts", {})
     if not isinstance(contracts, dict):
@@ -326,13 +339,18 @@ def runtime_contract_errors(root: Path, *, require_jsonschema: bool = True) -> l
             if not isinstance(schema.get("$id"), str) or not schema.get("$id"):
                 errors.append(f"{root / relative}: portable check requires a non-empty $id")
 
-    execution_schema = values.get("runtime/schemas/execution-plan.schema.json", {})
-    schema_version = execution_schema.get("properties", {}).get("schemaVersion", {}).get("const")
-    if schema_version != "2.0":
-        errors.append(f"{root / 'runtime/schemas/execution-plan.schema.json'}: schemaVersion must be 2.0")
+    model_schema = values.get("runtime/schemas/experiment-model.schema.json", {})
+    model_version = model_schema.get("properties", {}).get("version", {}).get("const")
+    if model_version != "4.0":
+        errors.append(f"{root / 'runtime/schemas/experiment-model.schema.json'}: version must be 4.0")
 
     generation_schema = values.get("runtime/schemas/generation-input.schema.json", {})
-    valid_contract = generation_schema.get("properties", {}).get("validationSummary", {}).get("properties", {})
+    generation_properties = generation_schema.get("properties", {})
+    if generation_properties.get("schemaVersion", {}).get("const") != "4.0":
+        errors.append(f"{root / 'runtime/schemas/generation-input.schema.json'}: schemaVersion must be 4.0")
+    if generation_properties.get("jobSchemaVersion", {}).get("const") != "2.0":
+        errors.append(f"{root / 'runtime/schemas/generation-input.schema.json'}: jobSchemaVersion must be 2.0")
+    valid_contract = generation_properties.get("validationSummary", {}).get("properties", {})
     if valid_contract.get("valid", {}).get("const") is not True or valid_contract.get("errorCount", {}).get("const") != 0:
         errors.append(f"{root / 'runtime/schemas/generation-input.schema.json'}: generation requires valid=true and errorCount=0")
 
@@ -351,9 +369,6 @@ def runtime_contract_errors(root: Path, *, require_jsonschema: bool = True) -> l
         errors.append(f"{root / 'runtime/schemas/review-output.schema.json'}: read-only review leaks derived/mutation fields: {', '.join(leaked)}")
     if manifest.get("profilesPath") != "runtime/profiles.json":
         errors.append(f"{root / 'runtime/manifest.json'}: profilesPath must point to runtime/profiles.json")
-    migration_guide = manifest.get("migrationGuide")
-    if not isinstance(migration_guide, str) or not (root / migration_guide).is_file():
-        errors.append(f"{root / 'runtime/manifest.json'}: migrationGuide must point to a readable file")
     if profiles.get("defaultProfile") != "standalone":
         errors.append(f"{root / 'runtime/profiles.json'}: standalone must be the default profile")
     declared_profiles = profiles.get("profiles")
@@ -379,7 +394,7 @@ def runtime_contract_errors(root: Path, *, require_jsonschema: bool = True) -> l
         if not isinstance(artifact, str) or artifact not in values:
             errors.append(f"{root / 'runtime/capabilities.json'}: invalid profile artifactContract {artifact!r}")
 
-    for platform, expected_model_paths in MODEL_ARTIFACTS.items():
+    for platform, expected_runtime_paths in STUDIO_RUNTIME_ARTIFACTS.items():
         relative = f"runtime/artifacts/{platform}.json"
         contract = values.get(relative, {})
         files = contract.get("files", [])
@@ -407,17 +422,53 @@ def runtime_contract_errors(root: Path, *, require_jsonschema: bool = True) -> l
             for item in files
             if isinstance(item, dict) and item.get("owner") == "model"
         }
-        if model_paths != expected_model_paths:
+        if model_paths != expected_runtime_paths:
             errors.append(
-                f"{root / relative}: model-owned paths must be {sorted(expected_model_paths)!r}, "
-                f"got {sorted(model_paths)!r}"
+                f"{root / relative}: only platform runtime entry paths may be model-owned; "
+                f"expected {sorted(expected_runtime_paths)!r}, got {sorted(model_paths)!r}"
             )
-        audit = next(
-            (item for item in files if isinstance(item, dict) and item.get("path") == "audit_report.md"),
-            None,
-        )
-        if not audit or audit.get("owner") != "compiler":
-            errors.append(f"{root / relative}: audit_report.md must be compiler-rendered")
+        runtime_files = {
+            item.get("path")
+            for item in files
+            if isinstance(item, dict) and item.get("path") in expected_runtime_paths
+        }
+        if runtime_files != expected_runtime_paths:
+            errors.append(
+                f"{root / relative}: runtime paths must be {sorted(expected_runtime_paths)!r}, "
+                f"got {sorted(runtime_files)!r}"
+            )
+        unprotected_runtime_paths = {
+            item.get("path")
+            for item in files
+            if isinstance(item, dict)
+            and item.get("path") in expected_runtime_paths
+            and item.get("semanticProtection") != "compiler_hash_bound"
+        }
+        if unprotected_runtime_paths:
+            errors.append(
+                f"{root / relative}: runtime semantic files must use compiler_hash_bound protection: "
+                f"{sorted(unprotected_runtime_paths)!r}"
+            )
+        protected_paths = {
+            item.get("path")
+            for item in files
+            if isinstance(item, dict) and item.get("owner") == "compiler"
+        }
+        required_protected = {
+            "experiment_model.json",
+            "compilation_manifest.json",
+            "source_map.json",
+            "README.md",
+        }
+        if not required_protected.issubset(protected_paths):
+            errors.append(
+                f"{root / relative}: compiler-owned evidence files are incomplete: "
+                f"{sorted(required_protected - protected_paths)!r}"
+            )
+        if "audit_report.md" in paths:
+            errors.append(
+                f"{root / relative}: audit_report.md was replaced by structured _pipeline evidence"
+            )
 
     routing = values.get("runtime/routing.json", {}).get("stages", {})
     if isinstance(routing, dict):

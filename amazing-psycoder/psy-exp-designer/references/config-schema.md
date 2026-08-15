@@ -4,9 +4,9 @@ Declarative YAML format for defining an experiment. When all config fields are f
 
 > This YAML document is the editable handoff for standalone Claude Code/Codex
 > use. PsyCoder Studio does not submit this YAML to its Worker: the website
-> stores `PsyCoderExperimentSpecV2@2.4` JSON, then deterministically compiles an
-> `ExecutionPlan@2.0`. Keep the semantics equivalent, but never serialize this
-> standalone shape as a Studio `canvas_state` or legacy `ExperimentSpec`.
+> stores `ExperimentModel@4.0` JSON and compiles it directly for the selected
+> platform. Keep the semantics equivalent, but never serialize this
+> standalone shape as a Studio Canvas or any retired experiment document.
 
 > **Related**: [condition-file.md](condition-file.md) · [spec-template.md](spec-template.md) · deterministic validator: `../../scripts/validate_experiment.py`
 
@@ -67,57 +67,36 @@ windows:
 # === Required: Sequence Structure (Primary Format) ===
 # Each sequence = one horizontal row of windows on the canvas.
 # Sequences execute top-to-bottom; windows within a sequence run left-to-right.
+trial_sources:
+  practice_table: "conditions/practice.xlsx"
+  formal_table: "conditions/formal.xlsx"
+
 sequences:
   - name: Trial
     order: 1
     window_ids: [Fixation, Stimulus, Response, Feedback, ITI]
+    trial_source_id: formal_table      # optional; one source per sequence
     execution:
-      mode: loop                    # once | loop
-      repetitions: 80               # required when mode=loop
-      shuffle: true                 # optional; randomize window order within the sequence
+      repetitions: 1                  # positive cycle count; 1 already means once
+      order_mode: fixed_random        # table_order | fixed_random | fully_random
+      seed: "{subject_id}"            # required for fixed_random
+      reshuffle_each_cycle: false      # reuse the same fixed order across cycles
 
   - name: Feedback                  # only shown when feedback is active
     order: 2
     window_ids: [Feedback, ITI]
     execution:
-      mode: once
+      repetitions: 1
+      order_mode: table_order
     show_in: [practice]             # optional; restrict to specific contexts
 
   - name: Rest
     order: 3
     window_ids: [Rest]
     execution:
-      mode: once
+      repetitions: 1
+      order_mode: table_order
     duration: 30000                 # ms, or "self-paced"
-
-# === Block Structure (Legacy — use Sequences above for new designs) ===
-# When both `sequences` and `blocks` are present, `sequences` takes precedence.
-# Block→Sequence mapping: practice=loop+feedback, formal=loop, rest=once, debrief=once.
-blocks:
-  - name: Practice
-    condition_file: "conditions/practice.xlsx"
-    type: practice                # practice | formal | rest | debrief
-    feedback: true
-    repeatable: true              # participant can repeat this block
-    instruction_text: "按空格键对X反应，看到O不反应"
-    trials: 20                    # must equal the condition-file row count
-
-  - name: Block_1
-    condition_file: "conditions/block_1.xlsx"
-    type: formal
-    feedback: false
-    trials: 80
-
-  - name: Rest
-    type: rest
-    duration: 30000               # ms, or "self-paced"
-    instruction_text: "休息一下，按空格键继续"
-
-  - name: Block_2
-    condition_file: "conditions/block_2.xlsx"
-    type: formal
-    feedback: false
-    trials: 80
 
 # === Required: Randomization Contract ===
 randomization:
@@ -377,34 +356,31 @@ windows:
     duration: [500, 800]
     response: none
 
-blocks:
-  - name: Practice
-    condition_file: "conditions/practice.xlsx"
-    type: practice
-    feedback: true
-    trials: 20
-  - name: Formal
-    condition_file: "conditions/formal.xlsx"
-    type: formal
-    feedback: false
-    trials: 80
-
-# === OR use the primary Sequences format (recommended for new designs) ===
 sequences:
   - name: Practice
     order: 1
     window_ids: [Fixation, StimulusResponse, Feedback, ITI]
+    trial_source_id: practice_table
     execution:
-      mode: loop
-      repetitions: 20
+      repetitions: 1
+      order_mode: fixed_random
+      seed: "{subject_id}"
+      reshuffle_each_cycle: false
     show_in: [practice]
 
   - name: Formal
     order: 2
     window_ids: [Fixation, StimulusResponse, ITI]
+    trial_source_id: formal_table
     execution:
-      mode: loop
-      repetitions: 80
+      repetitions: 1
+      order_mode: fixed_random
+      seed: "{subject_id}"
+      reshuffle_each_cycle: false
+
+trial_sources:
+  practice_table: "conditions/practice.xlsx"
+  formal_table: "conditions/formal.xlsx"
 
 response_rules:
   correct: "{correct_response}"
@@ -430,11 +406,9 @@ All checks must pass before code generation. Checks 1-8 are deterministic artifa
 1. `runtime` records an exact framework version, pinned/lockfile dependency strategy, and target environment; every `{column_name}` in `content`, `duration`, `response`, `correct` exists in ALL referenced condition files
 2. `stimulus_folder` path exists and contains all stimulus files referenced via `{column}` in condition files
 3. All `condition_file` paths exist and are valid xlsx/csv
-4. (blocks) Every practice/formal block has a positive integer `block.trials`, and its condition-file row count matches exactly
-4b. (sequences) Every loop-mode sequence has `execution.repetitions` ≥ 1 and ≤ 10,000; every `window_ids` entry references an existing window in `windows[]`; `window_ids` is non-empty; `execution.mode` is `once` or `loop`
+4. Every sequence has `execution.repetitions` ≥ 1 and ≤ 10,000 and `order_mode` in `table_order`, `fixed_random`, `fully_random`; `fixed_random` has a non-empty seed; every `window_ids` entry references an existing window; every `trial_source_id` references `trial_sources`
 5. At least one window accepts input (response is not `none`)
-6. (blocks) Block types are valid: `practice`, `formal`, `rest`, `debrief`
-6b. (sequences) Sequence `show_in` values (if present) are valid: `practice`, `formal`, `rest`, `debrief`. If `show_in: [practice]`, at least one sequence or block of type `practice` must exist. If `show_in: [formal]`, at least one sequence or block of type `formal` must exist
+6. Sequence `show_in` values (if present) are valid: `practice`, `formal`, `rest`, `debrief`. The configuration must not contain the retired `blocks` field.
 7. `randomization` defines a valid method; every stochastic method declares `seed_scope`, a resolvable seed, and `record_resolved_seed: true`. A fixed seed across sessions needs a stated justification
 8. `output` defines directory; a collision-resistant filename containing `{subject_id}` plus `{session_id}`, `{run_id}`, or `{timestamp}`; `incremental_save: true`; and one trial-summary row per trial. A date alone is not unique enough. Designs with repeated within-trial observations also define a linked event-level output rather than collapsing events into one cell
 9. `paradigm` is a stable exact design identifier. If an exact reference exists it may be consulted; otherwise validation continues as a custom design. `paradigm_family` and `variant` are metadata and never fill missing semantics

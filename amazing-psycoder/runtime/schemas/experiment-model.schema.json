@@ -1,0 +1,670 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psycoder.studio/schemas/experiment-model.schema.json",
+  "title": "PsyCoder ExperimentModel 4.0",
+  "description": "The sole persisted and editable authority for experiment semantics. Derived previews, source units, manifests, traces, and platform code must never become alternate semantic inputs.",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "id",
+    "revision",
+    "metadata",
+    "presentation",
+    "sequences",
+    "conditionTables",
+    "conditionRules",
+    "variables",
+    "computations",
+    "dataContract",
+    "runtime",
+    "advancedLogic",
+    "assets",
+    "targets",
+    "provenance"
+  ],
+  "properties": {
+    "format": { "const": "PSYCODER-EXPERIMENT-MODEL" },
+    "version": { "const": "4.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "revision": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "metadata": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 12000 },
+        "paradigm": { "type": ["string", "null"], "maxLength": 200 }
+      },
+      "additionalProperties": false
+    },
+    "presentation": {
+      "type": "object",
+      "required": ["display", "windows"],
+      "properties": {
+        "display": { "$ref": "#/$defs/displayContract" },
+        "windows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/window" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sequences": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sequence" }
+    },
+    "conditionTables": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/conditionTable" }
+    },
+    "conditionRules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/conditionRule" }
+    },
+    "variables": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/variable" }
+    },
+    "computations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/computation" }
+    },
+    "dataContract": {
+      "type": "object",
+      "required": ["participantFields", "outputFields", "savePolicy"],
+      "properties": {
+        "participantFields": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/dataField" },
+              { "properties": { "source": { "const": "participant" } } }
+            ]
+          }
+        },
+        "outputFields": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/dataField" },
+              {
+                "properties": {
+                  "source": { "enum": ["condition", "response", "system", "advanced_logic"] }
+                }
+              }
+            ]
+          }
+        },
+        "savePolicy": { "enum": ["incremental_trial", "incremental_window"] }
+      },
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["participantDialog", "abortKeys"],
+      "properties": {
+        "participantDialog": { "type": "boolean" },
+        "abortKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/key" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "advancedLogic": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/advancedLogic" }
+    },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["psychopy", "jspsych", "psychtoolbox"] }
+    },
+    "workflow": { "$ref": "#/$defs/workflow" },
+    "provenance": {
+      "type": "object",
+      "required": ["createdAt", "updatedAt", "lastEditor"],
+      "properties": {
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "lastEditor": { "enum": ["user", "psycoder", "system", "migration"] },
+        "migratedFrom": { "type": ["string", "null"], "maxLength": 100 },
+        "migrationWarnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 4000 }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "key": { "type": "string", "minLength": 1, "maxLength": 50 },
+    "displayContract": {
+      "type": "object",
+      "required": ["referenceViewport", "scaleMode", "coordinateSystem", "backgroundColor", "fontPolicy"],
+      "properties": {
+        "referenceViewport": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "const": 1280 },
+            "height": { "const": 720 }
+          },
+          "additionalProperties": false
+        },
+        "scaleMode": { "const": "contain" },
+        "coordinateSystem": { "const": "center_pixel_y_up" },
+        "backgroundColor": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "fontPolicy": {
+          "type": "object",
+          "required": ["family", "strictMetrics"],
+          "properties": {
+            "family": { "type": "string", "minLength": 1, "maxLength": 200 },
+            "assetId": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+            "strictMetrics": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "valueBinding": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "literal" },
+            "value": { "type": "string", "maxLength": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "column"],
+          "properties": {
+            "kind": { "const": "condition_column" },
+            "column": { "type": "string", "minLength": 1, "maxLength": 500 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "correct", "incorrect", "timeout"],
+          "properties": {
+            "kind": { "const": "response_feedback" },
+            "correct": { "type": "string", "maxLength": 100000 },
+            "incorrect": { "type": "string", "maxLength": 100000 },
+            "timeout": { "type": "string", "maxLength": 100000 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "literalOrColumnBinding": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "literal" },
+            "value": { "type": "string", "maxLength": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "column"],
+          "properties": {
+            "kind": { "const": "condition_column" },
+            "column": { "type": "string", "minLength": 1, "maxLength": 500 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "elementBase": {
+      "type": "object",
+      "required": ["id", "order", "position", "anchor"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "order": { "type": "integer", "minimum": 1 },
+        "position": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "anchor": {
+          "enum": ["center", "top_left", "top_center", "top_right", "center_left", "center_right", "bottom_left", "bottom_center", "bottom_right"]
+        }
+      }
+    },
+    "textElement": {
+      "allOf": [
+        { "$ref": "#/$defs/elementBase" },
+        {
+          "type": "object",
+          "required": ["kind", "content", "color", "fontSizePx", "textAlign"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "order": { "type": "integer", "minimum": 1 },
+            "position": { "type": "object" },
+            "anchor": { "type": "string" },
+            "kind": { "const": "text" },
+            "content": { "$ref": "#/$defs/valueBinding" },
+            "color": { "$ref": "#/$defs/literalOrColumnBinding" },
+            "fontSizePx": { "type": "number", "exclusiveMinimum": 0 },
+            "textAlign": { "enum": ["left", "center", "right"] }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "imageElement": {
+      "allOf": [
+        { "$ref": "#/$defs/elementBase" },
+        {
+          "type": "object",
+          "required": ["kind", "source", "widthPx", "preserveAspectRatio"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "order": { "type": "integer", "minimum": 1 },
+            "position": { "type": "object" },
+            "anchor": { "type": "string" },
+            "kind": { "const": "image" },
+            "source": { "$ref": "#/$defs/literalOrColumnBinding" },
+            "widthPx": { "type": "number", "exclusiveMinimum": 0 },
+            "heightPx": { "type": "number", "exclusiveMinimum": 0 },
+            "preserveAspectRatio": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "timing": {
+      "type": "object",
+      "required": ["mode", "continueKeys"],
+      "properties": {
+        "mode": { "enum": ["fixed", "manual_continue", "until_response", "condition_column"] },
+        "durationMs": { "type": "number", "minimum": 0 },
+        "durationColumn": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "continueKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/key" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "correctAnswer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "fixed" },
+            "value": { "$ref": "#/$defs/key" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "column"],
+          "properties": {
+            "kind": { "const": "condition_column" },
+            "column": { "type": "string", "minLength": 1, "maxLength": 500 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "required": ["enabled", "allowedKeys", "responseEndsWindow", "recordResponse", "recordRt", "recordAccuracy", "recordOnset", "rtOnset"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "allowedKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/key" }
+        },
+        "responseEndsWindow": { "type": "boolean" },
+        "correctAnswer": { "$ref": "#/$defs/correctAnswer" },
+        "recordResponse": { "type": "boolean" },
+        "recordRt": { "type": "boolean" },
+        "recordAccuracy": { "type": "boolean" },
+        "recordOnset": { "type": "boolean" },
+        "rtOnset": {
+          "oneOf": [
+            { "const": "self" },
+            {
+              "type": "object",
+              "required": ["windowId"],
+              "properties": { "windowId": { "$ref": "#/$defs/id" } },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "window": {
+      "type": "object",
+      "required": ["id", "scene", "timing", "response", "notes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scene": {
+          "type": "object",
+          "required": ["elements"],
+          "properties": {
+            "elements": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/$defs/textElement" },
+                  { "$ref": "#/$defs/imageElement" }
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "timing": { "$ref": "#/$defs/timing" },
+        "response": { "$ref": "#/$defs/response" },
+        "notes": { "type": "string", "maxLength": 12000 }
+      },
+      "additionalProperties": false
+    },
+    "sequence": {
+      "type": "object",
+      "required": ["id", "name", "order", "windowIds", "execution"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "order": { "type": "integer", "minimum": 1 },
+        "windowIds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "conditionTableId": { "$ref": "#/$defs/id" },
+        "execution": {
+          "type": "object",
+          "required": ["repetitions", "orderMode"],
+          "properties": {
+            "repetitions": { "type": "integer", "minimum": 1 },
+            "orderMode": { "enum": ["table_order", "fixed_random", "fully_random"] },
+            "fixedSeed": { "type": "string", "minLength": 1, "maxLength": 500 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditionColumn": {
+      "type": "object",
+      "required": ["name", "dataType"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "dataType": { "enum": ["string", "number", "boolean", "asset_path"] }
+      },
+      "additionalProperties": false
+    },
+    "conditionTable": {
+      "type": "object",
+      "required": ["id", "name", "columns", "rows", "contentHash", "source"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/conditionColumn" }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+          }
+        },
+        "contentHash": { "$ref": "#/$defs/sha256" },
+        "resourceAssetIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "source": {
+          "type": "object",
+          "required": ["kind", "name"],
+          "properties": {
+            "kind": { "enum": ["user_import", "agent_confirmed"] },
+            "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+            "importedAt": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataField": {
+      "type": "object",
+      "required": ["name", "source", "required"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "source": { "enum": ["participant", "condition", "response", "system", "advanced_logic"] },
+        "required": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "conditionRule": {
+      "type": "object",
+      "required": ["id", "scope", "rule"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "sequenceId": { "$ref": "#/$defs/id" },
+            "conditionTableId": { "$ref": "#/$defs/id" }
+          },
+          "additionalProperties": false
+        },
+        "rule": { "type": "object", "minProperties": 1 }
+      },
+      "additionalProperties": false
+    },
+    "variable": {
+      "type": "object",
+      "required": ["id", "name", "type", "scope", "source", "required"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "type": { "enum": ["string", "number", "boolean", "array", "object"] },
+        "scope": { "enum": ["experiment", "sequence", "window", "condition_row"] },
+        "source": { "enum": ["participant", "condition", "response", "system", "advanced_logic"] },
+        "required": { "type": "boolean" },
+        "initialValue": {}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "string" } }, "required": ["type", "initialValue"] },
+          "then": { "properties": { "initialValue": { "type": "string" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "number" } }, "required": ["type", "initialValue"] },
+          "then": { "properties": { "initialValue": { "type": "number" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "boolean" } }, "required": ["type", "initialValue"] },
+          "then": { "properties": { "initialValue": { "type": "boolean" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "array" } }, "required": ["type", "initialValue"] },
+          "then": { "properties": { "initialValue": { "type": "array" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "object" } }, "required": ["type", "initialValue"] },
+          "then": { "properties": { "initialValue": { "type": "object" } } }
+        }
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["experiment", "sequence", "window", "condition_row"] },
+        "id": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "experiment" } }, "required": ["kind"] },
+          "then": { "not": { "required": ["id"] } }
+        },
+        {
+          "if": { "properties": { "kind": { "enum": ["sequence", "window", "condition_row"] } }, "required": ["kind"] },
+          "then": { "required": ["id"] }
+        }
+      ]
+    },
+    "computation": {
+      "type": "object",
+      "required": ["id", "scope", "reads", "writes", "operation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "reads": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "writes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "operation": { "type": "object", "minProperties": 1 }
+      },
+      "additionalProperties": false
+    },
+    "advancedLogic": {
+      "type": "object",
+      "required": ["id", "scope", "purpose", "reads", "writes", "effects", "protectedModelPaths", "portability", "tests", "createdBy", "reviewState", "support"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 12000 },
+        "reads": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "writes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "effects": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["presentation", "timing", "response", "data", "flow"] }
+        },
+        "protectedModelPaths": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^/", "maxLength": 1000 }
+        },
+        "portability": { "enum": ["portable", "platform_specific"] },
+        "hook": { "enum": ["after_window"] },
+        "program": {
+          "type": "object",
+          "required": ["version", "statements"],
+          "properties": {
+            "version": { "const": "1" },
+            "statements": { "type": "array", "minItems": 1, "maxItems": 100, "items": { "type": "object" } }
+          },
+          "additionalProperties": false
+        },
+        "implementations": {
+          "type": "object",
+          "properties": {
+            "psychopy": { "$ref": "#/$defs/logicImplementation" },
+            "jspsych": { "$ref": "#/$defs/logicImplementation" },
+            "psychtoolbox": { "$ref": "#/$defs/logicImplementation" }
+          },
+          "additionalProperties": false
+        },
+        "tests": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "given", "expected"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "name": { "type": "string", "minLength": 1, "maxLength": 500 },
+              "given": { "type": "object" },
+              "expected": { "type": "object" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "createdBy": { "enum": ["user_import", "psycoder"] },
+        "reviewState": { "enum": ["pending", "verified", "conflict", "unsupported"] },
+        "support": {
+          "type": "object",
+          "required": ["psychopy", "jspsych", "psychtoolbox"],
+          "properties": {
+            "psychopy": { "enum": ["supported", "unsupported"] },
+            "jspsych": { "enum": ["supported", "unsupported"] },
+            "psychtoolbox": { "enum": ["supported", "unsupported"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "oneOf": [
+        { "required": ["program"], "not": { "required": ["implementations"] } },
+        { "required": ["implementations"], "not": { "required": ["program"] } }
+      ],
+      "additionalProperties": false
+    },
+    "logicImplementation": {
+      "type": "object",
+      "required": ["language", "source"],
+      "properties": {
+        "language": { "enum": ["python", "javascript", "matlab", "expression"] },
+        "source": { "type": "string", "minLength": 1, "maxLength": 200000 },
+        "generatorVersion": { "type": "string", "maxLength": 100 }
+      },
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["status", "decisions", "gates"],
+      "properties": {
+        "status": { "enum": ["draft", "confirmed"] },
+        "confirmedAt": { "type": "string", "format": "date-time" },
+        "decisions": { "type": "array", "items": { "type": "object" } },
+        "gates": { "type": "array", "items": { "type": "object" } },
+        "confirmation": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "asset": {
+      "type": "object",
+      "required": ["id", "path", "sha256", "sizeBytes", "mediaType"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "path": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "sizeBytes": { "type": "integer", "minimum": 1 },
+        "mediaType": { "type": "string", "minLength": 1, "maxLength": 200 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -14,7 +14,7 @@ description: >-
 
 ## Version
 
-v1.4.0 — unified standalone and PsyCoder Studio contract, 2026-07-23. Supports AI runtime generation, read-only review, constrained Coder repair, and evidence-derived readiness without conflating deployment capability boundaries.
+v1.4.0 — unified standalone and PsyCoder Studio contract, 2026-07-23; direct ExperimentModel@4 and Generation Envelope 4.0 amendment, 2026-08-15. Supports scoped model transactions, bounded AI runtime repair, independent review, and evidence-derived readiness without conflating deployment capability boundaries.
 
 ## Purpose
 
@@ -29,7 +29,7 @@ This is the entry point for the Amazing PsyCoder system. It routes work into two
 
 ## Execution Profiles
 
-Use **standalone** unless the caller supplies a validated PsyCoder Studio Generation Envelope 2.0 containing a canonical `PsyCoderExperimentSpecV2@2.4` snapshot and an `ExecutionPlan@2.0`.
+Use **standalone** unless the caller supplies a validated PsyCoder Studio Generation Envelope 4.0 containing a frozen `ExperimentModel@4.0`, canonical `modelHash`, exact asset manifest, and `assetSetHash`.
 
 - **Standalone Agent Skills host**: load [STANDALONE.md](STANDALONE.md). This profile covers Claude Code, Codex, Hermes, OpenClaw, or another compatible host. Persist YAML/config/code/review artifacts in the user's workspace and adapt actions to the host's available tools. Studio service dependencies and Studio capability flags do not apply.
 - **PsyCoder Studio**: load [PSYCODER_STUDIO.md](PSYCODER_STUDIO.md) and the
@@ -39,20 +39,23 @@ Use **standalone** unless the caller supplies a validated PsyCoder Studio Genera
 Never infer the profile from the model vendor. Claude and OpenAI models may be
 used in either profile; the input envelope and execution environment decide it.
 
-## Experiment Semantics
+## Authority and Experiment Semantics
 
-The confirmed `ExperimentSpec` is the only authority for executable experiment
-logic. A paradigm name, family label, template, example, or reference file may
-help the Designer ask better questions, but it must never fill or override
-stimuli, condition generation, correctness, randomization, timing, feedback, or
-data rules.
+Amazing PsyCoder is maintained professional knowledge, not an infallible or
+sole scientific authority. If confirmed design or reproducible evidence
+contradicts it, preserve the design, report the conflict, fix and validate the
+maintained skill source when in scope, then update downstream bundles.
 
-Treat related tasks as independent designs unless their confirmed semantics are
-identical. Classic color-word, semantic, and emotional Stroop share a research
-lineage but do not share an executable correctness or condition contract. Keep
-family and variant as metadata. Compile the complete `ExperimentSpec` into a
-platform-neutral `ExecutionPlan`; then let the selected platform adapter
-translate that plan without redesigning it.
+In Studio, the saved `ExperimentModel@4` is the single experiment fact; the
+canvas is its visual projection and may honestly omit unsupported advanced
+semantics. Direct edits and Psycoder proposals must become the same validated
+model transaction. PsychoPy, jsPsych, and Psychtoolbox compile this same frozen
+Model directly. AI may propose model patches and bounded runtime-module repairs,
+but cannot add unconfirmed semantics, mutate the frozen Model or asset set, or
+claim readiness. In standalone use,
+the confirmed `ExperimentSpec` is authoritative. Paradigm references may guide
+questions but cannot supply missing executable decisions. Related variants stay
+independent unless their complete confirmed semantics are identical.
 
 ## System Architecture
 
@@ -72,7 +75,7 @@ User describes experiment (English / 中文)
                ▼
 ┌──────────────────────────────────────┐
 │ ② psy-exp-coder            │  Code generation layer
-│   Input: config YAML + conditions    │  ExperimentSpec → ExecutionPlan
+│   Input: config YAML + conditions    │  Standalone config → target code
 │   Output: runnable code + README     │  4-layer priority architecture
 │   Gate: 10-item post-generation check│  Canonical Code Skeleton
 └──────────────┬───────────────────────┘
@@ -280,7 +283,7 @@ Layer 3: paradigms/      ← Optional design evidence only; never fills missing 
 Layer 4: demo/          ← Lowest: raw demo code, logic reference only, never API reference
 ```
 
-**Code generation priority**: confirmed ExperimentSpec/ExecutionPlan > platform spec and anti-patterns > config→code mapping > optional exact-design reference > demos
+**Code generation priority**: confirmed standalone config or frozen Studio ExperimentModel@4 > platform spec and anti-patterns > config/Model→code mapping > optional exact-design reference > demos
 
 Treat `demo/_raw/` and any L3 code block targeting a different/legacy runtime as quarantined: extract only design semantics, never copy API calls, and re-implement against the pinned L1-L2 target.
 
@@ -459,8 +462,6 @@ Antisaccade · ANT · BART · Bilingual Stroop · Change Detection · Children F
 | Analysis report | psy-ana-coder | psy-ana-reviewer | `.Rmd` / `.ipynb` |
 | Audit report | Both Reviewers | User | Markdown (graded + readiness label) |
 
----
-
 ## Code Output Specification
 
 ### Experiment Deliverables
@@ -482,8 +483,6 @@ Antisaccade · ANT · BART · Bilingual Stroop · Change Detection · Children F
 Code comments and README language MUST match the user's language:
 - 中文用户 → 中文 README + 中文代码注释
 - English user → English README + English code comments
-
----
 
 ## Resource Routing
 

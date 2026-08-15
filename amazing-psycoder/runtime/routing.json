@@ -3,11 +3,13 @@
   "scope": "psycoder_studio_experiment_pipeline",
   "stages": {
     "interpreter": [
+      "runtime/stage-context/interpreter.md",
       "SKILL.md",
       "psy-exp-designer/SKILL.md",
       "psy-exp-designer/references/config-schema.md"
     ],
     "code_generator": [
+      "runtime/stage-context/code-generator.md",
       "SKILL.md",
       "psy-exp-coder/SKILL.md",
       "psy-exp-coder/{platform}/spec/README.md",
@@ -15,6 +17,7 @@
       "psy-exp-coder/references/quality-gate.md"
     ],
     "reviewer": [
+      "runtime/stage-context/reviewer.md",
       "SKILL.md",
       "psy-exp-reviewer/SKILL.md",
       "psy-exp-coder/{platform}/spec/README.md",
@@ -24,12 +27,6 @@
   "optionalParadigmReferences": {
     "interpreter": [
       "psy-exp-designer/paradigms/{designerParadigm}.md"
-    ],
-    "code_generator": [
-      "psy-exp-coder/{platform}/paradigms/{coderParadigm}.md"
-    ],
-    "reviewer": [
-      "psy-exp-coder/{platform}/paradigms/{coderParadigm}.md"
     ]
   }
 }

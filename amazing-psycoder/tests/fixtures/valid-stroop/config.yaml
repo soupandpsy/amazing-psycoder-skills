@@ -25,12 +25,19 @@ windows:
     duration: [500, 800]
     response: none
 
-blocks:
+trial_sources:
+  formal_table: conditions/formal.csv
+
+sequences:
   - name: Formal
-    condition_file: conditions/formal.csv
-    type: formal
-    feedback: false
-    trials: 6
+    order: 1
+    window_ids: [Fixation, Stroop, ITI]
+    trial_source_id: formal_table
+    execution:
+      repetitions: 1
+      order_mode: fixed_random
+      seed: "{subject_id}"
+      reshuffle_each_cycle: false
 
 response_rules:
   correct: "{correct_response}"

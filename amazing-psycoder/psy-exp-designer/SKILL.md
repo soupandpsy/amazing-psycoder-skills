@@ -27,8 +27,8 @@ Let the user own design decisions while the system enforces explicit semantics, 
 ## Paradigm References Are Non-Authoritative
 
 `paradigm` and `paradigm_family` classify a design and may select an optional
-knowledge reference. They never select executable logic. Templates initialize
-editable fields only. After import, the user's confirmed windows, condition
+knowledge reference. They never select executable logic or initialize hidden
+experiment fields. The user's confirmed windows, condition
 model, correctness rules, randomization constraints, feedback, and data schema
 are authoritative.
 
@@ -75,8 +75,7 @@ variant:     # optional exact variant; metadata only
 platform:    # psychopy / psychtoolbox / jsPsych
 stimulus_folder:  # global path for image file references
 windows:     # trial event sequence
-sequences:   # sequence structure + execution modes (once/loop)
-blocks:      # LEGACY — block structure (use sequences for new designs)
+sequences:   # row order, condition-table binding, cycles, and condition ordering
 response_rules:  # keys, deadline, accuracy logic
 randomization:   # method, seed, sequence/counterbalance constraints
 paradigm_config: # paradigm-specific settings
@@ -232,45 +231,47 @@ Also ask any paradigm Must-Confirm items assigned to Phase 3 (condition ratios, 
 
 With the trial defined (Phase 2) and conditions built (Phase 3), determine the experiment structure: how sequences are ordered and how each sequence executes.
 
-**Core concept**: A Sequence is one horizontal row of windows that runs from top to bottom. Each sequence has exactly one execution mode:
+**Core concept**: A Sequence is one horizontal row of windows that runs from top to bottom. Every sequence has a positive `repetitions` cycle count. `1` already means one execution, so there is no separate once/loop switch. A sequence may bind one real condition table:
 
-| Execution Mode | Meaning | Example |
-|----------------|---------|---------|
-| `once` | Run exactly one time | Welcome screen, rest screen, debrief |
-| `loop` | Repeat N times, once per trial | Practice block, formal experiment block |
+| Binding | Meaning |
+|---------|---------|
+| No condition table | One cycle executes the window chain once |
+| Condition table selected | One cycle traverses every row of that table once |
+
+The condition order is explicit: `table_order` (original table order),
+`fixed_random` (one seeded reproducible order), or `fully_random` (a fresh
+random order for every repetition). In Studio these are the complete
+`ExperimentModel@4.execution` choices; there is no separate once/loop or
+reshuffle switch. Standalone YAML may serialize additional execution evidence,
+but it must not be projected back into Studio as a hidden setting.
 
 **What to determine**:
 - Sequence order (top to bottom on the canvas)
-- Per-sequence execution mode and repetition count
+- Per-sequence condition table, cycle count, order mode, and fixed seed when `fixed_random` is selected
 - Feedback placement: does a Feedback window exist in this sequence?
 - Sequence visibility: should this sequence only appear in certain contexts? (`show_in`)
 - Between-sequence behavior: does the experiment pause, show instructions, or auto-advance?
 - **Counterbalancing**: Is sequence order fixed or counterbalanced across subjects? If counterbalanced, by what rule (subject ID parity, Latin square)?
 
-**Sequence naming convention**: Names like Start, Practice, Main, Rest, End are editable labels that help the researcher organize their experiment. They never determine execution behavior — only `execution.mode` and `execution.repetitions` control what happens.
-
-**Block Type Mapping** (for backward compatibility with legacy configs):
-
-| Legacy Block Type | Sequence Equivalent |
-|-------------------|---------------------|
-| `practice` | `mode: loop` + contains Feedback window |
-| `formal` | `mode: loop` + no Feedback window |
-| `rest` | `mode: once` + rest text content |
-| `debrief` | `mode: once` + results/debrief content |
-| instruction | `mode: once` + instruction text |
+**Sequence naming convention**: Names like Start, Practice, Main, Rest, End are editable labels that help the researcher organize their experiment. They never determine execution behavior — only the condition-table binding and `execution` fields control what happens.
 
 **Before finalizing sequences**, run this consistency check:
 - If any sequence has a Feedback window but no Feedback window exists in `windows[]`, insert one after the Response window: `{name: Feedback, content: correct_incorrect, duration: 500, response: none}`.
 - Feedback appears only in sequences that contain a Feedback window. The `show_in` field restricts further — e.g., `show_in: [practice]` means the sequence only appears during practice, even if it shares windows with formal sequences.
 
 **Questions (max 3)**:
-1. "实验有几个序列？每个序列重复几次？（如 Start一次、练习20次、正式80次、Rest一次、End一次）"
+1. "实验有几个序列？每个序列使用哪张条件表并循环几轮？（如 Start 无表 1 轮、Practice 使用练习表 1 轮、Main 使用正式表 2 轮）"
 2. "反馈在哪些序列显示？只在练习还是正式实验也有？"
 3. "序列呈现顺序是固定的还是在被试间平衡？"
 
-For Rest sequences, also ask: "休息时屏幕显示什么文字？" (default: "休息一下，按空格键继续").
+For a rest sequence, ask what the screen displays and how it advances. Never
+insert rest text or a continue key that the user did not confirm.
 
-**Output**: Config `sequences[]` and `randomization` sections complete. Each sequence has `name`, `window_ids`, `execution` (mode + repetitions + optional shuffle), optional `show_in`. Present the Phase 4 Decision Checklist for confirmation.
+**Output**: In Studio, update `sequences[]` with `name`, `windowIds`, optional
+`conditionTableId`, and `execution` (`repetitions`, `orderMode`, and
+`fixedSeed` only for `fixed_random`). In standalone YAML, use its documented
+snake-case adapter fields. Present the Phase 4 Decision Checklist for
+confirmation.
 
 ### Phase 5: Validate & Route
 
@@ -282,7 +283,7 @@ Cross-check everything, **present the final design to the user for confirmation*
 - Missing config metadata (`name`, `paradigm`, `platform`) → Phase 1
 - Missing or incomplete window definitions (`content`, `duration`, `response`, `rt_onset`), missing response rules, ambiguous accuracy coding → Phase 2
 - Missing condition file, invalid columns, row count mismatch, or missing stimulus files → Phase 3
-- Missing sequence fields or invalid execution modes → Phase 4
+- Missing sequence fields, invalid condition-table references, cycle counts, or order policies → Phase 4
 
 **Step 2: Final Design Review (Gate 5, blocking)** — Present the final design for user confirmation. This is mandatory before routing to code generation.
 
@@ -354,7 +355,7 @@ Rules:
 ```
 Trial level (Phase 2):   window sequence → content → duration → response keys → key mapping → accuracy rules → output format
 Trial level (Phase 3):   condition columns → trial counts → stimulus file paths
-Sequence level (Phase 4): execution modes → repetitions → feedback placement → counterbalancing → looping
+Sequence level (Phase 4): condition table → cycles → condition order → feedback placement → counterbalancing
 ```
 
 Never ask more than 3 questions in one response. Never skip a phase with `[MISSING]` fields. If all generic and paradigm questions for a phase are resolved with fewer than 3 questions, advance early — don't pad.
@@ -381,7 +382,7 @@ The goal: every Must-Confirm item is either explicitly confirmed by the user, or
 | Code modification / debugging | Route to [psy-exp-coder](../psy-exp-coder/SKILL.md); apply change; show diff |
 | Condition table generation | Use the confirmed condition semantics + [randomization.md](references/randomization.md); an exact paradigm reference may suggest checks only |
 
-All three platforms (PsychoPy, jsPsych, Psychtoolbox) share the same Generation Pipeline (`ExperimentSpec → ExecutionPlan → Platform Adapter → Code`). The coder applies platform L1-L2 contracts and may consult an exact L3 reference, but the reference cannot supply missing experiment semantics.
+All three Studio platforms (PsychoPy, jsPsych, Psychtoolbox) share the same direct Generation Pipeline (`ExperimentModel@4 → Platform Adapter → Code`). Standalone generation uses its confirmed config. The coder applies platform L1-L2 contracts and may consult an exact L3 reference, but the reference cannot supply missing experiment semantics.
 
 **Platform reference coverage:**
 - **PsychoPy**: 28 paradigm references and 45 quarantined demos. Generate only when the complete config maps to an implemented platform adapter.
@@ -453,7 +454,7 @@ The Coder reads the config YAML and condition files to generate runnable code.
 
 ### Embedded (PsyCoder Studio Canvas)
 
-When invoked as a plugin inside PsyCoder Studio, the Designer receives a live `CURRENT_SPEC` JSON object (PsyCoderExperimentSpecV2@2.4) and outputs structured data that the Canvas renders directly:
+When invoked inside PsyCoder Studio, the Designer reads a revision-bound `ExperimentModel@4.0` scope and returns structured proposals. The backend applies an accepted proposal as one atomic optimistic model transaction; Canvas and source are projections of that Model:
 
 ```json
 {
@@ -461,7 +462,7 @@ When invoked as a plugin inside PsyCoder Studio, the Designer receives a live `C
   "questions": ["0 to 3 clarifying questions"],
   "decisions": [
     {
-      "path": "meta.platform",
+      "path": "/targets",
       "label": "Target Platform",
       "value": "psychopy",
       "source": "user",
@@ -470,20 +471,29 @@ When invoked as a plugin inside PsyCoder Studio, the Designer receives a live `C
   ],
   "missingFields": ["semantic paths still unresolved"],
   "commands": [
-    {"type": "add_window", "payload": {"sequenceId": "seq-trial", "label": "Fixation", "durationMs": 500, "stimulus": {"staticText": "+"}}}
+    {
+      "type": "add_window",
+      "baseModelRevision": "model-v4-...",
+      "scope": {"kind": "sequence", "sequenceId": "seq-trial"},
+      "modelPaths": ["/presentation/windows", "/sequences/0/windowIds"],
+      "beforeAfterSummary": {"before": "Trial has no fixation window", "after": "Trial begins with the explicitly configured fixation scene"},
+      "destructive": false,
+      "confirmationLevel": "explicit_user_confirmation",
+      "payload": {"sequenceId": "seq-trial", "window": {"scene": {"elements": []}, "timing": {"mode": "fixed", "durationMs": 500, "continueKeys": []}}}
+    }
   ],
   "proposalSummary": "what the commands change on the Canvas",
   "warnings": ["scientific or destructive-change warnings"]
 }
 ```
 
-**Command types available**: create_experiment, update_experiment_meta, add_sequence, update_sequence, remove_sequence, reorder_sequences, add_window, update_window, remove_window, reorder_windows, move_window_to_sequence, update_condition_source, update_response_rule, set_platform, update_data_schema, update_timing_defaults, update_runtime_contract, update_output_contract.
+**Command types available** are defined only by `runtime/schemas/designer-output.schema.json`. They cover sequence/window lifecycle, ordered scene elements, timing, response/data settings, condition-table import/create/bind, display/data/runtime contracts, targets, and verified advanced logic.
 
 **Canvas safety rules**:
-- Return proposed commands only. The user must explicitly apply them.
-- Reference only window and sequence IDs provided in CURRENT_SPEC, except new add_sequence may provide a unique stable sequenceId.
+- Return proposed commands only. Every command carries the base revision, frozen scope, exact Model pointers, before/after summary, destructive flag, and confirmation level. The user must explicitly apply the transaction.
+- Reference only window and sequence IDs provided in the current model scope, except new add_sequence may provide a unique stable sequenceId.
 - Every add_window command must include sequenceId.
-- Windows have no preset role or type. Describe behavior through label, stimulus/displayMode, timing, response, feedback, and data.
-- Sequence execution (mode + repetitions) determines scope; never invent practice/formal repetition counts.
+- Windows have no preset role or type. Describe behavior through ordered text/image scene elements, explicit timing, response, feedback bindings, and data recording.
+- Optional real condition table + repetitions + order policy determine sequence execution; never infer behavior from labels or invent practice/formal counts.
 - Preserve existing confirmed values unless the user explicitly changes them.
 - Removing a non-empty sequence requires removeWindows=true and is destructive; warn explicitly.

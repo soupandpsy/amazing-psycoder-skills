@@ -50,7 +50,7 @@ Validate immediately after reading the config:
 - At least one `questions[]` entry
 - Field types are correct (`rt_lower` is numeric when used, `correction` is explicit and supported by the selected inference, etc.)
 
-Run `python3 <amazing-psycoder-root>/scripts/validate_analysis.py <analysis_config.yaml>` and treat every error as blocking. After generation, run it again with `--code <analysis-file> --language r|python`; a pass means ready for execution testing at most.
+Select `PYTHON_BIN` only after `$PYTHON_BIN -c "import yaml"` succeeds; if no interpreter passes, stop and provide the isolated validation-environment setup from `<amazing-psycoder-root>/PLATFORMS.md`. Run `$PYTHON_BIN <amazing-psycoder-root>/scripts/validate_analysis.py <analysis_config.yaml>` and treat every error as blocking. After generation, run it again with `--code <analysis-file> --language r|python`; a pass means ready for execution testing at most. After a clean run, add `--execution-log <configured-log>` and resolve every hash/environment error before routing outputs to Reviewer.
 
 Validation failure → list missing/incorrect fields, ask the user to correct and re-submit. Do not proceed.
 

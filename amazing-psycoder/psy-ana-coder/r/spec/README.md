@@ -22,9 +22,12 @@ Do not require all stages to use one fixed function or order. A paired test, GLM
 ## Core Guard Pattern
 
 ```r
-config <- yaml::read_yaml("analysis_config.yaml")
+args <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args, value = TRUE)
+if (!length(file_arg)) stop("Run the generated project with Rscript or supply an explicit project root")
+project_root <- normalizePath(dirname(sub("^--file=", "", file_arg[[1]])), mustWork = TRUE)
+config <- yaml::read_yaml(file.path(project_root, "analysis_config.yaml"))
 stopifnot(config$version == "1.2")
-project_root <- fs::path_abs(getwd())
 
 project_path <- function(value) {
   candidate <- fs::path_abs(value, start = project_root)
@@ -59,7 +62,12 @@ read_one <- function(path, file_format, options) {
     txt = readr::read_delim(path, delim = options$delimiter, locale = readr::locale(encoding = encoding), show_col_types = FALSE),
     xlsx = readxl::read_excel(path, sheet = options$sheet),
     parquet = arrow::read_parquet(path, as_data_frame = TRUE),
-    json = tibble::as_tibble(jsonlite::fromJSON(path, flatten = TRUE)),
+    json = {
+      value <- jsonlite::fromJSON(path, flatten = TRUE)
+      orient <- options$json_orient
+      if (!orient %in% c("records", "columns")) stop("Unsupported json_orient: ", orient)
+      tibble::as_tibble(as.data.frame(value, stringsAsFactors = FALSE))
+    },
     stop("Unsupported file format: ", file_format)
   )
 }
@@ -86,7 +94,8 @@ frames <- lapply(input_files, function(input_file) {
 data_raw <- dplyr::bind_rows(frames)
 
 required <- unique(c(
-  config$experiment$id_columns$subject,
+  unlist(Filter(Negate(is.null), config$experiment$id_columns)),
+  unlist(config$design$clustering),
   unlist(lapply(config$design$ivs, `[[`, "name")),
   unlist(lapply(config$design$dvs, `[[`, "name"))
 ))
@@ -104,6 +113,10 @@ output_dir <- project_path(config$output$save_path)
 fs::dir_create(output_dir, recurse = TRUE)
 writeLines(capture.output(sessionInfo()), fs::path(output_dir, "session-info.txt"))
 ```
+
+Treat this as the setup core, not a complete deliverable. Wrap the full run in `tryCatch()`/`on.exit()` so failures and successes both write valid JSON with timestamps, status, available hashes, warnings/errors, environment, and output inventory. After success, run `validate_analysis.py ... --execution-log <configured-log>`; plain text stored under a `.json` name does not satisfy the contract.
+
+Resolve every `library()`/`require()`/`pkg::call()` dependency against `renv.lock` and verify the clean-run package versions. A lockfile with versioned records that omits a loaded package blocks delivery.
 
 ## Method/API Guidance
 

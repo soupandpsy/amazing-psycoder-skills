@@ -150,6 +150,16 @@ class ConfigValidationTests(unittest.TestCase):
             _, _, findings = validator.validate_config(config)
         self.assertIn("OUT006", {finding.code for finding in findings})
 
+    def test_retired_blocks_contract_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "fixture"
+            shutil.copytree(FIXTURE, target)
+            config = target / "config.yaml"
+            text = config.read_text(encoding="utf-8") + "\nblocks: []\n"
+            config.write_text(text, encoding="utf-8")
+            _, _, findings = validator.validate_config(config)
+        self.assertIn("CFG006", {finding.code for finding in findings})
+
 
 class CodeValidationTests(unittest.TestCase):
     def validate_text(self, suffix: str, platform: str, source: str):

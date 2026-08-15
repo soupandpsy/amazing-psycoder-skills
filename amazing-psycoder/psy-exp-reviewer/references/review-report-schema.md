@@ -4,14 +4,17 @@ v1.4.0 — unified, evidence-gated, and PsyCoder Studio-compatible.
 
 ## Purpose
 
-PsyCoder Studio uses four separate records so that a model cannot repair its
-own review, duplicate large files inside a report, or self-certify readiness.
+PsyCoder Studio separates review, constrained Coder repair, runtime evidence,
+and derived readiness so that a model cannot repair its own review, duplicate
+large files inside a report, or self-certify readiness. A `RepairAttempt` is an
+internal Worker record: it is accepted only after exact review, artifact, plan,
+issue-ID, Model/asset hash, and runtime-path binding succeeds.
 The executable JSON Schemas under `../../runtime/schemas/` are authoritative.
 
 | Record | Producer | Contains | Must not contain |
 |---|---|---|---|
 | `ReviewReport` | Reviewer | scope, primitive findings, reviewed hashes | file content, repairs, counts, readiness |
-| `RepairAttempt` | Coder | allowlisted model-owned replacement files | compiler-owned files, a new plan, readiness |
+| `RepairAttempt` | Coder, invoked by Worker | hash-bound allowlisted runtime replacements | ExperimentModel, assets, metadata, evidence, or unreviewed paths |
 | `RuntimeEvidence` | target-machine workflow + reviewer inspection | structured observed tests and evidence paths | inferred or planned results |
 | `ReadinessSnapshot` | deterministic backend | derived packaging/collection state | free-form model judgment |
 
@@ -23,10 +26,11 @@ Schema: `../../runtime/schemas/review-output.schema.json`.
 {
   "review_id": "review_018",
   "artifact_set_hash": "64 lowercase hex characters",
-  "execution_plan_hash": "64 lowercase hex characters",
+  "model_hash": "64 lowercase hex characters",
+  "asset_set_hash": "64 lowercase hex characters",
   "mode": "code-audit",
   "scope": {
-    "reviewed": ["execution_plan.json", "main.py", "conditions.csv"],
+    "reviewed": ["experiment_model.json", "compilation_manifest.json", "source_map.json", "main.py"],
     "not_reviewed": ["target-machine timing"]
   },
   "issues": [
@@ -34,11 +38,11 @@ Schema: `../../runtime/schemas/review-output.schema.json`.
       "id": "REV-001",
       "severity": "major",
       "category": "DesignFidelity",
-      "message": "The response mapping differs from the immutable plan.",
-      "suggestion": "Regenerate the model-owned entrypoint from responses.mapping.",
+      "message": "The response mapping differs from the frozen ExperimentModel@4.",
+      "suggestion": "Fix the maintained compiler adapter, add a regression fixture, and regenerate from responses.mapping.",
       "file": "main.py",
       "line": 184,
-      "evidence": ["ExecutionPlan response key f maps to red; code maps f to green."]
+      "evidence": ["ExperimentModel /presentation/windows/0 response key f maps to red; code maps f to green."]
     }
   ],
   "reviewed_files": [
@@ -89,12 +93,13 @@ mismatches.
 
 Schema: `../../runtime/schemas/repair-attempt.schema.json`.
 
-A Coder repair is authorized by one review ID and explicit issue IDs, declares
-the target `platform`, echoes the input artifact and plan hashes, and may
-replace only model-owned allowlisted paths. `_pipeline/`, the ExperimentSpec, ExecutionPlan, conditions, compiler
-README/config, and prior evidence are protected. The backend permits at most
-two attempts, re-runs structural/static validation, creates a new artifact-set
-hash, and requests a new read-only review.
+The Worker accepts this record only inside a bounded repair round after a
+hash-bound Reviewer report identifies blocking findings. It verifies the exact
+review ID, prior artifact-set hash, Model hash, asset-set hash, blocking issue IDs, and
+platform runtime path allowlist before applying any replacement. The saved
+ExperimentModel, asset manifest, conditions, `_pipeline/` metadata, and prior evidence are
+never mutable through this record. Every changed artifact set receives a new
+hash and a fresh read-only review.
 
 ## RuntimeEvidence
 
@@ -106,10 +111,10 @@ Required tests for the generic experiment profile are:
 - `full_short_session`
 - `data_integrity`
 - `incremental_recovery`
+- `timing_device_check`
 
-Add `timing_device_check` whenever timing precision, audio, triggers, eye
-tracking, specialized input, display calibration, or another hardware claim
-depends on the target system. Every test records `result`, the exact procedure,
+All five checks are required exactly once for every supported Studio platform.
+Every test records `result`, the exact procedure,
 target OS/runtime/hardware, timestamps, and non-empty `evidence_paths`.
 Statements such as “it ran fine,” planned procedures, model inference, or a
 missing evidence path are not passing evidence.

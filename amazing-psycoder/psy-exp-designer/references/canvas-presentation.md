@@ -8,8 +8,8 @@ saved config remains authoritative; these views make its meaning inspectable.
 
 - Show each sequence as an independent row separated by blank lines.
 - Show sequences top-to-bottom and windows left-to-right.
-- Start with `序列: <name>` and `execution: <mode> (<description>)`.
-- Execution is `once` or `loop (每个试次一次，重复 N 次)`.
+- Start with `序列: <name>` plus condition table, cycles, and order policy.
+- One cycle traverses every table row once; without a table it executes the window chain once.
 - Each window card shows label, content, duration, and response mode.
 - Annotate the response window with its RT anchor and recorded data.
 - Use `[MISSING]` for unresolved values.
@@ -18,7 +18,7 @@ saved config remains authoritative; these views make its meaning inspectable.
 
 ```text
 序列: Trial
-  execution: loop (每个试次一次，重复 80 次)
+  条件表: formal_table · cycles: 1 · order: fixed_random(seed=sub-01)
 
   ┌─ Fixation ─┐  ┌─ Stimulus ───┐  ┌─ Response ────┐  ┌─ ITI ──────┐
   │ "+"        │  │ "{stimulus}" │  │ "{stimulus}"  │  │ ""         │
@@ -28,8 +28,8 @@ saved config remains authoritative; these views make its meaning inspectable.
                                             RT: Response onset
                                             数据: rt, key, acc
 
-序列: Start       → execution: once     → 欢迎文字
-序列: End         → execution: once     → 感谢文字
+序列: Start       → 无条件表 · cycles: 1 → 欢迎文字
+序列: End         → 无条件表 · cycles: 1 → 感谢文字
 ```
 
 ## Phase decision checklist
@@ -73,7 +73,7 @@ record of the new confirmed value.
 
 The final review contains:
 
-1. Every sequence row and window, with execution modes and repetitions.
+1. Every sequence row and window, with its optional condition table, cycles, and order policy.
 2. A compact window table covering content, duration, response, condition
    bindings, RT anchor, and recorded data.
 3. The complete cumulative Decision Registry.

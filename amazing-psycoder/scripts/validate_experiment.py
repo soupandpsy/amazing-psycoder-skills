@@ -28,7 +28,6 @@ except ImportError:  # pragma: no cover - exercised only in minimal installs
 
 
 PLATFORMS = {"psychopy", "jspsych", "psychtoolbox"}
-BLOCK_TYPES = {"practice", "formal", "rest", "debrief"}
 INPUT_NONE = {None, "none", "null", ""}
 SPECIAL_COLUMNS = {
     "subject_id", "session_id", "run_id", "timestamp", "block_name",
@@ -65,7 +64,7 @@ class ConditionTable:
     path: Path
     headers: list[str]
     rows: list[dict[str, Any]]
-    block: dict[str, Any]
+    source_id: str
 
 
 def add(findings: list[Finding], level: str, code: str, message: str, location: str = "") -> None:
@@ -114,7 +113,7 @@ def is_response(value: Any) -> bool:
     return True
 
 
-def read_condition_table(path: Path, block: dict[str, Any]) -> ConditionTable:
+def read_condition_table(path: Path, source_id: str) -> ConditionTable:
     suffix = path.suffix.lower()
     if suffix == ".csv":
         with path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -137,7 +136,7 @@ def read_condition_table(path: Path, block: dict[str, Any]) -> ConditionTable:
             rows = [dict(zip(headers, row)) for row in values[1:] if any(value is not None for value in row)]
     else:
         raise ValueError(f"unsupported condition format {suffix!r}; use .csv or .xlsx")
-    return ConditionTable(path, headers, rows, block)
+    return ConditionTable(path, headers, rows, source_id)
 
 
 def normalized(value: Any) -> str:
@@ -213,8 +212,7 @@ def validate_fidelity(config: dict[str, Any], tables: list[ConditionTable], find
         if not 0 <= ratios[key] <= 1:
             add(findings, "error", "FID000", f"{key} must be in [0,1]", f"config.paradigm_config.{key}")
             ratios.pop(key)
-    formal = [table for table in tables if normalized(table.block.get("type")) == "formal"]
-    for table in formal:
+    for table in tables:
         if "congruency_ratio" in ratios:
             check_ratio(
                 findings,
@@ -296,10 +294,17 @@ def validate_config(config_path: Path) -> tuple[dict[str, Any], list[ConditionTa
     except (OSError, RuntimeError, ValueError) as exc:
         return {}, [], [Finding("error", "CFG000", str(exc), str(config_path))]
 
-    for key in ("name", "paradigm", "platform", "runtime", "windows", "response_rules", "randomization", "output"):
-        # blocks is conditionally required — see below
+    for key in ("name", "paradigm", "platform", "runtime", "windows", "sequences", "response_rules", "randomization", "output"):
         if key not in config or config[key] in (None, "", [], {}):
             add(findings, "error", "CFG001", f"required field {key!r} is missing or empty", f"config.{key}")
+    if "blocks" in config:
+        add(
+            findings,
+            "error",
+            "CFG006",
+            "retired blocks configuration is not accepted; express execution with sequences and trial_sources",
+            "config.blocks",
+        )
 
     for location, value in walk(config):
         if isinstance(value, str) and MISSING.search(value):
@@ -410,38 +415,27 @@ def validate_config(config_path: Path) -> tuple[dict[str, Any], list[ConditionTa
     correct_refs = placeholders(response_rules.get("correct"))
     column_refs = placeholders({"windows": windows, "correct": response_rules.get("correct")})
     tables: list[ConditionTable] = []
-    has_sequences = isinstance(config.get("sequences"), list) and len(config.get("sequences") or []) > 0
-    if not isinstance(config.get("blocks"), list) or not config.get("blocks"):
-        if not has_sequences:
-            add(findings, "error", "BLK000", "config requires either blocks (legacy) or sequences (primary format)", "config")
-    blocks = config.get("blocks") if isinstance(config.get("blocks"), list) else []
-    formal_count = 0
-    for index, block in enumerate(blocks):
-        location = f"config.blocks[{index}]"
-        if not isinstance(block, dict):
-            add(findings, "error", "BLK001", "block must be a mapping", location)
+    trial_sources = config.get("trial_sources")
+    if trial_sources is None:
+        trial_sources = {}
+    if not isinstance(trial_sources, dict):
+        add(findings, "error", "SRC001", "trial_sources must be a mapping", "config.trial_sources")
+        trial_sources = {}
+    for source_id, raw_path in trial_sources.items():
+        location = f"config.trial_sources.{source_id}"
+        if not isinstance(source_id, str) or not source_id.strip() or not isinstance(raw_path, str):
+            add(findings, "error", "SRC002", "each condition-table source requires a non-empty ID and file path", location)
             continue
-        block_type = normalized(block.get("type"))
-        formal_count += block_type == "formal"
-        if block_type not in BLOCK_TYPES:
-            add(findings, "error", "BLK002", f"invalid block type {block_type!r}", f"{location}.type")
-        if block_type not in {"practice", "formal"}:
-            continue
-        if not block.get("condition_file"):
-            add(findings, "error", "BLK003", "practice/formal block requires condition_file", f"{location}.condition_file")
-            continue
-        if not isinstance(block.get("trials"), int) or block["trials"] <= 0:
-            add(findings, "error", "BLK004", "practice/formal block requires a positive integer trials count", f"{location}.trials")
-        condition_ref = Path(str(block["condition_file"]))
+        condition_ref = Path(raw_path)
         condition_path = (config_path.parent / condition_ref).resolve()
-        if unsafe_project_path(block["condition_file"]) or not condition_path.is_relative_to(config_path.parent.resolve()):
-            add(findings, "error", "COND008", "condition_file must stay inside the config project directory", f"{location}.condition_file")
+        if unsafe_project_path(raw_path) or not condition_path.is_relative_to(config_path.parent.resolve()):
+            add(findings, "error", "COND008", "condition file must stay inside the config project directory", location)
             continue
         if not condition_path.exists():
             add(findings, "error", "COND001", "condition file does not exist", str(condition_path))
             continue
         try:
-            table = read_condition_table(condition_path, block)
+            table = read_condition_table(condition_path, source_id)
         except (OSError, RuntimeError, ValueError) as exc:
             add(findings, "error", "COND002", str(exc), str(condition_path))
             continue
@@ -457,67 +451,58 @@ def validate_config(config_path: Path) -> tuple[dict[str, Any], list[ConditionTa
             for row_number, row in enumerate(table.rows, 2):
                 if row.get(column) in (None, ""):
                     add(findings, "error", "COND009", f"correct-response column {column!r} contains an empty value; encode an explicit no-response rule when intended", f"{table.path}:{row_number}")
-        if isinstance(block.get("trials"), int) and len(table.rows) != block["trials"]:
-            add(findings, "error", "COND004", f"row count {len(table.rows)} does not equal block.trials {block['trials']}", str(condition_path))
-        if "trial" in table.headers:
-            actual = [normalized(row.get("trial")) for row in table.rows]
-            expected = [str(number) for number in range(1, len(table.rows) + 1)]
-            if actual != expected:
-                add(findings, "error", "COND005", "trial column must be consecutive and 1-indexed", str(condition_path))
 
-    if blocks and formal_count == 0:
-        add(findings, "error", "BLK005", "at least one formal block is required", "config.blocks")
-
-    # ── Sequences validation (primary format) ──
     sequences = config.get("sequences") if isinstance(config.get("sequences"), list) else []
-    if has_sequences:
-        for index, seq in enumerate(sequences):
-            loc = f"config.sequences[{index}]"
-            if not isinstance(seq, dict):
-                add(findings, "error", "SEQ001", "sequence must be a mapping", loc)
-                continue
-            if not str(seq.get("name", "")).strip():
-                add(findings, "error", "SEQ002", "sequence name is required", f"{loc}.name")
-            if not isinstance(seq.get("window_ids"), list) or not seq.get("window_ids"):
-                add(findings, "error", "SEQ003", "window_ids must be a non-empty list", f"{loc}.window_ids")
+    for index, seq in enumerate(sequences):
+        loc = f"config.sequences[{index}]"
+        if not isinstance(seq, dict):
+            add(findings, "error", "SEQ001", "sequence must be a mapping", loc)
+            continue
+        if not str(seq.get("name", "")).strip():
+            add(findings, "error", "SEQ002", "sequence name is required", f"{loc}.name")
+        if not isinstance(seq.get("window_ids"), list) or not seq.get("window_ids"):
+            add(findings, "error", "SEQ003", "window_ids must be a non-empty list", f"{loc}.window_ids")
+        else:
+            for wid in seq["window_ids"]:
+                if wid not in window_names:
+                    add(findings, "error", "SEQ004", f"window_ids references unknown window {wid!r}", f"{loc}.window_ids")
+        source_id = seq.get("trial_source_id")
+        if source_id is not None and source_id not in trial_sources:
+            add(findings, "error", "SEQ014", f"trial_source_id references unknown source {source_id!r}", f"{loc}.trial_source_id")
+        execution = seq.get("execution")
+        if not isinstance(execution, dict):
+            add(findings, "error", "SEQ005", "execution must be a mapping", f"{loc}.execution")
+        else:
+            if "mode" in execution:
+                add(findings, "error", "SEQ006", "retired execution.mode is not accepted", f"{loc}.execution.mode")
+            reps = execution.get("repetitions")
+            if not isinstance(reps, int) or isinstance(reps, bool) or not 1 <= reps <= 10000:
+                add(findings, "error", "SEQ007", "execution.repetitions must be an integer from 1 to 10000", f"{loc}.execution.repetitions")
+            order_mode = execution.get("order_mode")
+            if order_mode not in {"table_order", "fixed_random", "fully_random"}:
+                add(findings, "error", "SEQ008", "execution.order_mode must be table_order, fixed_random, or fully_random", f"{loc}.execution.order_mode")
+            if order_mode == "fixed_random" and not str(execution.get("seed", "")).strip():
+                add(findings, "error", "SEQ015", "fixed_random requires a non-empty seed", f"{loc}.execution.seed")
+            reshuffle = execution.get("reshuffle_each_cycle")
+            if reshuffle is not None and not isinstance(reshuffle, bool):
+                add(findings, "error", "SEQ016", "reshuffle_each_cycle must be boolean", f"{loc}.execution.reshuffle_each_cycle")
+        show_in = seq.get("show_in")
+        if show_in is not None:
+            if not isinstance(show_in, list):
+                add(findings, "error", "SEQ009", "show_in must be a list", f"{loc}.show_in")
             else:
-                for wid in seq["window_ids"]:
-                    if wid not in window_names:
-                        add(findings, "error", "SEQ004", f"window_ids references unknown window {wid!r}", f"{loc}.window_ids")
-            execution = seq.get("execution")
-            if not isinstance(execution, dict):
-                add(findings, "error", "SEQ005", "execution must be a mapping", f"{loc}.execution")
-            else:
-                mode = execution.get("mode")
-                if mode not in ("once", "loop"):
-                    add(findings, "error", "SEQ006", "execution.mode must be once or loop", f"{loc}.execution.mode")
-                if mode == "loop":
-                    reps = execution.get("repetitions")
-                    if not isinstance(reps, int) or reps < 1:
-                        add(findings, "error", "SEQ007", "loop-mode sequences require execution.repetitions >= 1", f"{loc}.execution.repetitions")
-                    if isinstance(reps, int) and reps > 10000:
-                        add(findings, "warning", "SEQ008", f"execution.repetitions={reps} exceeds sanity bound (10000)", f"{loc}.execution.repetitions")
-            show_in = seq.get("show_in")
-            if show_in is not None:
-                if not isinstance(show_in, list):
-                    add(findings, "error", "SEQ009", "show_in must be a list", f"{loc}.show_in")
-                else:
-                    valid_contexts = {"practice", "formal", "rest", "debrief"}
-                    for ctx in show_in:
-                        if ctx not in valid_contexts:
-                            add(findings, "error", "SEQ010", f"invalid show_in value {ctx!r}; use practice/formal/rest/debrief", f"{loc}.show_in")
-                    # Cross-validate: show_in targets must reference existing sequences
-                    if "practice" in show_in and not any(s.get("name", "").lower() == "practice" or (isinstance(s.get("execution"), dict) and s["execution"].get("mode") == "loop") for s in sequences):
-                        add(findings, "warning", "SEQ011", "show_in references 'practice' but no practice sequence exists", f"{loc}.show_in")
-        # ITI precedence: warn if both timing override and ITI window exist
-        timing_overrides = config.get("timing") if isinstance(config.get("timing"), dict) else {}
-        if timing_overrides.get("iti") and any(w.get("name", "").lower() == "iti" for w in windows):
-            add(findings, "warning", "SEQ012", "both timing.iti override and an ITI window exist — ITI window takes precedence", "config.timing.iti")
-        # Condition variation check
-        if not blocks and tables:
-            all_rows = [tuple(r.values()) for table in tables for r in table.rows]
-            if len(set(all_rows)) <= 1:
-                add(findings, "warning", "SEQ013", "all condition rows are identical — experiment has no variation", "config.conditions")
+                valid_contexts = {"practice", "formal", "rest", "debrief"}
+                for context in show_in:
+                    if context not in valid_contexts:
+                        add(findings, "error", "SEQ010", f"invalid show_in value {context!r}; use practice/formal/rest/debrief", f"{loc}.show_in")
+
+    timing_overrides = config.get("timing") if isinstance(config.get("timing"), dict) else {}
+    if timing_overrides.get("iti") and any(w.get("name", "").lower() == "iti" for w in windows):
+        add(findings, "warning", "SEQ012", "both timing.iti override and an ITI window exist — ITI window takes precedence", "config.timing.iti")
+    if tables:
+        all_rows = [tuple(row.values()) for table in tables for row in table.rows]
+        if len(set(all_rows)) <= 1:
+            add(findings, "warning", "SEQ013", "all condition rows are identical — experiment has no variation", "config.trial_sources")
 
     stimulus_folder = config.get("stimulus_folder")
     if stimulus_folder:

@@ -1,0 +1,68 @@
+version: "1.2"
+analysis_mode: confirmatory
+runtime:
+  language: r
+  language_version: "4.5.0"
+  dependency_strategy: lockfile
+  dependency_file: renv.lock
+  target_environment: "GitHub Actions clean R fixture"
+preregistration:
+  reference: null
+  alpha: 0.05
+experiment:
+  config_path: null
+  data_path: data/paired_rt.csv
+  file_pattern: null
+  file_format: csv
+  loader_options: {}
+  multi_file: false
+  n_subjects: 12
+  id_columns:
+    subject: subject_id
+    item: null
+    session: null
+    site: null
+design:
+  ivs:
+    - name: condition
+      type: categorical
+      levels: [control, experimental]
+  dvs:
+    - name: rt
+      type: continuous
+      unit: ms
+  design_type: within
+  observation_level: subject-summary
+  clustering: [subject_id]
+questions:
+  - id: Q1
+    question: Does the experimental condition increase mean reaction time?
+    dv: rt
+    role: primary
+    estimand: Population mean paired RT difference, experimental minus control
+    hypothesis: directional
+    selected_method: paired_t_test
+    alternatives_considered: [linear_mixed_model]
+    rationale: The fixture contains one confirmed subject-level summary per condition and estimates the paired mean contrast.
+    model_formula: rt ~ condition
+    dependence_structure: Pair observations by subject_id before estimating the contrast.
+cleaning:
+  rt_lower: 100
+  rt_upper: 1500
+  accuracy_min: null
+  trial_exclusion: none
+  missing_policy: Exclude incomplete subject pairs from this paired analysis and record the affected source rows and subjects.
+  sensitivity_rules: []
+model:
+  stochastic: false
+  seed: null
+  contrast: not_applicable
+  correction: none
+  diagnostics: [paired-difference distribution and finite-value checks]
+output:
+  save_path: output/
+  report_format: RMarkdown
+  figures: []
+  effect_sizes: [raw paired mean difference with 95% CI]
+  environment_capture: true
+  execution_log: analysis-run.json

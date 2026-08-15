@@ -14,7 +14,7 @@ description: >-
 
 ## Version
 
-v1.4.0 — unified evidence-gated contract, 2026-07-23. Sub-skill of [amazing-psycoder](../SKILL.md).
+v1.4.0 — unified evidence-gated contract, 2026-07-23; Studio direct ExperimentModel@4 and compiler-bound repair amendment, 2026-08-15. Sub-skill of [amazing-psycoder](../SKILL.md).
 
 ## Purpose
 
@@ -32,14 +32,14 @@ State the selected mode. Never reject a targeted bug fix merely because the orig
 
 ## Design Philosophy
 
-**输出即交付候选。** Generated code must be runnable as-is — not pseudocode — but it is not collection-ready until Reviewer audit and target-machine smoke tests pass. In standalone mode, keep confirmed user-editable values in one named config/parameter section and require revalidation after edits. In Studio mode, the compiler-owned immutable `ExecutionPlan@2.0` is the only experiment-parameter source; generated runtime code must not create a second editable copy of its semantics.
+**输出即交付候选。** Generated code must be runnable as-is — not pseudocode — but it is not collection-ready until Reviewer audit and target-machine smoke tests pass. In standalone mode, keep confirmed user-editable values in one named config/parameter section and require revalidation after edits. In Studio mode, the frozen `ExperimentModel@4`, `modelHash`, and `assetSetHash` are the only experiment-parameter inputs; all three adapters compile the Model directly and generated runtime code must not create a second editable copy of its semantics.
 
 Core principles:
 - **用户的实验，系统的规范** — the user owns the design; the system enforces explicit code-quality checks and reports remaining uncertainty
 - **骨架先行** — new generated scripts use the platform Canonical Code Skeleton as the validated API baseline. A structural deviation is allowed only when the config requires it, the reason is documented, equivalent safety/timing/data contracts are preserved, and the deviation is specifically tested; `modify`/`debug` need not rewrite unrelated existing architecture.
 - **规格提供逻辑，适配器提供 API** — only the confirmed config/ExperimentSpec defines window sequence, stimuli, conditions, correctness, timing, randomization, and data behavior. Paradigm files are optional references, never executable templates. If a reference conflicts with the config, the config wins; if the config is incomplete, stop and return to Designer.
 - **反模式零容忍** — block `time.sleep()`, `event.getKeys(maxWait=)`, `KbCheck` for RT, and stimulus/media I/O inside timed windows. Persist trial data immediately after each trial, outside timing-critical windows.
-- **代码生成优先级** — confirmed ExperimentSpec/ExecutionPlan > current platform spec and anti-patterns > config→code mapping > optional exact-design reference. A family reference never supplies executable semantics.
+- **代码生成优先级** — confirmed standalone config or frozen Studio ExperimentModel@4 > current platform spec and anti-patterns > config/Model→code mapping > optional exact-design reference. A family reference never supplies executable semantics.
 - **生成后必经审计** — code generation is not the final step. After delivery, the user MUST run the code through `psy-exp-reviewer` before collecting data. The reviewer is the mandatory quality gate between code generation and data collection.
 - **语言与实验内容一致** — user-facing instructions, feedback, UI prose, comments, and README follow the user's language unless the confirmed config says otherwise. Stimuli preserve the confirmed experimental language/content. API tokens, response keys, identifiers, filenames, and data schema are never translated merely to match the conversation language.
 
@@ -73,7 +73,7 @@ Language determination is automatic from the design workflow conversation:
 
 ## Platform Support Status
 
-All three platforms share the same Generation Pipeline (`ExperimentSpec → ExecutionPlan → Platform Adapter → Code`). Experimental semantics are fixed before the adapter boundary; only platform implementation, packaging, and runtime validation differ. Each platform README documents its implementation details.
+All three Studio platforms share one direct Generation Pipeline (`ExperimentModel@4 → Platform Adapter → Code`). Standalone uses its confirmed YAML config. Experimental semantics are fixed before the adapter boundary; only platform implementation, packaging, and runtime validation differ. Each platform README documents its implementation details.
 
 | Platform | Status | What to do |
 |----------|--------|------------|
@@ -123,8 +123,8 @@ Layer 3: Paradigm reference files    ← 可选领域提示；不提供或继承
 Layer 4: Raw demo code               ← 隔离来源：不进入正常生成上下文
 ```
 
-Config controls experiment semantics. A deterministic ExecutionPlan preserves
-those semantics. L1 controls supported implementation contracts; L2 may map but
+The confirmed standalone config or frozen Studio Model controls experiment semantics.
+L1 controls supported implementation contracts; L2 may map but
 not change either. L3 may supply questions, risks, and literature context only.
 It must not fill missing fields or override the config. L4 and legacy L3 code
 never override or supply APIs.
@@ -151,7 +151,7 @@ Every generated experiment script follows this structure, regardless of platform
 1. Imports / dependencies
 2. Experiment parameters
    - Standalone: one centralized section mirroring the confirmed config; edits require revalidation
-   - Studio: read the compiler-owned immutable plan; do not duplicate editable experimental semantics
+   - Studio: compile the frozen Model@4 directly; do not duplicate editable experimental semantics
    - Include a target-runtime font family/path/fallback strategy when text is font-sensitive (especially CJK), then require visual verification
 3. Display setup (window / canvas / screen)
 4. Stimulus preloading (outside trial loop)
@@ -159,10 +159,10 @@ Every generated experiment script follows this structure, regardless of platform
 6. Helper functions
 7. Instruction routine when declared
 8. Practice routine when declared
-9. Main experimental loop generated from `windows[]`/`sequences[]` (primary) or `windows[]`/`blocks[]` (legacy), without inserting undeclared fixation, feedback, rest, or debrief stages
-   a. Sequence-level setup (execution mode: once/loop)
-   b. Per-sequence: window order + repetition count
-   c. Per-trial within loop-mode sequence: windows in order, then feedback/ITI
+9. Main experimental loop generated only from `windows[]`/`sequences[]`, without inserting undeclared fixation, feedback, rest, or debrief stages
+   a. Resolve each sequence's optional condition table and positive repetition count
+   b. Realize `table_order`, seeded `fixed_random`, or recorded `fully_random` order
+   c. Per condition row and cycle: execute the sequence's windows left-to-right
 10. Data saving (incremental, try/finally)
 11. Cleanup / quit (always with escape / abort handler)
 12. Package as platform file + generate README
@@ -193,14 +193,14 @@ duplicate experiment semantics. Avoid line-by-line narration and generic empty
 headings. Repair mode preserves/restores the contract, and Reviewer treats a
 missing marker or non-substantive section as a quality-gate failure.
 
-The same file must expose an auditable Canvas projection with the exact marker
-`PSYCODER-CANVAS-MAP: v1`, one `CANVAS-SEQUENCE: <stable id>` entry for every
-sequence in declared order, and one `CANVAS-WINDOW: <stable id>` entry for each
-window in its owning sequence's order. Summaries include the saved name,
-execution mode/repetitions, stimulus binding or static content, timing, and
-responses. The runtime still consumes the immutable plan; the map is not a
-second execution source. Never infer roles such as practice, formal, rest, or
-debrief from display labels when the confirmed execution fields say otherwise.
+Do not embed a Canvas map, copied experiment specification, or any other second
+semantic representation in the runtime comments. In PsyCoder Studio packages,
+auditable traceability belongs to the immutable `experiment_model.json`,
+`compilation_manifest.json`, and `source_map.json`. Runtime comments may point
+to those evidence files and Model JSON Pointers, but must not restate stimulus,
+condition, timing, or response values as another contract. Never infer roles
+such as practice, formal, rest, or debrief from display labels when the frozen
+Model says otherwise.
 
 ### Code Output: Platform File + README
 
@@ -247,10 +247,8 @@ When the user provides a `config.yaml` + condition xlsx files, translate the con
 | `windows[].duration: [min, max]` | Random duration in [min, max] ms |
 | `windows[].response: [keys]` | Response collection with timed loop (platform-specific: see implementation guide) |
 | `windows[].rt_onset` | Which window's display onset starts the RT clock. `"self"` = this window. A window name = clock reset at that window's display |
-| `sequences[]` | Sequence loop (primary format): `execution.mode` = once/loop, `execution.repetitions` for loop, `window_ids` determine per-sequence window order |
+| `sequences[]` | Execution format: optional `trial_source_id`; positive `execution.repetitions`; `order_mode` = table_order/fixed_random/fully_random; `window_ids` determine left-to-right order |
 | `sequences[].show_in` | Context filter: restrict sequence to practice/formal/rest/debrief |
-| `blocks[]` | Block loop + condition file loading **(legacy — use sequences for new designs)** |
-| `blocks[].condition_file` | Load condition data from xlsx/csv **(legacy)** |
 | `randomization` | Resolve method + `seed_scope`/seed before constructing order; save the resolved seed or realized-order reference with every trial/session |
 | `response_rules.correct` | Accuracy evaluation in trial loop |
 | `paradigm_config` | Explicit user-confirmed custom logic (SSD staircase, n-back target detection, etc.); compile exactly as specified |
@@ -286,7 +284,7 @@ When generating code, output:
 
 1. **Trial Window Timeline** — box diagram showing the window sequence with response rules (user-facing)
 2. **Condition tables** — xlsx file summary (rows, columns, condition ratios)
-3. **Platform experiment file** — runnable code saved with the correct extension (`.py` / `.js` / `.m`); standalone parameters are centralized, while Studio code consumes the immutable plan without a second semantic copy; use a platform-appropriate explicit font strategy when participant-visible CJK text is used, with code comments in the user's language
+3. **Platform experiment file** — runnable code saved with the correct extension (`.py` / `.js` / `.m`); standalone parameters are centralized, while Studio code compiles the frozen `ExperimentModel@4` without a second semantic copy; use a platform-appropriate explicit font strategy when participant-visible CJK text is used, with code comments in the user's language
 4. **README file** — companion document describing exact pinned prerequisites, tested target environment, experiment logic, data contract, how to run, parameter locations, and known limitations. Language matches the user's language (中文 or English)
 5. **Data output columns** — column names and descriptions per trial
 6. **How to Run & Test** — actionable steps embedded in the README:
@@ -315,6 +313,18 @@ When the user reports that generated code has an error or unexpected behavior:
    - **SyntaxError / NameError** → Bug in generated code. Fix the code and regenerate.
    - **RuntimeError (PsychoPy)** → Usually timing or stimulus issue. Check font paths, image dimensions, units.
    - **No data saved / empty CSV** → `try/finally` block issue. Verify flush logic, check if experiment crashed before finally block.
-3. **Fix within the authorized layer**: In `modify`, `debug`, or Studio repair mode, patch the concrete model-owned runtime candidate when that is the requested scope. Never alter the confirmed design or compiler-owned files to make a test pass. If the same defect originates in a reusable adapter or generation rule, record and fix that source separately so later candidates do not repeat it.
+3. **Fix within the authorized layer**: In standalone `modify` or `debug` mode, patch the concrete user-owned runtime candidate when that is the requested scope. In PsyCoder Studio, use only the hash-bound `repair-attempt` contract and the host-provided runtime-path allowlist. Replace complete files, never the frozen Model, condition tables, compiler-owned metadata, source map, or evidence. Changed source is limited to the target-specific runtime kernel; the Model-derived window, sequence, entrypoint, condition, resource, and data-contract shell must remain byte-identical. Repair profile 1.0 also preserves every executable reference statement byte-identically and in order, allowing only host-recognized additive fail-closed guard blocks at their declared reference statements or standalone comments. The host must verify both content and placement, then verify syntax, deterministically rebind compilation evidence, rerun all static gates, and obtain a fresh independent review; otherwise the proposal is discarded and the run fails. Recurring defects must become maintained adapter fixes with regression fixtures.
 4. **Re-test checklist**: After fixing, run static validation and then a new target-machine test with a unique session/run ID; confirm that the prior output was not overwritten.
 5. **Update patterns**: If the fix reveals a gap in a maintained implementation guide, adapter, or exact-design reference, update the authoritative source only when it is in scope and validate it separately from the candidate repair.
+
+### PsyCoder Studio executable boundary
+
+When a validated Studio Generation Envelope is present, this skill may inspect
+or propose repairs only for the model-owned runtime paths explicitly allowed by
+the host. The frozen Model, condition tables, source graph, metadata, and
+evidence remain host-owned. The Coder must not add a second semantic copy,
+infer missing design decisions, modify an unlisted path, or bypass static,
+hash, and independent-review validation. Until the host has a sandboxed
+target-specific executable conformance extractor, changed AI runtime source is
+not eligible for packaging; the accepted runtime must remain byte-identical to
+the deterministic compiler reference.

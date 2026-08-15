@@ -1,20 +1,14 @@
 ---
 name: psy-exp-reviewer
 description: >-
-  Audit psychological experiment ideas, configs, implementation plans, or code
-  without modifying them. Use for code review, design review, readiness for
-  data collection, timing/RT correctness, condition balance, data integrity,
-  PsychoPy/jsPsych/Psychtoolbox anti-patterns, smoke-test guidance, or “实验代码
-  有没有问题/能不能正式采集”. Select code-audit, config-audit,
-  implementation-plan-review, triage-only, or blocked mode from the available
-  input. Report graded findings and a readiness label; do not generate fixes.
+  Audit psychological experiment ideas, configs, implementation plans, or code without modifying them. Use for code review, design review, readiness for data collection, timing/RT correctness, condition balance, data integrity, PsychoPy/jsPsych/Psychtoolbox anti-patterns, smoke-test guidance, or “实验代码 有没有问题/能不能正式采集”. Select code-audit, config-audit, implementation-plan-review, triage-only, or blocked mode from the available input. Report graded findings and a readiness label; do not generate fixes.
 ---
 
 # Psychological Experiment Code Reviewer
 
 ## Version
 
-v1.4.0 — unified evidence-gated contract, 2026-07-23. Sub-skill of [amazing-psycoder](../SKILL.md).
+v1.4.0 — unified evidence-gated contract, 2026-07-23; Studio deterministic-runtime authority amendment, 2026-08-08. Sub-skill of [amazing-psycoder](../SKILL.md).
 
 ## Purpose
 
@@ -30,16 +24,16 @@ Static inspection can assess structure and risk, but runtime claims require obse
 2. **Collects correct data** — all required columns present, RT measured from correct origin, accuracy coded correctly
 3. **Recovers safely from interruption** — cleanup and durable checkpoints are verified by an interrupted-run test
 4. **Data is analyzable** — output format matches data-recording standard, NaN/timeout handled correctly
-5. **Experiment logic is correct** — implementation matches the confirmed ExperimentSpec/ExecutionPlan, response mapping is unambiguous, and declared condition constraints are verified
+5. **Experiment logic is correct** — implementation matches the confirmed standalone config or frozen Studio ExperimentModel@4, response mapping is unambiguous, and declared condition constraints are verified
 
-Each item must be backed by the structured `RuntimeEvidence` records in [references/review-report-schema.md](references/review-report-schema.md). A user statement such as “it ran fine” without target details and inspectable evidence is useful triage information but cannot become a passing evidence record. The backend derives `smoke_test_status`; the Reviewer does not emit that summary field.
+Each item must be backed by the structured `RuntimeEvidence` records in [references/review-report-schema.md](references/review-report-schema.md). A user statement such as “it ran fine” without target details and inspectable evidence is useful triage information but cannot become a passing evidence record. Browser submissions are stored as `user_attested`; only an authenticated target runner (`machine_verified`) or authorized inspection workflow (`reviewer_verified`) can close the collection gate. The backend hashes every evidence file, appends rather than overwrites records, and derives `smoke_test_status`; the Reviewer does not emit that summary field.
 
 ## Integration with Coder Skill
 
 The reviewer cross-references the [psy-exp-coder](../psy-exp-coder/SKILL.md) skill's artifacts:
 
 | Coder artifact | Reviewer use |
-|---------------|-------------|
+| --- | --- |
 | Platform spec Canonical Skeleton | Reference for correct API patterns — compare generated code against skeleton |
 | Platform spec anti-pattern table | Checklist of forbidden patterns to scan for |
 | Coder Quality Gate (10 items) | Minimum bar — if any gate fails, automatic `not_ready_for_collection` |
@@ -49,7 +43,7 @@ The reviewer cross-references the [psy-exp-coder](../psy-exp-coder/SKILL.md) ski
 The reviewer also cross-references the [psy-exp-designer](../psy-exp-designer/SKILL.md) skill's artifacts:
 
 | Programming artifact | Reviewer use |
-|---------------------|-------------|
+| --- | --- |
 | Paradigm `## Do Not Assume` | Paradigm-specific checks — verify known pitfalls are addressed |
 | `references/data-recording.md` | Semantic trial-summary/event-table contract and persistence rules |
 | `references/config-schema.md` | Config validation rules — every deterministic and design-semantic check passes before code generation |
@@ -59,7 +53,7 @@ The reviewer also cross-references the [psy-exp-designer](../psy-exp-designer/SK
 Before reviewing, classify the request into one mode.
 
 | Mode | Use when | Minimum Input | Allowed Output |
-|------|----------|---------------|----------------|
+| --- | --- | --- | --- |
 | `code-audit` | User provides experiment code | Code file or pasted code | PASS / FAIL with readiness label + platform-specific findings + smoke test protocol |
 | `config-audit` | User provides config YAML, trial timeline, or condition schema but no code | config YAML or structured experiment spec | Pre-code design review; **cannot** judge code correctness |
 | `implementation-plan-review` | User provides pseudocode or planned code architecture | Implementation plan | Architecture risk review; **cannot** judge runtime behavior |
@@ -73,7 +67,7 @@ If the user's input could fit multiple modes, default to the **highest** mode av
 These labels are the user-facing verdict vocabulary for standalone reviews. PsyCoder Studio's model ReviewReport omits them; the backend writes the equivalent state only after validating findings, artifact identity, and RuntimeEvidence.
 
 | Label | Allowed in mode | Meaning |
-|-------|----------------|---------|
+| --- | --- | --- |
 | `ready_for_collection` | `code-audit` only | Zero critical or major issues; code matches platform spec skeleton; smoke test passed |
 | `not_ready_for_collection` | `code-audit` | Critical/Major issues exist, or required runtime tests have not passed; do NOT collect data |
 | `pre_code_ready` | `config-audit` only | Config/spec complete and ready for code generation |
@@ -94,19 +88,18 @@ At the start of every review output, state what was and was not reviewed. If no 
 When code is provided, first detect the platform:
 
 | Signature | Platform |
-|-----------|----------|
+| --- | --- |
 | `from psychopy import` / `visual.Window` / `keyboard.Keyboard` | PsychoPy |
 | `initJsPsych` / `jsPsych.run` / `jsPsychHtmlKeyboardResponse` | jsPsych |
 | `PsychImaging` / `Screen('Flip'` / `KbQueueCreate` / `sca` | Psychtoolbox |
 
 Once detected, load the corresponding coder spec for authoritative API patterns:
+
 - PsychoPy → `../psy-exp-coder/psychopy/spec/README.md`
 - jsPsych → `../psy-exp-coder/jspsych/spec/README.md`
 - Psychtoolbox → `../psy-exp-coder/psychtoolbox/spec/README.md`
 
-When an exact design reference exists, it may be loaded from
-`../psy-exp-designer/paradigms/{paradigm_name}.md` for candidate failure modes.
-Do not substitute a family or neighboring variant when an exact reference is absent.
+When an exact design reference exists, it may be loaded from `../psy-exp-designer/paradigms/{paradigm_name}.md` for candidate failure modes. Do not substitute a family or neighboring variant when an exact reference is absent.
 
 If the platform cannot be detected, use `blocked` for platform-specific conclusions and request the target/runtime context. Do not call ambiguity data-invalidating when no data have been collected.
 
@@ -130,7 +123,7 @@ Load the detected platform's canonical spec before scanning. Its anti-pattern ta
 
 ### 1. Experiment Logic
 
-- [ ] Trial window sequence matches the confirmed ExperimentSpec/ExecutionPlan; an exact reference may only reveal omissions to investigate
+- [ ] Trial window sequence matches the confirmed standalone config or frozen Studio ExperimentModel@4; an exact reference may only reveal omissions to investigate
 - [ ] Each window has defined content, duration, response rule — no window is ambiguous
 - [ ] Correctness rule is unambiguous for every trial type (including no-go/catch/timeout)
 - [ ] Condition table matches the declared full, fractional, constrained, or adaptive design; do not invent undeclared cells
@@ -224,7 +217,7 @@ This section validates that the experiment produces analyzable, complete data.
 Cross-reference against [data-recording.md](../psy-exp-designer/references/data-recording.md). Validate semantic roles against the confirmed config; do not force non-keypress paradigms into a universal fixed column list:
 
 | Role | Check |
-|------|-------|
+| --- | --- |
 | Identity/order | Subject/session/trial identity is unique and reconstructs realized order |
 | Design/exposure | Condition, item/stimulus, counterbalance/adaptive values, and completion state reconstruct what occurred |
 | Response/timing | Applicable raw response, status, RT unit, and onset/event definitions are explicit |
@@ -235,7 +228,7 @@ Cross-reference against [data-recording.md](../psy-exp-designer/references/data-
 #### 6.2 Accuracy Coding Correctness
 
 | Trial type | Correct behavior | accuracy value |
-|-----------|-----------------|----------------|
+| --- | --- | --- |
 | Go trial, correct key | response == correct_response | 1 |
 | Go trial, wrong key | response != correct_response | 0 |
 | Go trial, timeout | no response within deadline | 0 when omission is defined as incorrect; response status remains `timeout` |
@@ -272,7 +265,7 @@ Cross-reference against [data-recording.md](../psy-exp-designer/references/data-
 
 ### 8. Pre-collection Readiness
 
-- [ ] Standalone: a non-programmer can edit the declared config/parameter section and is instructed to revalidate; Studio: experimental parameters remain compiler-owned and immutable, with no second editable semantic copy
+- [ ] Standalone: a non-programmer can edit the declared config/parameter section and is instructed to revalidate; Studio: experimental parameters remain Model/Plan-owned and immutable, with no second editable semantic copy
 - [ ] Stable parameter/config names are documented; line numbers, if included, match the final file
 - [ ] No debug/test code remaining (no `print()`, `console.log()`, `disp()` without guard)
 - [ ] Hardware triggers validated (if EEG/parallel port used)
@@ -283,18 +276,16 @@ Cross-reference against [data-recording.md](../psy-exp-designer/references/data-
 
 ### 9. Paradigm-Specific Failure Mode Checks
 
-When an exact paradigm reference exists, cross-reference it for candidate failure
-modes only. The confirmed config remains authoritative, and a missing reference
-does not invalidate a custom design. Never audit one variant by importing the
-logic of another member of the same paradigm family.
-Load `../psy-exp-designer/paradigms/{paradigm_name}.md` and check each item in `## Do Not Assume`.
+When an exact paradigm reference exists, cross-reference it for candidate failure modes only. The confirmed config remains authoritative, and a missing reference does not invalidate a custom design. Never audit one variant by importing the logic of another member of the same paradigm family. Load `../psy-exp-designer/paradigms/{paradigm_name}.md` and check each item in `## Do Not Assume`.
 
 **Go/No-go:**
+
 - [ ] No-go accuracy: witholding = accuracy 1 (correct rejection), responding = accuracy 0 (commission error)
 - [ ] No blocking keyboard call is used in a phase that must keep drawing, dispatch triggers, enforce deadlines, or handle continuous abort; a justified static/non-critical wait is reviewed in context
 - [ ] Escape check present within response window loop
 
 **IAT:**
+
 - [ ] Sequence order counterbalanced (compatible-first vs incompatible-first) across subjects
 - [ ] Stimulus identity recorded per trial (which exemplar appeared)
 - [ ] Error-correction procedure matches the declared IAT variant; raw observed RT and error status are never overwritten by analysis penalties
@@ -302,27 +293,32 @@ Load `../psy-exp-designer/paradigms/{paradigm_name}.md` and check each item in `
 - [ ] Category exemplars and sequence labels are traceable; do not impose an exemplar count that the confirmed design did not declare
 
 **Stop-signal:**
+
 - [ ] SSD staircase: SSD decreases after failed stop, increases after successful stop
 - [ ] Stop-signal delay independent of go RT distribution (tracking algorithm)
 - [ ] Save go RT, signal presence, SSD, response/omission, staircase state, and trial order so SSRT can be estimated later
 - [ ] Staircase behavior targets the declared inhibition probability and bounds; SSRT estimation belongs to analysis, using a prespecified method such as the integration method
 
 **N-back:**
+
 - [ ] Match detection: buffer comparison uses correct n-back distance
 - [ ] Lure trials (stimulus appeared n±1 back) correctly counted as non-targets
 - [ ] Record target/lure status, response, hit/miss/false-alarm/correct-rejection fields; compute d-prime in analysis unless an online preview is explicitly required
 
 **Dot-probe:**
+
 - [ ] Congruency coding: congruent = target replaces cue, incongruent = target replaces opposite
 - [ ] Cue-target SOA appropriate for the attentional process (100ms vs 500ms)
 - [ ] Record cue identities/locations, probe location, congruency, response, accuracy, and RT. Bias-score definition and exclusions belong to the confirmed analysis plan
 
 **Stroop:**
+
 - [ ] Congruency proportions exactly match the confirmed design, including intentional proportion-congruency manipulations
 - [ ] Response alternatives map to the task-relevant color/response set; neutral is a condition type, not automatically an extra response choice
 - [ ] Color rendering: RGB values verified to be perceptually distinct on target display
 
 **When no exact reference exists**: Run the generic checks against the confirmed spec:
+
 - [ ] Trial window sequence matches the declared windows and sequence flow
 - [ ] Response mapping unambiguous for every condition
 - [ ] Condition ratios and constraints match the declared design rather than family conventions
@@ -342,7 +338,7 @@ Only design-level checks. Do not check implementation details.
 - [ ] Every response window has `rt_onset` defined
 - [ ] Every `{column_name}` in `windows[]` exists in the condition file
 - [ ] Every trial type has a resolvable correct response (including no-go/stop/catch/timeout)
-- [ ] Sequence structure is complete (once/loop execution modes, valid window_ids)
+- [ ] Sequence structure is complete (valid optional condition-table IDs, positive repetitions, valid order policies and window IDs)
 - [ ] Feedback trials only appear in sequences with show_in: [practice] (or as explicitly designed)
 - [ ] Condition ratios match the stated design
 - [ ] Counterbalancing rule is specified (if paradigm requires it)
@@ -366,7 +362,7 @@ Only design-level checks. Do not check implementation details.
 - [ ] What trial windows are implied? (list; mark missing ones)
 - [ ] What is the response rule? (keys? mapping? deadline?)
 - [ ] What varies trial-to-trial? (conditions)
-- [ ] What is the sequence structure? (once/loop modes? repetition counts?)
+- [ ] What is the sequence structure? (which optional condition table, how many repetitions, and which order policy?)
 - [ ] What data is collected? (rt? key? acc? additional measures?)
 - [ ] Is the platform stated? If not, request it or keep platform-specific conclusions blocked; do not silently default
 
@@ -375,7 +371,7 @@ Only design-level checks. Do not check implementation details.
 ## Severity Classification
 
 | Severity | Definition | Concrete examples |
-|----------|-----------|-------------------|
+| --- | --- | --- |
 | **Critical** | The artifact cannot run/produce recoverable data, or would systematically invalidate the primary outcome | Inverted correctness, wrong RT origin for the primary DV, end-only/no persistence, missing required artifact, deterministic condition construction contradicts the confirmed design |
 | **Major** | Affects a subset of trials/participants, materially degrades measurement, or blocks safe target testing | Unrecoverable realized randomization, unresolved field mapping, CJK glyph failure, inappropriate response event, production sync tests disabled, media I/O in a timed window |
 | **Minor** | Does not affect data quality; fix when convenient | Extra debug print left in code, variable naming convention, missing code comment, parameter ordering, redundant import, hardcoded path that works but should be configurable |
@@ -423,8 +419,7 @@ When code has been modified after an initial review, re-audit with this focused 
 4. **Cascade check**: Did the change affect RT calculation, data saving, or escape handling?
 5. **Smoke test re-run**: Run Test 2 (full run-through) and Test 3 (data output) from the Smoke Test Protocol
 
-If the change is trivial (e.g., parameter value only, comment fix), re-audit is optional.
-If the change affects trial loop, response collection, or data saving, full re-audit is required.
+If the change is trivial (e.g., parameter value only, comment fix), re-audit is optional. If the change affects trial loop, response collection, or data saving, full re-audit is required.
 
 ---
 
@@ -453,7 +448,7 @@ psy-exp-reviewer 审计
 ```
 
 | Issue type | Who fixes | How to fix |
-|-----------|---------|-----------|
+| --- | --- | --- |
 | Design error (missing windows or incorrect declared semantics) | psy-exp-designer | Fix design → regenerate config → psy-exp-coder regenerate code |
 | Code error (anti-pattern found, wrong API, missing escape) | psy-exp-coder | Fix code directly according to reviewer's specific findings |
 | Missing data columns / wrong RT source | psy-exp-coder | Verify against platform spec → fix code |
@@ -469,17 +464,18 @@ psy-exp-reviewer 审计
 When the audit passes with `ready_for_collection`:
 
 > "审计通过。下一步:
->  1. 保存已完成的 [First-Run Checklist](#first-run-checklist-pre-first-subject) 和目标机 Smoke Test 证据
->  2. 保存审计报告、运行环境和验证产物路径
->  3. 首名正式被试前复核设备、版本与刺激资源未改变
->  4. 如需分析数据，使用 `/amazing-psycoder` 进入分析流水线"
+>
+> 1.  保存已完成的 [First-Run Checklist](#first-run-checklist-pre-first-subject) 和目标机 Smoke Test 证据
+> 2.  保存审计报告、运行环境和验证产物路径
+> 3.  首名正式被试前复核设备、版本与刺激资源未改变
+> 4.  如需分析数据，使用 `/amazing-psycoder` 进入分析流水线"
 
 ---
 
 ## Related Files
 
 | File | When to load |
-|------|-------------|
+| --- | --- |
 | [../psy-exp-coder/psychopy/spec/README.md](../psy-exp-coder/psychopy/spec/README.md) | PsychoPy code audit — canonical skeleton + authoritative anti-pattern table |
 | [../psy-exp-coder/jspsych/spec/README.md](../psy-exp-coder/jspsych/spec/README.md) | jsPsych code audit — canonical skeleton + authoritative anti-pattern table |
 | [../psy-exp-coder/psychtoolbox/spec/README.md](../psy-exp-coder/psychtoolbox/spec/README.md) | PTB code audit — canonical skeleton + authoritative anti-pattern table |
@@ -500,9 +496,8 @@ The reviewer must verify that generated code/conditions match spec constraints.
 4. **Sequence/counterbalance constraints**: Verify maximum runs, lure/match placement, stop/switch rules, and subject-order assignment declared by the design. Violation → at least **major**.
 5. **Construct then shuffle**: Build exact constrained sets before shuffling. Required balance produced by independent random draws or weak post-hoc repair → **major**.
 
-Spec-code-condition inconsistency must be reported at its evidence-based severity;
-the backend then derives `ready_for_collection = false` when a blocking finding remains.
+Spec-code-condition inconsistency must be reported at its evidence-based severity; the backend then derives `ready_for_collection = false` when a blocking finding remains.
 
 ## Review Gate Rules (v1.4.0)
 
-Load [references/review-gate.md](references/review-gate.md) whenever producing a PsyCoder Studio ReviewReport. A report covers exactly one content-addressed artifact set. Repairs are separate Coder attempts; each repaired artifact set receives a fresh review. Require complete `reviewed_files` hashes and report every Critical/Major finding so the backend can fail packaging deterministically.
+Load [references/review-gate.md](references/review-gate.md) whenever producing a PsyCoder Studio ReviewReport. A report covers exactly one content-addressed artifact set. The Reviewer is read-only. Blocking findings fail the Studio run and route to maintained compiler-adapter repair plus regression testing; the current runtime is never patched by the model. Every regenerated artifact set receives a fresh review. Require complete `reviewed_files` hashes and report every Critical/Major finding so the backend can fail packaging deterministically.

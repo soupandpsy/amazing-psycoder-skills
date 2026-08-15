@@ -27,6 +27,7 @@ data/
 # Reliability fixtures are source artifacts, not participant output
 !amazing-psycoder/tests/fixtures/**/*.csv
 !amazing-psycoder/tests/fixtures/**/*.xlsx
+amazing-psycoder/tests/fixtures/runnable-analysis-*/output/
 
 # OS generated
 *.bak

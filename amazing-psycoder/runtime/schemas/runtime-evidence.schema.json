@@ -10,7 +10,8 @@
     "tests",
     "started_at",
     "completed_at",
-    "recorded_by"
+    "recorded_by",
+    "verification"
   ],
   "properties": {
     "evidence_id": { "type": "string", "minLength": 1, "maxLength": 200 },
@@ -21,21 +22,73 @@
       "properties": {
         "platform": { "enum": ["psychopy", "jspsych", "psychtoolbox"] },
         "os": { "type": "string", "minLength": 1, "maxLength": 500 },
-        "runtime_version": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "runtime_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
         "hardware": { "type": "string", "minLength": 1, "maxLength": 2000 }
       },
       "additionalProperties": false
     },
     "tests": {
       "type": "array",
-      "minItems": 1,
-      "maxItems": 100,
+      "minItems": 5,
+      "maxItems": 5,
+      "allOf": [
+        {
+          "contains": {
+            "properties": { "id": { "const": "launch_exit" } },
+            "required": ["id"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": { "id": { "const": "full_short_session" } },
+            "required": ["id"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": { "id": { "const": "data_integrity" } },
+            "required": ["id"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": { "id": { "const": "incremental_recovery" } },
+            "required": ["id"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": { "id": { "const": "timing_device_check" } },
+            "required": ["id"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ],
       "items": {
         "type": "object",
         "required": ["id", "result", "procedure", "evidence_paths"],
         "properties": {
           "id": {
-            "enum": ["launch_exit", "full_short_session", "data_integrity", "incremental_recovery", "timing_device_check"]
+            "enum": [
+              "launch_exit",
+              "full_short_session",
+              "data_integrity",
+              "incremental_recovery",
+              "timing_device_check"
+            ]
           },
           "result": { "enum": ["passed", "failed", "blocked"] },
           "procedure": { "type": "string", "minLength": 1, "maxLength": 12000 },
@@ -52,7 +105,38 @@
     },
     "started_at": { "type": "string", "format": "date-time" },
     "completed_at": { "type": "string", "format": "date-time" },
-    "recorded_by": { "type": "string", "minLength": 1, "maxLength": 500 }
+    "recorded_by": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "verification": {
+      "type": "object",
+      "required": ["level", "verified_by", "verified_at", "file_digests"],
+      "properties": {
+        "level": {
+          "enum": ["user_attested", "machine_verified", "reviewer_verified"]
+        },
+        "verified_by": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "verified_at": { "type": "string", "format": "date-time" },
+        "file_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 25,
+          "items": {
+            "type": "object",
+            "required": ["path", "sha256", "size_bytes"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1, "maxLength": 2000 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2097152
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

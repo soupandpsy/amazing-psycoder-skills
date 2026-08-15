@@ -7,21 +7,20 @@
   "serialization": {
     "studio": "json",
     "standalone": "yaml",
-    "generationEnvelope": "2.0",
-    "semanticModel": "PsyCoderExperimentSpecV2@2.4",
-    "executionModel": "ExecutionPlan@2.0"
+    "generationEnvelope": "4.0",
+    "jobSchemaVersion": "2.0",
+    "authorityModel": "ExperimentModel@4.0"
   },
   "capabilitiesPath": "runtime/capabilities.json",
   "primitivesPath": "runtime/primitives.json",
   "routingPath": "runtime/routing.json",
   "artifactDirectory": "runtime/artifacts",
   "schemaDirectory": "runtime/schemas",
-  "migrationGuide": "runtime/MIGRATION_V1.4.md",
   "contracts": {
     "designAssistantOutput": "runtime/schemas/designer-output.schema.json",
+    "experimentModel": "runtime/schemas/experiment-model.schema.json",
     "generationInput": "runtime/schemas/generation-input.schema.json",
     "immutableInterpretation": "runtime/schemas/interpreter-output.schema.json",
-    "executionPlan": "runtime/schemas/execution-plan.schema.json",
     "modelArtifactOutput": "runtime/schemas/artifact-output.schema.json",
     "readOnlyReview": "runtime/schemas/review-output.schema.json",
     "coderRepairAttempt": "runtime/schemas/repair-attempt.schema.json",
